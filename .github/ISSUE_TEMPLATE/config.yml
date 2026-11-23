@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Live UI Kit Showcase
+    url: https://pages.chenge.ink/tp-mobile-ui-kit/
+    about: Browse Omada APP 5.3 restorations, 6-brand Theme Lab, Core 21 primitives, and live PAG motions.
+  - name: Agent Skill Catalog & Templates
+    url: https://github.com/ChenyqThu/tp-mobile-ui-kit/tree/main/skills/tp-mobile-ui-kit
+    about: Install and use the tp-mobile-ui-kit skill across Claude Code, Cursor, Codex, and Antigravity.

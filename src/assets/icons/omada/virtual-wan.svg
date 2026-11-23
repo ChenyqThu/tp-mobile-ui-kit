@@ -1,0 +1,7 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="stroke0_66570_13539" fill="white">
+<path d="M15.1496 6.70045V4H8.84963V6.70045H5.70018V9.40044H3V20.3004H21V9.40044H18.3002V6.70045H15.1496Z" fill-rule="evenodd" clip-rule="evenodd"/>
+</mask>
+<path d="M15.1496 6.70045H18.3002V9.40044H21V20.3004H3V9.40044H5.70018V6.70045H8.84963V4H15.1496V6.70045Z" stroke-width="2.4" stroke="currentColor" mask="url(#stroke0_66570_13539)"/>
+<path d="M10.1151 11L12.2565 16.0662L14.4307 11H15.8401L12.8793 17.72H11.6119L8.64014 11H10.1151Z" fill="currentColor"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg width="300" height="160" viewBox="0 0 300 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="93" y="44" width="111" height="18" fill="#E3F1EC"/>
+<rect x="94" y="44" width="110" height="72" stroke-width="1.2" stroke-linecap="square" stroke="#0A5A5A"/>
+<path d="M98 65H200V112H98V65Z" fill="white" stroke-width="0.7" stroke-linecap="square" stroke="#636363"/>
+<path d="M144.375 104.111C144.375 99.2232 140.412 95.2606 135.524 95.2606C134.191 95.2606 132.927 95.5553 131.793 96.0832L126.673 104.111H144.375Z" fill="#B7EE00" stroke-width="0.7" stroke-linecap="square" stroke="#636363"/>
+<ellipse cx="120.984" cy="81.9541" rx="6.95406" ry="6.95415" fill="#32DE9B" stroke-width="0.7" stroke-linecap="square" stroke="#636363"/>
+<path d="M120.984 90.1719C113.652 90.1719 107.708 96.3989 107.708 104.08H134.26C134.26 96.3989 128.316 90.1719 120.984 90.1719Z" fill="#32DE9B" stroke-width="0.7" stroke-linecap="square" stroke="#636363"/>
+<ellipse cx="135.523" cy="87.172" rx="4.42531" ry="4.42537" fill="#B7EE00" stroke-width="0.7" stroke-linecap="square" stroke="#636363"/>
+<path d="M208 102.667C215.364 102.667 221.333 108.636 221.333 116C221.333 123.364 215.364 129.333 208 129.333C200.636 129.333 194.667 123.364 194.667 116C194.667 108.636 200.636 102.667 208 102.667Z" fill-rule="evenodd" clip-rule="evenodd" fill="#00A870" stroke-width="1.73333" stroke="#00A870"/>
+<path d="M202 116L206 120L214 111.333" stroke-width="1.73333" stroke="white"/>
+<path d="M160.625 71H192.042V76.5H160.625V71Z" fill="#E3F1EC"/>
+<path d="M152.625 71H158.042V76.5H152.625V71Z" fill="#2D62FA"/>
+<path d="M160.625 80H192.042V85.5H160.625V80Z" fill="#E3F1EC"/>
+<path d="M152.625 80H158.042V85.5H152.625V80Z" fill="#E57DFA"/>
+<rect x="152.625" y="92" width="26.5833" height="2" fill="#32DE9B"/>
+<rect x="152.625" y="99.417" width="26.5833" height="2" fill="#32DE9B"/>
+<rect x="94" y="44" width="110" height="17" stroke-width="1.2" stroke-linecap="square" stroke="#0A5A5A"/>
+<rect x="135.208" y="42" width="28.4167" height="11" fill="white" stroke-width="1.2" stroke-linecap="square" stroke="#0A5A5A"/>
+</svg>

@@ -1,0 +1,37 @@
+name: Missing Mobile Component / Asset
+description: Request a missing TP-Design mobile component, brand theme token, Omada APP screen/block, icon, illustration, or PAG motion.
+title: "[Component]: "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Core Mobile Component (TP*)
+        - Brand Theme Token / Override
+        - Omada APP Block / Screen
+        - Figma Icon / Illustration / Logo Asset
+        - Tencent PAG Motion (.pag)
+    validations:
+      required: true
+  - type: input
+    id: brand_scope
+    attributes:
+      label: Brand & App Screen / Context
+      placeholder: e.g. Omada APP v5.3 Site Settings, or Tapo Dark Mode slider
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Expected Props, Interactions & Visual States
+      placeholder: Describe layout, props, Light/Dark mode behavior, and iOS/Android adaptation...
+    validations:
+      required: true
+  - type: textarea
+    id: reference
+    attributes:
+      label: Reference (Screenshots or Figma Link)
+    validations:
+      required: false

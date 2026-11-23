@@ -1,0 +1,839 @@
+/* TP-Link Omada APP v5.3–6.3 brand overrides, components & screen styles */
+
+/* Brand-specific refinements layered over tp-tokens.css */
+[data-tp-brand="omada"] {
+  --tp-omada-glass-bg: rgba(255, 255, 255, 0.78);
+  --tp-omada-glass-border: rgba(15, 23, 42, 0.1);
+  --tp-omada-glass-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --tp-omada-pill-muted-bg: rgba(43, 43, 43, 0.06);
+  --tp-omada-skeleton-base: rgba(43, 43, 43, 0.08);
+  --tp-omada-skeleton-shine: rgba(255, 255, 255, 0.65);
+  --tp-omada-prompt-bg: rgba(0, 105, 203, 0.1);
+  --tp-omada-prompt-border: rgba(0, 105, 203, 0.24);
+  --tp-omada-topo-bg: rgba(0, 168, 112, 0.12);
+  --tp-omada-chart-grid: rgba(43, 43, 43, 0.12);
+  --tp-omada-upload: #0069CB;
+  --tp-omada-download: #D946EF;
+}
+
+:root,
+[data-tp-mode="light"] {
+  --tp-omada-glass-bg: rgba(255, 255, 255, 0.8);
+  --tp-omada-glass-border: rgba(15, 23, 42, 0.1);
+  --tp-omada-glass-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --tp-omada-pill-muted-bg: rgba(43, 43, 43, 0.06);
+  --tp-omada-skeleton-base: rgba(43, 43, 43, 0.08);
+  --tp-omada-skeleton-shine: rgba(255, 255, 255, 0.65);
+  --tp-omada-prompt-bg: rgba(0, 105, 203, 0.1);
+  --tp-omada-prompt-border: rgba(0, 105, 203, 0.24);
+  --tp-omada-topo-bg: rgba(0, 168, 112, 0.12);
+  --tp-omada-chart-grid: rgba(43, 43, 43, 0.12);
+  --tp-omada-upload: #0069CB;
+  --tp-omada-download: #D946EF;
+}
+
+[data-tp-mode="dark"] {
+  --tp-omada-glass-bg: rgba(38, 38, 42, 0.78);
+  --tp-omada-glass-border: rgba(255, 255, 255, 0.14);
+  --tp-omada-glass-shadow: 0 4px 14px rgba(0, 0, 0, 0.36);
+  --tp-omada-pill-muted-bg: rgba(255, 255, 255, 0.09);
+  --tp-omada-skeleton-base: rgba(255, 255, 255, 0.08);
+  --tp-omada-skeleton-shine: rgba(255, 255, 255, 0.16);
+  --tp-omada-prompt-bg: #112A5C;
+  --tp-omada-prompt-border: rgba(51, 160, 233, 0.28);
+  --tp-omada-topo-bg: rgba(0, 168, 112, 0.16);
+  --tp-omada-chart-grid: rgba(255, 255, 255, 0.12);
+  --tp-omada-upload: #33A0E9;
+  --tp-omada-download: #E57DFA;
+}
+
+/* Adapt multicolor Omada Figma SVGs that use dark #2B2B2B strokes on dark surfaces */
+[data-tp-mode="dark"] .tp-omada-adapt-svg svg [stroke="#2B2B2B"] {
+  stroke: rgba(255, 255, 255, 0.82) !important;
+}
+
+/* Screen shell */
+.tp-omada-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  background: var(--tp-bg-page);
+  color: var(--tp-text-primary);
+  font-family: var(--tp-font-family);
+  box-sizing: border-box;
+}
+
+.tp-omada-screen--standalone {
+  height: 100%;
+  overflow: hidden;
+}
+
+.tp-omada-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 16px 24px;
+  box-sizing: border-box;
+}
+
+.tp-omada-body--with-tabbar {
+  padding-bottom: 92px;
+}
+
+.tp-omada-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Header glass wells & capsules */
+.tp-omada-header-wrap {
+  position: relative;
+  z-index: 25;
+}
+
+.tp-omada-capsule-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+}
+
+.tp-omada-glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--tp-omada-glass-border);
+  background: var(--tp-omada-glass-bg);
+  color: var(--tp-text-primary);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--tp-omada-glass-shadow);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.tp-omada-glass-btn:active {
+  transform: scale(0.94);
+}
+
+.tp-omada-glass-capsule {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 4px;
+  border-radius: 999px;
+  border: 1px solid var(--tp-omada-glass-border);
+  background: var(--tp-omada-glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--tp-omada-glass-shadow);
+  gap: 2px;
+}
+
+.tp-omada-glass-capsule-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--tp-text-primary);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.15s ease;
+}
+
+.tp-omada-glass-capsule-item:hover {
+  background: var(--tp-omada-pill-muted-bg);
+}
+
+.tp-omada-avatar-c {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--tp-focus);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Menu anchor positioning */
+.tp-omada-menu-anchor {
+  position: relative;
+}
+
+.tp-omada-center-menu {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  min-width: 190px;
+}
+
+.tp-omada-right-menu {
+  position: absolute;
+  top: 48px;
+  right: 16px;
+  z-index: 40;
+  min-width: 176px;
+}
+
+/* Floating Toolkit FAB */
+.tp-omada-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: none;
+  background: var(--tp-focus);
+  color: #FFFFFF;
+  box-shadow: 0 6px 18px rgba(0, 168, 112, 0.38);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.tp-omada-fab:hover {
+  filter: brightness(1.06);
+}
+
+.tp-omada-fab:active {
+  transform: scale(0.94);
+}
+
+.tp-omada-standalone-fab {
+  position: absolute;
+  right: 16px;
+  bottom: 88px;
+  z-index: 25;
+}
+
+.tp-omada-standalone-tabbar {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  z-index: 25;
+}
+
+/* Upgrade Prompt override for authentic Omada blue banner */
+.tp-omada-upgrade-prompt {
+  background: var(--tp-omada-prompt-bg) !important;
+  border: 1px solid var(--tp-omada-prompt-border);
+  border-radius: 12px !important;
+}
+
+/* Animated skeleton cards (LaunchLoading) */
+@keyframes tp-omada-shimmer {
+  0% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -180% 0;
+  }
+}
+
+.tp-omada-skeleton-card {
+  background: var(--tp-bg-card);
+  border-radius: var(--tp-radius-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--tp-card-shadow);
+}
+
+.tp-omada-skeleton-block {
+  background: linear-gradient(
+    90deg,
+    var(--tp-omada-skeleton-base) 20%,
+    var(--tp-omada-skeleton-shine) 50%,
+    var(--tp-omada-skeleton-base) 80%
+  );
+  background-size: 220% 100%;
+  animation: tp-omada-shimmer 1.6s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+.tp-omada-skeleton-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 2px;
+}
+
+/* Cards */
+.tp-omada-card {
+  background: var(--tp-bg-card);
+  border-radius: var(--tp-radius-card);
+  padding: 14px 16px;
+  box-shadow: var(--tp-card-shadow);
+  box-sizing: border-box;
+}
+
+.tp-omada-card--interactive {
+  cursor: pointer;
+  transition: transform 0.14s ease, opacity 0.14s ease;
+}
+
+.tp-omada-card--interactive:active {
+  transform: scale(0.992);
+}
+
+.tp-omada-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tp-omada-card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--tp-text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.tp-omada-card-subtitle {
+  font-size: 12px;
+  color: var(--tp-text-secondary);
+  margin-top: 3px;
+}
+
+/* Dashboard KPI 4-column grid */
+.tp-omada-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.tp-omada-kpi-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 2px;
+  border: none;
+  background: transparent;
+  color: var(--tp-text-primary);
+  cursor: pointer;
+}
+
+.tp-omada-kpi-count {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--tp-text-primary);
+  line-height: 1.1;
+}
+
+.tp-omada-topo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 36px;
+  border: none;
+  border-radius: var(--tp-radius-in-card-btn);
+  background: var(--tp-omada-topo-bg);
+  color: var(--tp-focus);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.tp-omada-topo-btn:hover {
+  opacity: 0.9;
+}
+
+/* Site Health Score card */
+.tp-omada-health-score-value {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--tp-color-green);
+  line-height: 1;
+}
+
+.tp-omada-health-subgrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tp-omada-health-subcard {
+  border: 1px solid var(--tp-divider);
+  border-radius: 10px;
+  padding: 10px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: transparent;
+}
+
+.tp-omada-health-subcard-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-omada-health-subcard-num {
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--tp-color-green);
+  line-height: 1.1;
+}
+
+.tp-omada-health-timeline {
+  position: relative;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 0 6px;
+}
+
+.tp-omada-health-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tp-omada-health-bar-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tp-text-secondary);
+  flex-shrink: 0;
+}
+
+.tp-omada-health-bar-track {
+  position: relative;
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--tp-divider);
+  overflow: hidden;
+}
+
+.tp-omada-health-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(0, 168, 112, 0.35), rgba(0, 168, 112, 0.72));
+}
+
+.tp-omada-health-scrubber-line {
+  position: absolute;
+  top: 0;
+  bottom: 4px;
+  width: 0;
+  border-right: 1.5px dashed var(--tp-color-green);
+  pointer-events: none;
+}
+
+.tp-omada-health-scrubber-thumb {
+  position: absolute;
+  bottom: -14px;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  border-radius: 999px;
+  background: var(--tp-color-green);
+  border: 3px solid #E5E7EB;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+/* ISP Activity rows */
+.tp-omada-isp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.tp-omada-isp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.tp-omada-isp-name {
+  color: var(--tp-text-primary);
+  font-weight: 400;
+}
+
+.tp-omada-isp-rates {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--tp-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-omada-rate-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Charts & Legends */
+.tp-omada-legend-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.tp-omada-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tp-omada-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--tp-text-secondary);
+}
+
+.tp-omada-legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.tp-omada-chart-axis-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--tp-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Filter chip bar */
+.tp-omada-chip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tp-omada-chip-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tp-omada-chip-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--tp-text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Upgrade badge inline & overlay */
+.tp-omada-upgrade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  background: var(--tp-color-green);
+  color: #FFFFFF;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.tp-omada-ctrl-thumb-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.tp-omada-ctrl-mini-badge {
+  position: absolute;
+  right: -2px;
+  bottom: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  background: var(--tp-color-green);
+  color: #FFFFFF;
+  border: 1.5px solid var(--tp-bg-card);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Device & Client right-side metrics stack */
+.tp-omada-row-metrics {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-omada-status-line {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tp-omada-status-line--good {
+  color: var(--tp-color-green);
+}
+
+.tp-omada-status-line--warn {
+  color: var(--tp-color-yellow);
+}
+
+.tp-omada-status-line--alert {
+  color: var(--tp-color-alert);
+}
+
+.tp-omada-health-dot-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--tp-text-secondary);
+}
+
+.tp-omada-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--tp-color-green);
+  display: inline-block;
+}
+
+.tp-omada-dot--warn {
+  background: var(--tp-color-yellow);
+}
+
+.tp-omada-dot--alert {
+  background: var(--tp-color-alert);
+}
+
+/* OmadaStandardInput */
+.tp-omada-std-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.tp-omada-std-input-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-omada-std-input-shell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 42px;
+  padding: 4px 10px;
+  border-radius: var(--tp-radius-btn);
+  border: 1px solid var(--tp-divider);
+  background: var(--tp-bg-search);
+  color: var(--tp-text-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.tp-omada-std-input-shell:focus-within {
+  border-color: var(--tp-focus);
+  box-shadow: 0 0 0 2px var(--tp-focus-16);
+}
+
+.tp-omada-std-input-shell--error {
+  border-color: var(--tp-color-alert);
+}
+
+.tp-omada-std-input-shell--error:focus-within {
+  border-color: var(--tp-color-alert);
+  box-shadow: 0 0 0 2px var(--tp-color-alert-10);
+}
+
+.tp-omada-std-input-shell--disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tp-omada-std-seg-input {
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--tp-text-primary);
+  font-family: var(--tp-font-family);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  padding: 6px 2px;
+  outline: none;
+}
+
+.tp-omada-std-seg-input--text {
+  text-align: left;
+  padding: 6px 2px;
+}
+
+.tp-omada-std-sep {
+  color: var(--tp-text-secondary);
+  font-weight: 600;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.tp-omada-std-error {
+  font-size: 12px;
+  color: var(--tp-color-alert);
+}
+
+.tp-omada-std-helper {
+  font-size: 12px;
+  color: var(--tp-text-secondary);
+}
+
+/* Interactive Port Grid in Device Detail */
+.tp-omada-port-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tp-omada-port-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 1px solid var(--tp-divider);
+  background: var(--tp-bg-page);
+  color: var(--tp-text-primary);
+  cursor: pointer;
+  font-size: 11px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.tp-omada-port-tile--active {
+  border-color: var(--tp-focus);
+  background: var(--tp-focus-10);
+}
+
+/* Toolkit grid in BottomSheet */
+.tp-omada-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tp-omada-tool-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--tp-divider);
+  background: var(--tp-bg-card);
+  color: var(--tp-text-primary);
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tp-omada-tool-tile:active {
+  background: var(--tp-focus-10);
+}
+
+/* Topology diagram inside bottom sheet */
+.tp-omada-topo-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.tp-omada-topo-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--tp-divider);
+  background: var(--tp-bg-card);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tp-omada-topo-connector {
+  width: 2px;
+  height: 14px;
+  background: var(--tp-color-green);
+}
+
+/* Radial health gauge */
+.tp-omada-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+}

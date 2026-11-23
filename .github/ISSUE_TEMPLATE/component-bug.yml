@@ -1,0 +1,48 @@
+name: UI Component Bug / Visual Fidelity Issue
+description: Report a layout, 6-brand theme token, Light/Dark mode, PAG motion, or prop issue on tp-mobile-ui-kit.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Affected Component / Screen / Motion
+      placeholder: e.g. OmadaSiteDashboardPage, TPButton, TPMotion (deploy-config)
+    validations:
+      required: true
+  - type: dropdown
+    id: brand
+    attributes:
+      label: Brand & Theme Mode
+      options:
+        - Omada Light
+        - Omada Dark
+        - Tapo Light / Dark
+        - Tether Light / Dark
+        - Mercusys Light / Dark
+        - Deco / UX
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Usage Environment
+      options:
+        - Single-File HTML (CDN standalone.js)
+        - React / Vite ESM (@chenyqthu/tp-mobile-ui-kit)
+        - Online Showcase (GitHub Pages)
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Actual vs. Expected Behavior
+      description: Explain what went wrong (layout overlap, missing token, PAG load error, etc.).
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal Reproduction / Screenshots
+    validations:
+      required: false

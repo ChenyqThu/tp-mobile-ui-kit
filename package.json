@@ -1,0 +1,90 @@
+{
+  "name": "@chenyqthu/tp-mobile-ui-kit",
+  "version": "0.1.0",
+  "description": "TP-Link multi-brand mobile React UI component library (TP-Design 10-mode Theme Engine + Omada APP 5.3 Blocks & Real PAG Motion Assets + Single-file HTML standalone bundle)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChenyqThu/tp-mobile-ui-kit.git"
+  },
+  "homepage": "https://pages.chenge.ink/tp-mobile-ui-kit/",
+  "bugs": {
+    "url": "https://github.com/ChenyqThu/tp-mobile-ui-kit/issues"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/types/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/lib/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/types/lib/core.d.ts",
+      "import": "./dist/core.js"
+    },
+    "./assets": {
+      "types": "./dist/types/lib/assets.d.ts",
+      "import": "./dist/assets.js"
+    },
+    "./omada": {
+      "types": "./dist/types/lib/omada.d.ts",
+      "import": "./dist/omada.js"
+    },
+    "./style.css": "./dist/style.css",
+    "./standalone": "./dist/standalone.js",
+    "./libpag.wasm": "./dist/libpag.wasm",
+    "./catalog.json": "./dist/catalog.json"
+  },
+  "files": [
+    "dist",
+    "skills/tp-mobile-ui-kit",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm build:lib",
+    "build:app": "vite build --outDir dist-app",
+    "build:pages": "VITE_BASE_PATH=/tp-mobile-ui-kit/ vite build --outDir dist-app",
+    "build:esm": "vite build -c vite.lib.config.ts",
+    "build:standalone": "vite build -c vite.standalone.config.ts && rm -f dist/tp-mobile-ui-kit.css",
+    "build:types": "tsc -p tsconfig.lib.json",
+    "build:catalog": "node scripts/generate-catalog.mjs",
+    "build:lib": "pnpm build:esm && pnpm build:standalone && pnpm build:types && pnpm build:catalog",
+    "prepublishOnly": "pnpm build:lib",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0 || >=19.0.0",
+    "react-dom": ">=18.2.0 || >=19.0.0"
+  },
+  "dependencies": {
+    "libpag": "^4.5.85",
+    "lucide-react": "^1.77.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@testing-library/jest-dom": "^8.0.0",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "jsdom": "^26.1.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.8.3",
+    "vite": "^8.3.0",
+    "vitest": "^5.1.1"
+  }
+}

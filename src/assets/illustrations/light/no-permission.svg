@@ -1,0 +1,19 @@
+<svg width="300" height="160" viewBox="0 0 300 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="104.226" y="61.8296" width="91.5467" height="63.8409" fill="#E3F1EC" stroke-width="1.2" stroke-linecap="square" stroke="#0A5A5A"/>
+<rect x="109.045" y="66.647" width="81.9102" height="54.2046" fill="white" stroke-width="0.6" stroke-linecap="square" stroke="#636363"/>
+<path d="M121.089 35.3296H178.908V61.8296H172.886V41.3523H127.112V61.8296H121.089V35.3296Z" stroke-width="1.2" stroke-linecap="square" stroke="#0A5A5A"/>
+<ellipse cx="149.999" cy="87.1242" rx="7.22737" ry="7.22727" fill="#00A870"/>
+<path d="M147.483 93.147H152.52L156.024 105.192H143.979L147.483 93.147Z" fill="#00A870"/>
+<circle cx="88" cy="49" r="11.6364" stroke-width="1.2" stroke="#0A5A5A"/>
+<circle cx="87.9999" cy="49" r="5.81818" fill="#B7EE00" stroke-width="0.6" stroke-linecap="square" stroke="#636363"/>
+<path d="M72 49H104" stroke-width="0.6" stroke="#636363"/>
+<path d="M88 65L88 33" stroke-width="0.6" stroke="#636363"/>
+<rect x="190.955" y="77.4907" width="12.0456" height="4.81818" fill="white" stroke-width="0.6" stroke-linecap="square" stroke="#636363"/>
+<rect x="190.955" y="87.1255" width="12.0456" height="4.81818" fill="white" stroke-width="0.6" stroke-linecap="square" stroke="#636363"/>
+<rect x="97" y="77.4907" width="12.0456" height="4.81818" fill="white" stroke-width="0.6" stroke-linecap="square" stroke="#636363"/>
+<rect x="97" y="87.1255" width="12.0456" height="4.81818" fill="white" stroke-width="0.6" stroke-linecap="square" stroke="#636363"/>
+<rect x="137.954" y="112.421" width="24.0912" height="2.40909" fill="#F476FF"/>
+<path d="M196.333 108C203.697 108 209.667 113.97 209.667 121.333C209.667 128.697 203.697 134.667 196.333 134.667C188.97 134.667 183 128.697 183 121.333C183 113.97 188.97 108 196.333 108Z" fill-rule="evenodd" clip-rule="evenodd" fill="#EE385C"/>
+<path d="M191 116L201.667 126.667" stroke-width="1.73333" stroke="white"/>
+<path d="M191 126.667L201.667 116" stroke-width="1.73333" stroke="white"/>
+</svg>
