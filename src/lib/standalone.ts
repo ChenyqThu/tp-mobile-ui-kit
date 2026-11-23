@@ -2,6 +2,7 @@ import tokensCss from '../styles/tp-tokens.css?inline';
 import navControlsCss from '../styles/tp-core-nav-controls.css?inline';
 import listsInputsCss from '../styles/tp-core-lists-inputs.css?inline';
 import overlaysCss from '../styles/tp-core-overlays.css?inline';
+import extendedCss from '../styles/tp-core-extended.css?inline';
 import omadaCss from '../styles/tp-omada.css?inline';
 
 const standaloneGlobal = globalThis as unknown as {
@@ -27,7 +28,7 @@ if (typeof document !== 'undefined') {
   if (!hasExternalSheet && !document.getElementById(STYLE_ID)) {
     const styleEl = document.createElement('style');
     styleEl.id = STYLE_ID;
-    styleEl.textContent = [tokensCss, navControlsCss, listsInputsCss, overlaysCss, omadaCss].join('\n');
+    styleEl.textContent = [tokensCss, navControlsCss, listsInputsCss, overlaysCss, extendedCss, omadaCss].join('\n');
     document.head.appendChild(styleEl);
   }
 }

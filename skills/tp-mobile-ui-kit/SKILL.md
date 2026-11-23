@@ -125,9 +125,9 @@ Prefer dedicated subpath imports to keep Vite/Rollup bundles lean via tree-shaki
 
 | Subpath | Contents |
 | :--- | :--- |
-| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider`, `useTPTheme`, `TP_BRANDS`, `TP_THEME_PRESETS`, and all 34 `TP*` mobile core primitives + `useTPToast` |
+| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider`, `useTPTheme`, `TP_BRANDS`, `TP_THEME_PRESETS`, and all `TP*` mobile core primitives (including `TPLiquidGlass`, `TPIconButton`, `TPIconButtonGroup`, `TPCheckbox`, `TPRadio`, `TPSwipeRow`, `TPTooltip`, `TPFixedToast`, `TPMonthPicker`, `TPLast7DaysPicker`, `TPStepText`, `TPProgress`, `TPSkeleton`, `TPStepper`, `TPDivider`, `TPAvatar`, `TPPinInput`, dual-thumb `TPSlider`) + `useTPToast` |
 | `@chenyqthu/tp-mobile-ui-kit/assets` | `TPIcon`, `TPIllustration`, `TPBrandLogo`, `TPMotion`, and asset manifests (`TP_ICONS`, `TP_ILLUSTRATIONS`, `TP_BRAND_LOGOS`, `TP_MOTIONS`) |
-| `@chenyqthu/tp-mobile-ui-kit/omada` | `OmadaStandardInput`, `OmadaDeviceThumb`, 3 V5.3 blocks, 7 restored Omada APP pages, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo` |
+| `@chenyqthu/tp-mobile-ui-kit/omada` | `OmadaStandardInput`, `OmadaDeviceThumb`, 7 V5.3 blocks (`OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`), 7 restored Omada APP pages, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo` |
 | `@chenyqthu/tp-mobile-ui-kit/style.css` | Complete CSS token variables and `.tp-*` component/Omada styles |
 | `@chenyqthu/tp-mobile-ui-kit/standalone` | IIFE browser bundle attaching `window.TPMobileUI` |
 | `@chenyqthu/tp-mobile-ui-kit/catalog.json` | Machine-readable component, token, and asset catalog |
@@ -172,11 +172,12 @@ Switch dynamically via `useTPTheme()`:
 
 ---
 
-## 6. 7 Restored Omada APP Pages + V5.3 Blocks
+## 6. Restored Omada APP Pages, Liquid Glass Chrome & V5.3 Blocks
 
+- **Apple Liquid Glass Floating Chrome**: Set `overlayTop` and `overlayBottom` on `TPPhoneFrame` (with `<TPStatusBar transparent />` and `<TPTabBar variant="floating-pill" />`) so page content scrolls behind and softly blurs beneath both the floating glass header controls and the bottom pill tab bar (`TPLiquidGlass` exposes the standalone specular surface).
 - **7 Restored APP Screens**: `OmadaLaunchLoadingPage`, `OmadaControllerListPage`, `OmadaSiteDashboardPage`, `OmadaSiteInsightsPage`, `OmadaSiteDevicesPage`, `OmadaSiteClientsPage`, `OmadaSiteSettingsPage`
 - **Drill-Downs & Orchestrator**: `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo` (all-in-one interactive prototype inside `TPPhoneFrame`)
-- **V5.3 Blocks & Inputs**: `OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaStandardInput` (segmented IPv4, MAC, Port, Text)
+- **7 V5.3 Blocks & Inputs**: `OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaStandardInput` (segmented IPv4, MAC, Port, Text)
 
 ---
 

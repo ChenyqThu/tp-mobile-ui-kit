@@ -100,27 +100,29 @@ export const OmadaWirelessNetworkBlock: React.FC<OmadaWirelessNetworkBlockProps>
   return (
     <div className={`tp-omada-screen ${className}`.trim()} style={style}>
       {showHeader && (
-        <TPHeader
-          variant="floating"
-          title="Wireless Networks"
-          subtitle="SSID & Access Control"
-          left={
-            onBack ? (
-              <button
-                type="button"
-                className="tp-omada-glass-btn"
-                onClick={onBack}
-                aria-label="Back"
-              >
-                <TPIcon name="nav-back" size={20} />
-              </button>
-            ) : undefined
-          }
-        />
+        <div className="tp-omada-header-wrap">
+          <TPHeader
+            variant="floating"
+            title="Wireless Networks"
+            subtitle="SSID & Access Control"
+            left={
+              onBack ? (
+                <button
+                  type="button"
+                  className="tp-header-icon-btn"
+                  onClick={onBack}
+                  aria-label="Back"
+                >
+                  <TPIcon name="nav-back" size={20} />
+                </button>
+              ) : undefined
+            }
+          />
+        </div>
       )}
 
       <div className="tp-omada-scroll">
-        <div className="tp-omada-body">
+        <div className={`tp-omada-body ${showHeader ? '' : 'tp-omada-body--no-header'}`.trim()}>
           <TPSectionHeader title="Basic Wireless Settings" />
           <TPListCard divided>
             <div style={{ padding: '12px 16px' }}>

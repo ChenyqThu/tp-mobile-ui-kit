@@ -32,6 +32,8 @@ export const TPPhoneFrame: React.FC<TPPhoneFrameProps> = ({
   showFrame = true,
   showDynamicIsland,
   showHomeIndicator,
+  overlayTop,
+  overlayBottom,
   statusBar,
   bottomBar,
   floatingAction,
@@ -49,10 +51,24 @@ export const TPPhoneFrame: React.FC<TPPhoneFrameProps> = ({
   const displayDynamicIsland = showDynamicIsland ?? (showFrame && preset.isIOS);
   const displayHomeIndicator = showHomeIndicator ?? showFrame;
 
+  const hasStatusBar = statusBar !== undefined && statusBar !== null;
+  const hasBottomBar = bottomBar !== undefined && bottomBar !== null;
+  const isDockedTabBar =
+    React.isValidElement(bottomBar) &&
+    (bottomBar.props as { variant?: string } | null)?.variant === 'docked';
+
+  const isOverlayTop = Boolean(overlayTop && hasStatusBar);
+  const isOverlayBottom =
+    overlayBottom !== undefined ? overlayBottom : Boolean(hasBottomBar && !isDockedTabBar);
+
+  const topInsetPx = isOverlayTop ? (preset.isIOS ? '54px' : '36px') : '0px';
+
   const frameClass = [
     'tp-phone-frame',
     `tp-phone-frame--${resolvedDevice}`,
     showFrame ? 'tp-phone-frame--framed' : 'tp-phone-frame--frameless',
+    isOverlayTop ? 'tp-phone-frame--overlay-top' : '',
+    isOverlayBottom ? 'tp-phone-frame--overlay-bottom' : '',
     className,
   ]
     .filter(Boolean)
@@ -63,6 +79,8 @@ export const TPPhoneFrame: React.FC<TPPhoneFrameProps> = ({
       className={frameClass}
       data-device={resolvedDevice}
       data-show-frame={String(showFrame)}
+      data-overlay-top={String(isOverlayTop)}
+      data-overlay-bottom={String(isOverlayBottom)}
       data-tp-screen={resolvedScreenSize}
       data-width={resolvedWidth}
       data-height={resolvedHeight}
@@ -73,7 +91,13 @@ export const TPPhoneFrame: React.FC<TPPhoneFrameProps> = ({
     >
       <div
         className="tp-phone-screen"
-        style={{ width: `${resolvedWidth}px`, height: `${resolvedHeight}px` }}
+        style={
+          {
+            width: `${resolvedWidth}px`,
+            height: `${resolvedHeight}px`,
+            '--tp-phone-top-inset': topInsetPx,
+          } as React.CSSProperties
+        }
       >
         {displayDynamicIsland && (
           <div
@@ -85,22 +109,32 @@ export const TPPhoneFrame: React.FC<TPPhoneFrameProps> = ({
           </div>
         )}
 
-        {statusBar !== undefined && statusBar !== null && (
-          <div className="tp-phone-statusbar">{statusBar}</div>
+        {hasStatusBar && (
+          <div
+            className={`tp-phone-statusbar ${isOverlayTop ? 'tp-phone-statusbar--overlay' : ''}`.trim()}
+          >
+            {statusBar}
+          </div>
         )}
 
         <div className="tp-phone-stage">
           <div className="tp-phone-body">{children}</div>
           {floatingAction !== undefined && floatingAction !== null && (
-            <div className="tp-phone-floating-action">{floatingAction}</div>
+            <div
+              className={`tp-phone-floating-action ${
+                isOverlayBottom ? 'tp-phone-floating-action--above-overlay' : ''
+              }`.trim()}
+            >
+              {floatingAction}
+            </div>
           )}
         </div>
 
-        {(bottomBar !== undefined && bottomBar !== null) || displayHomeIndicator ? (
-          <div className="tp-phone-bottom">
-            {bottomBar !== undefined && bottomBar !== null && (
-              <div className="tp-phone-bottombar">{bottomBar}</div>
-            )}
+        {hasBottomBar || displayHomeIndicator ? (
+          <div
+            className={`tp-phone-bottom ${isOverlayBottom ? 'tp-phone-bottom--overlay' : ''}`.trim()}
+          >
+            {hasBottomBar && <div className="tp-phone-bottombar">{bottomBar}</div>}
             {displayHomeIndicator && (
               <div
                 className="tp-phone-home-indicator"

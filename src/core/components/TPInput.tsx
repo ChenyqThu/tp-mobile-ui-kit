@@ -7,6 +7,7 @@ import '../../styles/tp-core-lists-inputs.css';
  * password visibility toggle, helper/error text, prefix/suffix, and multiline mode.
  */
 export const TPInput: React.FC<TPInputProps> = ({
+  variant = 'standard',
   label,
   value,
   defaultValue = '',
@@ -64,8 +65,17 @@ export const TPInput: React.FC<TPInputProps> = ({
   const showPasswordToggle = password && !multiline;
   const resolvedType = password ? (showPassword ? 'text' : 'password') : type;
 
+  const fieldClasses = [
+    'tp-input-field',
+    `tp-input-field--${variant}`,
+    containerClassName,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   const boxClasses = [
     'tp-input-box',
+    `tp-input-box--variant-${variant}`,
     multiline ? 'tp-input-box--multiline' : '',
     focused ? 'tp-input-box--focused' : '',
     error ? 'tp-input-box--error' : '',
@@ -75,8 +85,8 @@ export const TPInput: React.FC<TPInputProps> = ({
     .join(' ');
 
   return (
-    <div className={`tp-input-field ${containerClassName}`.trim()}>
-      {label !== undefined && label !== null && (
+    <div className={fieldClasses} data-variant={variant}>
+      {variant !== 'borderless' && label !== undefined && label !== null && (
         <label htmlFor={inputId} className="tp-input-label">
           {label}
         </label>

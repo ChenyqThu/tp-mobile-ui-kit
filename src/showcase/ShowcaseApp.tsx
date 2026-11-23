@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   TP_BRANDS,
   TP_THEME_PRESETS,
@@ -25,40 +25,58 @@ import {
 import {
   TPActionSheet,
   TPAlert,
+  TPAvatar,
   TPBadge,
   TPBottomSheet,
   TPButton,
+  TPCheckboxGroup,
   TPDatePicker,
   TPDaySwitcher,
+  TPDivider,
   TPEmptyState,
   TPFixedButtonBar,
+  TPFixedToast,
   TPHeader,
+  TPIconButton,
+  TPIconButtonGroup,
   TPInput,
   TPKeyboard,
+  TPLast7DaysPicker,
+  TPLiquidGlass,
   TPListButton,
   TPListCard,
   TPListItem,
   TPMenu,
+  TPMonthPicker,
   TPPageControl,
   TPPhoneFrame,
+  TPPinInput,
   TPPopup,
+  TPProgress,
   TPPrompt,
+  TPRadioGroup,
   TPSearchBar,
   TPSectionHeader,
   TPSectionNote,
   TPSegment,
+  TPSkeleton,
   TPSlider,
   TPStatusBar,
+  TPStepText,
+  TPStepper,
+  TPSwipeRow,
   TPSwitch,
   TPTabBar,
   TPTag,
   TPText,
   TPTimePicker,
   TPToastProvider,
+  TPTooltip,
   TPWheelPicker,
   useTPToast,
   type TPDayKey,
   type TPMenuItem,
+  type TPMonthPickerValue,
   type TPPhoneFrameProps,
   type TPSegmentOption,
   type TPTabBarItem,
@@ -178,11 +196,47 @@ const OMADA_SCREEN_META: readonly OmadaScreenMeta[] = [
   {
     id: 'incidents',
     label: 'Logs & Incidents',
-    badge: 'V5.3 Drill-down',
+    badge: 'V5.3 Block',
     group: 'drilldown',
     description:
       'OmadaIncidentsBlock with category filter pills (All/Alerts/Device/Client/Operation), Mark All Read state sync back to Dashboard/Settings badges, and unread dots.',
     components: ['OmadaIncidentsBlock', 'TPTag', 'TPSectionHeader', 'TPListItem', 'TPIcon (log-*, status-*)'],
+  },
+  {
+    id: 'topology',
+    label: 'Network Topology',
+    badge: 'V5.3 Block',
+    group: 'drilldown',
+    description:
+      'Interactive OmadaTopologyBlock showing WAN3 uplink, Loop Protection, ER7212PC gateway, 2.5G PoE+ downlinks, and selectable node telemetry.',
+    components: ['OmadaTopologyBlock', 'TPTag', 'TPListCard', 'TPListItem', 'TPIcon'],
+  },
+  {
+    id: 'port-panel',
+    label: 'Hardware Port Panel',
+    badge: 'V5.3 Block',
+    group: 'drilldown',
+    description:
+      'Interactive OmadaPortPanelBlock faceplate matrix with RJ45/SFP+ link status LEDs, PoE wattage badges, VLAN assignment chips, and port-card-expand PAG motion.',
+    components: ['OmadaPortPanelBlock', 'TPSwitch', 'TPTag', 'TPMotion (port-card-expand)'],
+  },
+  {
+    id: 'schedule',
+    label: 'Site Schedules',
+    badge: 'V5.3 Block',
+    group: 'drilldown',
+    description:
+      'OmadaScheduleBlock (SMBNET-3501) managing Wi-Fi, PoE, and Reboot policies with TPDaySwitcher, TPTimePicker bottom sheet, and live rule creation.',
+    components: ['OmadaScheduleBlock', 'TPSwitch', 'TPDaySwitcher', 'TPTimePicker', 'TPBottomSheet'],
+  },
+  {
+    id: 'firmware',
+    label: 'Firmware Center',
+    badge: 'V5.3 Block',
+    group: 'drilldown',
+    description:
+      'OmadaFirmwareUpdateBlock (SMBNET-4894) combining TPFixedToast release notes, TPStepText changelog, TPCheckbox targets, TPProgress, and update-network PAG motion.',
+    components: ['OmadaFirmwareUpdateBlock', 'TPFixedToast', 'TPStepText', 'TPCheckbox', 'TPProgress', 'TPMotion'],
   },
 ];
 
@@ -196,11 +250,11 @@ const BRAND_LOGO_MAP: Record<TPBrand, TPBrandLogoName> = {
 };
 
 const CORE_CATEGORIES: readonly { id: CoreCategoryId; label: string; countLabel: string }[] = [
-  { id: 'all', label: 'All Components', countLabel: '21+' },
-  { id: 'nav-controls', label: 'Nav & Controls', countLabel: '8' },
-  { id: 'display-lists', label: 'Lists & Display', countLabel: '8' },
-  { id: 'inputs-pickers', label: 'Inputs & Pickers', countLabel: '8' },
-  { id: 'overlays-feedback', label: 'Overlays & Feedback', countLabel: '7' },
+  { id: 'all', label: 'All Components', countLabel: '38+' },
+  { id: 'nav-controls', label: 'Nav & Liquid Glass', countLabel: '11' },
+  { id: 'display-lists', label: 'Lists & Display', countLabel: '12' },
+  { id: 'inputs-pickers', label: 'Inputs & Pickers', countLabel: '11' },
+  { id: 'overlays-feedback', label: 'Overlays & Feedback', countLabel: '9' },
 ];
 
 const CORE_TAB_ITEMS: readonly TPTabBarItem[] = [
@@ -433,6 +487,14 @@ const CoreKitTab: React.FC<{
   const toast = useTPToast();
 
   const [category, setCategory] = useState<CoreCategoryId>('all');
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const body = previewRef.current?.closest('.tp-phone-body');
+    if (body) {
+      body.scrollTop = 0;
+    }
+  }, [category]);
 
   // Navigation & Controls state
   const [headerVariant, setHeaderVariant] = useState<'standard' | 'floating'>('floating');
@@ -446,10 +508,12 @@ const CoreKitTab: React.FC<{
   );
   const [switchOn, setSwitchOn] = useState(true);
   const [sliderVal, setSliderVal] = useState(60);
+  const [rangeVal, setRangeVal] = useState<[number, number]>([20, 75]);
   const [segVariant, setSegVariant] = useState<'pill' | 'underline'>('pill');
   const [segVal, setSegVal] = useState('5g');
   const [pageIdx, setPageIdx] = useState(1);
   const [tabVariant, setTabVariant] = useState<'floating-pill' | 'docked'>('floating-pill');
+  const [showTabExtra, setShowTabExtra] = useState(true);
   const [activeTabKey, setActiveTabKey] = useState('home');
 
   // Display & Lists state
@@ -457,17 +521,26 @@ const CoreKitTab: React.FC<{
   const [selectedTags, setSelectedTags] = useState<string[]>(['5GHz', 'MLO']);
   const [dismissedClosableTag, setDismissedClosableTag] = useState(false);
   const [emptyIllustration, setEmptyIllustration] = useState<TPIllustrationName>('no-devices');
+  const [swipeOpen, setSwipeOpen] = useState(false);
+  const [progressPct, setProgressPct] = useState(68);
+  const [stepperIdx, setStepperIdx] = useState(1);
 
   // Inputs & Pickers state
   const [inputText, setInputText] = useState('Office_Main_WLAN');
   const [inputPwd, setInputPwd] = useState('Omada@2026');
   const [inputNotes, setInputNotes] = useState('Guest VLAN isolated from LAN subnet.');
+  const [listInputVal, setListInputVal] = useState('192.168.0.1');
+  const [pinCode, setPinCode] = useState('2468');
+  const [checkedBands, setCheckedBands] = useState<string[]>(['5g', '6g']);
+  const [radioSecurity, setRadioSecurity] = useState('wpa3');
   const [searchQuery, setSearchQuery] = useState('');
   const [stdIp, setStdIp] = useState('192.168.0.1');
   const [stdMac, setStdMac] = useState('8C-86-DD-A6-A7-5F');
   const [stdPort, setStdPort] = useState('443');
   const [wheelValues, setWheelValues] = useState({ band: '5g', channel: '36' });
   const [pickedDate, setPickedDate] = useState<Date>(() => new Date(2026, 10, 23));
+  const [pickedMonth, setPickedMonth] = useState<TPMonthPickerValue>({ year: 2026, month: 11 });
+  const [last7Date, setLast7Date] = useState<Date>(() => new Date(2026, 10, 23));
   const [pickedTime, setPickedTime] = useState<{
     hour: number;
     minute: number;
@@ -480,6 +553,8 @@ const CoreKitTab: React.FC<{
   const [keyboardBuffer, setKeyboardBuffer] = useState('8C-86');
 
   // Overlays & Feedback state
+  const [tooltipOpen, setTooltipOpen] = useState(true);
+  const [fixedToastStatus, setFixedToastStatus] = useState<'info' | 'success' | 'warning' | 'danger'>('warning');
   const [alertState, setAlertState] = useState<{
     open: boolean;
     os: TPPlatformOS;
@@ -677,6 +752,17 @@ const CoreKitTab: React.FC<{
               items={CORE_TAB_ITEMS}
               activeKey={activeTabKey}
               onChange={(key) => setActiveTabKey(key)}
+              extraAction={
+                showTabExtra ? (
+                  <TPIconButton
+                    variant="glass"
+                    size="lg"
+                    icon="ai"
+                    ariaLabel="AI Assistant"
+                    onClick={() => toast.show({ type: 'info', message: 'Detached AI Liquid Glass action' })}
+                  />
+                ) : undefined
+              }
             />
           }
         >
@@ -699,7 +785,7 @@ const CoreKitTab: React.FC<{
             }
           />
 
-          <div className="studio-core-preview">
+          <div ref={previewRef} className="studio-core-preview">
             {showSection('nav-controls') && (
               <>
                 <div className="studio-core-section">
@@ -728,6 +814,63 @@ const CoreKitTab: React.FC<{
                     >
                       TabBar: {tabVariant}
                     </TPButton>
+                    <TPTag
+                      selected={showTabExtra}
+                      size="sm"
+                      onClick={() => setShowTabExtra((p) => !p)}
+                    >
+                      extraAction: {showTabExtra ? 'on' : 'off'}
+                    </TPTag>
+                  </div>
+                </div>
+
+                <div className="studio-core-section">
+                  <div className="studio-core-section-head">
+                    <h4 className="studio-core-section-title">
+                      TPLiquidGlass, TPIconButton &amp; Group
+                    </h4>
+                    <span className="studio-core-section-badge">iOS 27 Glass</span>
+                  </div>
+                  <div
+                    style={{
+                      padding: 12,
+                      borderRadius: 12,
+                      background:
+                        'linear-gradient(135deg, rgba(0,168,112,0.22) 0%, rgba(0,105,203,0.24) 55%, rgba(217,70,239,0.22) 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 10,
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <TPLiquidGlass
+                      shape="pill"
+                      interactive
+                      as="button"
+                      onClick={() => toast.show({ type: 'info', message: 'Liquid Glass Pill clicked' })}
+                      style={{ padding: '8px 14px', fontSize: 13, fontWeight: 600 }}
+                    >
+                      Liquid Glass Pill
+                    </TPLiquidGlass>
+                    <TPLiquidGlass shape="circle" tint="brand" interactive style={{ width: 38, height: 38 }}>
+                      <TPIcon name="settings-network-tools" size={18} color="#FFFFFF" />
+                    </TPLiquidGlass>
+                    <TPIconButtonGroup variant="glass">
+                      <TPIconButton
+                        icon="nav-add"
+                        variant="glass"
+                        ariaLabel="Add"
+                        onClick={() => toast.show('Added item')}
+                      />
+                      <TPIconButton
+                        icon="nav-more"
+                        variant="glass"
+                        badge={2}
+                        ariaLabel="More"
+                        onClick={() => toast.show('More menu')}
+                      />
+                    </TPIconButtonGroup>
                   </div>
                 </div>
 
@@ -815,6 +958,17 @@ const CoreKitTab: React.FC<{
                     unit="%"
                     ariaLabel="Transmit Power"
                     onChange={setSliderVal}
+                  />
+                  <TPSlider
+                    range
+                    min={0}
+                    max={100}
+                    step={5}
+                    rangeValue={rangeVal}
+                    showValue
+                    unit=" dBm"
+                    ariaLabel="RSSI Window"
+                    onRangeChange={setRangeVal}
                   />
                 </div>
 
@@ -992,6 +1146,73 @@ const CoreKitTab: React.FC<{
 
                 <div className="studio-core-section">
                   <div className="studio-core-section-head">
+                    <h4 className="studio-core-section-title">TPSwipeRow, TPAvatar &amp; TPDivider</h4>
+                    <TPTag size="sm" selected={swipeOpen} onClick={() => setSwipeOpen((p) => !p)}>
+                      {swipeOpen ? 'Hide Actions' : 'Reveal Swipe'}
+                    </TPTag>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <TPAvatar name="Lucien Chen" status="online" size="md" />
+                    <TPAvatar icon="client-controller" shape="rounded" status="busy" size="md" />
+                    <TPAvatar name="Guest" status="offline" size="sm" />
+                  </div>
+                  <TPDivider label="Swipeable Row" spacing="sm" />
+                  <TPSwipeRow
+                    open={swipeOpen}
+                    onOpenChange={setSwipeOpen}
+                    actions={[
+                      { key: 'pin', label: 'Pin', tone: 'focus', onClick: () => toast.show('Pinned') },
+                      { key: 'del', label: 'Delete', tone: 'alert', onClick: () => toast.show({ type: 'warning', message: 'Deleted' }) },
+                    ]}
+                  >
+                    <TPListItem
+                      title="EAP723_Living_Room"
+                      subtitle="3C-78-95-F0-45-F1 • Swipe left or tap Reveal"
+                      value="Online"
+                    />
+                  </TPSwipeRow>
+                </div>
+
+                <div className="studio-core-section">
+                  <div className="studio-core-section-head">
+                    <h4 className="studio-core-section-title">TPProgress, TPStepper, TPStepText &amp; TPSkeleton</h4>
+                    <TPButton
+                      variant="text"
+                      size="sm"
+                      onClick={() => {
+                        setProgressPct((p) => (p >= 100 ? 25 : p + 16));
+                        setStepperIdx((s) => (s + 1) % 3);
+                      }}
+                    >
+                      Step
+                    </TPButton>
+                  </div>
+                  <TPStepper
+                    current={stepperIdx}
+                    steps={[
+                      { key: 'scan', title: 'Discover' },
+                      { key: 'adopt', title: 'Adopt' },
+                      { key: 'ready', title: 'Online' },
+                    ]}
+                  />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <TPProgress variant="circular" percent={progressPct} tone="focus" size={56} />
+                    <div style={{ flex: 1 }}>
+                      <TPProgress variant="linear" percent={progressPct} tone="success" label="Provisioning" />
+                    </div>
+                  </div>
+                  <TPStepText
+                    variant="step"
+                    items={[
+                      { title: 'Connect PoE+', text: 'Plug EAP723 into LAN5 for 802.3at power.' },
+                      { title: 'Auto-Adopt', text: 'Cloud Controller pushes WLAN profiles automatically.' },
+                    ]}
+                  />
+                  <TPSkeleton variant="text" lines={2} />
+                </div>
+
+                <div className="studio-core-section">
+                  <div className="studio-core-section-head">
                     <h4 className="studio-core-section-title">TPEmptyState</h4>
                     <span className="studio-core-section-badge">{resolvedMode}</span>
                   </div>
@@ -1052,6 +1273,43 @@ const CoreKitTab: React.FC<{
                     rows={2}
                     value={inputNotes}
                     onChange={setInputNotes}
+                  />
+                  <TPInput
+                    variant="list"
+                    label="Gateway IP"
+                    value={listInputVal}
+                    onChange={setListInputVal}
+                  />
+                  <TPPinInput
+                    length={4}
+                    value={pinCode}
+                    onChange={setPinCode}
+                    ariaLabel="Device PIN"
+                  />
+                </div>
+
+                <div className="studio-core-section">
+                  <div className="studio-core-section-head">
+                    <h4 className="studio-core-section-title">TPCheckboxGroup &amp; TPRadioGroup</h4>
+                    <span className="studio-core-section-badge">{radioSecurity.toUpperCase()}</span>
+                  </div>
+                  <TPCheckboxGroup
+                    direction="horizontal"
+                    value={checkedBands}
+                    onChange={setCheckedBands}
+                    options={[
+                      { value: '24g', label: '2.4G' },
+                      { value: '5g', label: '5G' },
+                      { value: '6g', label: '6G MLO' },
+                    ]}
+                  />
+                  <TPRadioGroup
+                    value={radioSecurity}
+                    onChange={setRadioSecurity}
+                    options={[
+                      { value: 'wpa3', label: 'WPA3-Personal (Recommended)' },
+                      { value: 'wpa2', label: 'WPA2 / WPA3 Mixed' },
+                    ]}
                   />
                 </div>
 
@@ -1149,6 +1407,22 @@ const CoreKitTab: React.FC<{
                   />
                 </div>
 
+                <div className="studio-core-section">
+                  <div className="studio-core-section-head">
+                    <h4 className="studio-core-section-title">TPMonthPicker &amp; TPLast7DaysPicker</h4>
+                    <span className="studio-core-section-badge">
+                      {pickedMonth.year}-{String(pickedMonth.month).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <TPLast7DaysPicker
+                    value={last7Date}
+                    referenceDate={new Date(2026, 10, 23)}
+                    markedDates={['2026-11-20', '2026-11-22', '2026-11-23']}
+                    onChange={setLast7Date}
+                  />
+                  <TPMonthPicker value={pickedMonth} onChange={setPickedMonth} />
+                </div>
+
                 <div className="studio-core-section" style={{ padding: 0, overflow: 'hidden' }}>
                   <div style={{ padding: '12px 14px 8px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                     <div className="studio-core-section-head">
@@ -1211,6 +1485,43 @@ const CoreKitTab: React.FC<{
                   <TPPrompt tone="focus" title="Cloud Sync Connected" />
                   <TPPrompt tone="warning" title="PoE budget at 82% capacity" />
                   <TPPrompt tone="alert" title="WAN1 link lost failover active" />
+                </div>
+
+                <div className="studio-core-section">
+                  <div className="studio-core-section-head">
+                    <h4 className="studio-core-section-title">TPFixedToast &amp; TPTooltip</h4>
+                    <div className="studio-flex-wrap">
+                      {(['info', 'success', 'warning', 'danger'] as const).map((st) => (
+                        <TPTag
+                          key={st}
+                          size="sm"
+                          selected={fixedToastStatus === st}
+                          onClick={() => setFixedToastStatus(st)}
+                        >
+                          {st}
+                        </TPTag>
+                      ))}
+                    </div>
+                  </div>
+                  <TPFixedToast
+                    status={fixedToastStatus}
+                    action="button"
+                    actionLabel="Inspect"
+                    onAction={() => toast.show(`Inspected ${fixedToastStatus}`)}
+                    message={`Persistent ${fixedToastStatus} status notice bar.`}
+                  />
+                  <div style={{ paddingTop: 72, display: 'flex', justifyContent: 'center' }}>
+                    <TPTooltip
+                      open={tooltipOpen}
+                      onOpenChange={setTooltipOpen}
+                      arrowPosition="bottom-left"
+                      content="Tap to toggle channel auto-optimization."
+                    >
+                      <TPButton variant="secondary" size="sm">
+                        TPTooltip Target
+                      </TPButton>
+                    </TPTooltip>
+                  </div>
                 </div>
 
                 <div className="studio-core-section">
@@ -2075,7 +2386,7 @@ const ShowcaseStudio: React.FC = () => {
             [
               { id: 'omada-app', label: 'Omada APP 实机还原' },
               { id: 'theme-lab', label: '6-Brand Theme Lab' },
-              { id: 'core-kit', label: 'Core 21 Components' },
+              { id: 'core-kit', label: 'Core Components' },
               { id: 'assets-motion', label: 'Assets & Live PAG Motions' },
               { id: 'agent-skill', label: 'Agent Skill' },
             ] as const
@@ -2186,7 +2497,7 @@ const ShowcaseStudio: React.FC = () => {
               </div>
 
               <div className="studio-panel">
-                <h3 className="studio-panel-title">4 V5.3 Drill-Down Views</h3>
+                <h3 className="studio-panel-title">8 V5.3 Drill-Down &amp; Block Views</h3>
                 <div className="studio-screen-list">
                   {drilldownItems.map((item, idx) => (
                     <button

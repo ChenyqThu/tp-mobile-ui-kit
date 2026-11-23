@@ -39,10 +39,17 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
   activeKey,
   onChange,
   variant = 'floating-pill',
+  extraAction,
   className = '',
   style,
 }) => {
-  const rootClass = ['tp-tabbar', `tp-tabbar--${variant}`, className]
+  const hasExtra = extraAction !== undefined && extraAction !== null && variant === 'floating-pill';
+  const rootClass = [
+    'tp-tabbar',
+    `tp-tabbar--${variant}`,
+    hasExtra ? 'tp-tabbar--has-extra' : '',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
 
@@ -74,6 +81,8 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
           );
         })}
       </div>
+
+      {hasExtra && <div className="tp-tabbar-extra">{extraAction}</div>}
     </nav>
   );
 };

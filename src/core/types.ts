@@ -10,12 +10,27 @@ export interface TPPhoneFrameProps {
   showFrame?: boolean;
   showDynamicIsland?: boolean;
   showHomeIndicator?: boolean;
+  overlayTop?: boolean;
+  overlayBottom?: boolean;
   statusBar?: React.ReactNode;
   bottomBar?: React.ReactNode;
   floatingAction?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
+}
+
+export interface TPLiquidGlassProps {
+  shape?: 'pill' | 'circle' | 'rounded';
+  tint?: 'clear' | 'brand' | 'dark';
+  interactive?: boolean;
+  as?: 'div' | 'button' | 'nav' | 'section';
+  ariaLabel?: string;
+  disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
 }
 
 export interface TPStatusBarProps {
@@ -61,6 +76,7 @@ export interface TPTabBarProps {
   activeKey: string;
   onChange: (key: string) => void;
   variant?: 'floating-pill' | 'docked';
+  extraAction?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -134,6 +150,11 @@ export interface TPSliderProps {
   showValue?: boolean;
   unit?: string;
   disabled?: boolean;
+  range?: boolean;
+  rangeValue?: readonly [number, number];
+  defaultRangeValue?: readonly [number, number];
+  onRangeChange?: (value: [number, number]) => void;
+  onRangeAfterChange?: (value: [number, number]) => void;
   onChange?: (value: number) => void;
   onAfterChange?: (value: number) => void;
   ariaLabel?: string;
@@ -242,6 +263,7 @@ export interface TPEmptyStateProps {
 }
 
 export interface TPInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'prefix'> {
+  variant?: 'standard' | 'list' | 'borderless' | 'icon';
   label?: React.ReactNode;
   value?: string;
   defaultValue?: string;
@@ -436,6 +458,241 @@ export interface TPPromptProps {
   closable?: boolean;
   onClose?: () => void;
   icon?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPIconButtonProps {
+  icon: TPIconName | React.ReactNode;
+  variant?: 'glass' | 'filled' | 'tonal' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  badge?: number | string | boolean;
+  disabled?: boolean;
+  ariaLabel: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPIconButtonGroupProps {
+  variant?: 'glass' | 'solid';
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPCheckboxProps {
+  checked?: boolean;
+  defaultChecked?: boolean;
+  indeterminate?: boolean;
+  disabled?: boolean;
+  label?: React.ReactNode;
+  description?: React.ReactNode;
+  onChange?: (checked: boolean) => void;
+  ariaLabel?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPCheckboxOption {
+  value: string;
+  label: React.ReactNode;
+  description?: React.ReactNode;
+  disabled?: boolean;
+}
+
+export interface TPCheckboxGroupProps {
+  options: readonly TPCheckboxOption[];
+  value?: readonly string[];
+  defaultValue?: readonly string[];
+  onChange?: (values: string[]) => void;
+  direction?: 'vertical' | 'horizontal';
+  disabled?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPRadioProps {
+  checked?: boolean;
+  defaultChecked?: boolean;
+  disabled?: boolean;
+  label?: React.ReactNode;
+  description?: React.ReactNode;
+  value?: string;
+  name?: string;
+  onChange?: (checked: boolean) => void;
+  ariaLabel?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPRadioOption {
+  value: string;
+  label: React.ReactNode;
+  description?: React.ReactNode;
+  disabled?: boolean;
+}
+
+export interface TPRadioGroupProps {
+  options: readonly TPRadioOption[];
+  value?: string;
+  defaultValue?: string;
+  onChange?: (value: string) => void;
+  direction?: 'vertical' | 'horizontal';
+  disabled?: boolean;
+  name?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPSwipeAction {
+  key: string;
+  label: React.ReactNode;
+  tone?: 'neutral' | 'focus' | 'warning' | 'alert';
+  onClick?: () => void;
+}
+
+export interface TPSwipeRowProps {
+  actions: readonly TPSwipeAction[];
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPTooltipProps {
+  content: React.ReactNode;
+  arrowPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'left' | 'right';
+  contextAdaptive?: boolean;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPFixedToastProps {
+  status?: 'default' | 'info' | 'success' | 'warning' | 'danger';
+  action?: 'none' | 'close' | 'go-to' | 'button';
+  actionLabel?: string;
+  onAction?: () => void;
+  onClose?: () => void;
+  message: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPMonthPickerValue {
+  year: number;
+  month: number;
+}
+
+export interface TPMonthPickerProps {
+  value?: TPMonthPickerValue;
+  defaultValue?: TPMonthPickerValue;
+  minYear?: number;
+  maxYear?: number;
+  locale?: 'en' | 'zh';
+  onChange?: (val: TPMonthPickerValue) => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPLast7DaysPickerProps {
+  value?: Date;
+  defaultValue?: Date;
+  referenceDate?: Date;
+  markedDates?: readonly string[];
+  locale?: 'en' | 'zh';
+  onChange?: (date: Date) => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPStepTextItem {
+  key?: string;
+  title?: React.ReactNode;
+  text: React.ReactNode;
+  note?: React.ReactNode;
+}
+
+export interface TPStepTextProps {
+  variant?: 'step' | 'numbered' | 'bullet';
+  items: readonly TPStepTextItem[];
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPProgressProps {
+  variant?: 'linear' | 'circular';
+  percent: number;
+  tone?: 'focus' | 'success' | 'warning' | 'alert' | 'info';
+  size?: number;
+  strokeWidth?: number;
+  showValue?: boolean;
+  label?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPSkeletonProps {
+  variant?: 'text' | 'rect' | 'circle' | 'card';
+  width?: number | string;
+  height?: number | string;
+  lines?: number;
+  animated?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPStepperItem {
+  key: string;
+  title: React.ReactNode;
+  description?: React.ReactNode;
+}
+
+export interface TPStepperProps {
+  steps: readonly TPStepperItem[];
+  current: number;
+  direction?: 'horizontal' | 'vertical';
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPDividerProps {
+  inset?: boolean;
+  label?: React.ReactNode;
+  spacing?: 'sm' | 'md' | 'lg';
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPAvatarProps {
+  src?: string;
+  name?: string;
+  icon?: TPIconName | React.ReactNode;
+  size?: 'sm' | 'md' | 'lg';
+  status?: 'online' | 'offline' | 'busy' | 'none';
+  shape?: 'circle' | 'rounded';
+  alt?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPPinInputProps {
+  length?: number;
+  value?: string;
+  defaultValue?: string;
+  masked?: boolean;
+  error?: string;
+  disabled?: boolean;
+  onChange?: (value: string) => void;
+  onComplete?: (value: string) => void;
+  ariaLabel?: string;
   className?: string;
   style?: React.CSSProperties;
 }

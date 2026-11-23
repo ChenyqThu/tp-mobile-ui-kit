@@ -9,6 +9,8 @@ import { TPBottomSheet } from '../../core/components/TPBottomSheet';
 import { TPIcon, type TPIconName } from '../../assets-lib';
 import { OMADA_SITE_TABS, type OmadaSiteTabKey } from '../blocks/OmadaDeviceListBlock';
 import { OmadaWirelessNetworkBlock } from '../blocks/OmadaWirelessNetworkBlock';
+import { OmadaScheduleBlock } from '../blocks/OmadaScheduleBlock';
+import { OmadaFirmwareUpdateBlock } from '../blocks/OmadaFirmwareUpdateBlock';
 import '../../styles/tp-omada.css';
 
 export type OmadaSettingRowKey =
@@ -22,6 +24,8 @@ export type OmadaSettingRowKey =
   | 'ddns'
   | 'profiles'
   | 'site'
+  | 'schedule'
+  | 'firmware'
   | 'logs';
 
 interface SettingGroupItem {
@@ -47,6 +51,8 @@ const SETTING_GROUPS: readonly (readonly SettingGroupItem[])[] = [
   [
     { key: 'profiles', label: 'Profiles', icon: 'settings-groups' },
     { key: 'site', label: 'Site Settings', icon: 'settings-site-settings' },
+    { key: 'schedule', label: 'Schedules', icon: 'nav-calendar' },
+    { key: 'firmware', label: 'Firmware Updates', icon: 'nav-refresh' },
   ],
   [{ key: 'logs', label: 'Logs', icon: 'settings-log', hasCount: true }],
 ];
@@ -56,6 +62,8 @@ export interface OmadaSiteSettingsPageProps {
   activeTab?: OmadaSiteTabKey;
   onTabChange?: (tab: OmadaSiteTabKey) => void;
   onOpenWirelessNetworks?: () => void;
+  onOpenSchedule?: () => void;
+  onOpenFirmware?: () => void;
   onOpenLogs?: () => void;
   onSelectSetting?: (key: OmadaSettingRowKey) => void;
   showTabBar?: boolean;
@@ -65,13 +73,15 @@ export interface OmadaSiteSettingsPageProps {
 
 /**
  * 1:1 restoration of `SiteSettings.png`: centered `Settings` header, live `TPSearchBar`,
- * 4 grouped `TPListCard`s with exact Omada `settings-*` icons, and drill-downs to Wireless Networks & Logs.
+ * 4 grouped `TPListCard`s with exact Omada `settings-*` icons, and drill-downs to Wireless Networks, Schedules, Firmware Updates & Logs.
  */
 export const OmadaSiteSettingsPage: React.FC<OmadaSiteSettingsPageProps> = ({
   logsCount = 1,
   activeTab = 'settings',
   onTabChange,
   onOpenWirelessNetworks,
+  onOpenSchedule,
+  onOpenFirmware,
   onOpenLogs,
   onSelectSetting,
   showTabBar = true,
@@ -80,6 +90,8 @@ export const OmadaSiteSettingsPage: React.FC<OmadaSiteSettingsPageProps> = ({
 }) => {
   const [search, setSearch] = useState('');
   const [wirelessSheetOpen, setWirelessSheetOpen] = useState(false);
+  const [scheduleSheetOpen, setScheduleSheetOpen] = useState(false);
+  const [firmwareSheetOpen, setFirmwareSheetOpen] = useState(false);
   const [infoSetting, setInfoSetting] = useState<SettingGroupItem | null>(null);
 
   const visibleGroups = useMemo(() => {
@@ -97,6 +109,22 @@ export const OmadaSiteSettingsPage: React.FC<OmadaSiteSettingsPageProps> = ({
         onOpenWirelessNetworks();
       } else {
         setWirelessSheetOpen(true);
+      }
+      return;
+    }
+    if (item.key === 'schedule') {
+      if (onOpenSchedule) {
+        onOpenSchedule();
+      } else {
+        setScheduleSheetOpen(true);
+      }
+      return;
+    }
+    if (item.key === 'firmware') {
+      if (onOpenFirmware) {
+        onOpenFirmware();
+      } else {
+        setFirmwareSheetOpen(true);
       }
       return;
     }
@@ -176,6 +204,24 @@ export const OmadaSiteSettingsPage: React.FC<OmadaSiteSettingsPageProps> = ({
         onClose={() => setWirelessSheetOpen(false)}
       >
         <OmadaWirelessNetworkBlock showHeader={false} />
+      </TPBottomSheet>
+
+      <TPBottomSheet
+        open={scheduleSheetOpen}
+        title="Schedules"
+        subtitle="WLAN • PoE • Reboot Policies"
+        onClose={() => setScheduleSheetOpen(false)}
+      >
+        <OmadaScheduleBlock showHeader={false} />
+      </TPBottomSheet>
+
+      <TPBottomSheet
+        open={firmwareSheetOpen}
+        title="Firmware Updates"
+        subtitle="Site 92 • v1.3.2 Release"
+        onClose={() => setFirmwareSheetOpen(false)}
+      >
+        <OmadaFirmwareUpdateBlock showHeader={false} />
       </TPBottomSheet>
 
       <TPBottomSheet

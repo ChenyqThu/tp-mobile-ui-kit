@@ -107,18 +107,24 @@ export const OmadaSiteInsightsPage: React.FC<OmadaSiteInsightsPageProps> = ({
           onSelect={(item) => setDateRangeKey(item.key as '24h' | '7d' | '30d')}
           onClose={() => setCalendarMenuOpen(false)}
         />
+
+        <div className="tp-omada-header-subbar">
+          <TPSegment
+            variant="underline"
+            fullWidth
+            options={INSIGHTS_SEGMENTS}
+            value={segment}
+            onChange={(key) => setSegment(key as OmadaInsightsTabKey)}
+          />
+        </div>
       </div>
 
-      <TPSegment
-        variant="underline"
-        fullWidth
-        options={INSIGHTS_SEGMENTS}
-        value={segment}
-        onChange={(key) => setSegment(key as OmadaInsightsTabKey)}
-      />
-
       <div className="tp-omada-scroll">
-        <div className={`tp-omada-body ${showTabBar ? 'tp-omada-body--with-tabbar' : ''}`.trim()}>
+        <div
+          className={`tp-omada-body tp-omada-body--with-subbar ${
+            showTabBar ? 'tp-omada-body--with-tabbar' : ''
+          }`.trim()}
+        >
           {segment === 'wired' && (
             <>
               {/* Card 1: ISP Load */}

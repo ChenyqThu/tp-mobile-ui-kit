@@ -47,6 +47,8 @@ const CORE_NAV_CONTROL_FILES = new Set([
   'TPFixedButtonBar',
   'TPSwitch',
   'TPSlider',
+  'TPLiquidGlass',
+  'TPIconButton',
 ]);
 
 const CORE_LIST_INPUT_FILES = new Set([
@@ -66,6 +68,18 @@ const CORE_LIST_INPUT_FILES = new Set([
   'TPTimePicker',
   'TPDaySwitcher',
   'TPKeyboard',
+  'TPCheckbox',
+  'TPRadio',
+  'TPSwipeRow',
+  'TPMonthPicker',
+  'TPLast7DaysPicker',
+  'TPStepText',
+  'TPProgress',
+  'TPSkeleton',
+  'TPStepper',
+  'TPDivider',
+  'TPAvatar',
+  'TPPinInput',
 ]);
 
 const CORE_OVERLAY_FILES = new Set([
@@ -76,6 +90,8 @@ const CORE_OVERLAY_FILES = new Set([
   'TPMenu',
   'TPToast',
   'TPPrompt',
+  'TPTooltip',
+  'TPFixedToast',
 ]);
 
 function classifySourcePath(relPath, symbolName) {
@@ -129,6 +145,25 @@ const DESCRIPTION_FALLBACKS = {
   TPToastProvider: 'Context provider mounting global TPToast notifications for useTPToast().',
   useTPToast: 'Hook returning { show, dismiss } to trigger imperative TPToast notifications.',
   TPPrompt: 'Inline announcement banner supporting info, focus, warning, and alert tones with optional action CTA and dismiss button.',
+  TPLiquidGlass: 'Apple iOS 26/27 Liquid Glass surface primitive combining translucent backdrop refraction, 135-degree directional specular rim, and inner depth highlights.',
+  TPIconButton: 'Circular mobile icon button with Liquid Glass, filled, tonal, and ghost variants plus optional badge overlay.',
+  TPIconButtonGroup: 'Pill capsule grouping multiple TPIconButton controls over shared Liquid Glass or solid backing.',
+  TPCheckbox: 'Theme-adaptive TP-Design checkbox with indeterminate state, label, and description.',
+  TPCheckboxGroup: 'Vertical or horizontal multi-select checkbox group.',
+  TPRadio: 'Theme-adaptive TP-Design radio selection control.',
+  TPRadioGroup: 'Exclusive single-select radio group supporting vertical and horizontal layouts.',
+  TPSwipeRow: 'Mobile swipe-action list row revealing trailing actions via horizontal drag gesture or open prop.',
+  TPTooltip: 'Callout prompt bubble with 6 arrow positions and optional click-to-toggle trigger.',
+  TPFixedToast: 'Persistent inline banner bar supporting default, info, success, warning, and danger states plus action slots.',
+  TPMonthPicker: 'Year stepper and 12-month grid selector.',
+  TPLast7DaysPicker: 'Rolling 7-day horizontal calendar strip with activity markers.',
+  TPStepText: 'Structured step-by-step, numbered, and bullet instructional text block.',
+  TPProgress: 'Linear and circular SVG progress indicator with semantic tone variants.',
+  TPSkeleton: 'Shimmer loading placeholder for text, rect, circle, and dashboard card geometries.',
+  TPStepper: 'Horizontal or vertical multi-step wizard indicator.',
+  TPDivider: 'Hairline separator supporting inset indentation, centered labels, and spacing presets.',
+  TPAvatar: 'User or device avatar supporting image src, name initials, TPIcon, shapes, and presence dot.',
+  TPPinInput: 'Multi-cell OTP and PIN code box input with auto-advance, backspace stepping, and paste distribution.',
   OmadaDeviceThumb: 'Device thumbnail icon helper rendering Omada access point, switch, or gateway icons.',
 };
 

@@ -562,6 +562,10 @@ body {
   box-sizing: border-box;
 }
 
+[data-overlay-bottom="true"] .studio-core-preview {
+  padding-bottom: 108px;
+}
+
 .studio-core-section {
   background: var(--tp-bg-card);
   border-radius: var(--tp-radius-card, 10px);

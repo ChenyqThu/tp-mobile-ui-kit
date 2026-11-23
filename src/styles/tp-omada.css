@@ -2,9 +2,13 @@
 
 /* Brand-specific refinements layered over tp-tokens.css */
 [data-tp-brand="omada"] {
-  --tp-omada-glass-bg: rgba(255, 255, 255, 0.78);
-  --tp-omada-glass-border: rgba(15, 23, 42, 0.1);
-  --tp-omada-glass-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --tp-omada-glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.56) 0%, rgba(242, 245, 250, 0.36) 100%);
+  --tp-omada-glass-border: rgba(255, 255, 255, 0.65);
+  --tp-omada-glass-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.92),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.32),
+    0 10px 26px rgba(15, 23, 42, 0.12),
+    0 2px 6px rgba(15, 23, 42, 0.05);
   --tp-omada-pill-muted-bg: rgba(43, 43, 43, 0.06);
   --tp-omada-skeleton-base: rgba(43, 43, 43, 0.08);
   --tp-omada-skeleton-shine: rgba(255, 255, 255, 0.65);
@@ -18,9 +22,13 @@
 
 :root,
 [data-tp-mode="light"] {
-  --tp-omada-glass-bg: rgba(255, 255, 255, 0.8);
-  --tp-omada-glass-border: rgba(15, 23, 42, 0.1);
-  --tp-omada-glass-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --tp-omada-glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.56) 0%, rgba(242, 245, 250, 0.36) 100%);
+  --tp-omada-glass-border: rgba(255, 255, 255, 0.65);
+  --tp-omada-glass-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.92),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.32),
+    0 10px 26px rgba(15, 23, 42, 0.12),
+    0 2px 6px rgba(15, 23, 42, 0.05);
   --tp-omada-pill-muted-bg: rgba(43, 43, 43, 0.06);
   --tp-omada-skeleton-base: rgba(43, 43, 43, 0.08);
   --tp-omada-skeleton-shine: rgba(255, 255, 255, 0.65);
@@ -33,9 +41,13 @@
 }
 
 [data-tp-mode="dark"] {
-  --tp-omada-glass-bg: rgba(38, 38, 42, 0.78);
-  --tp-omada-glass-border: rgba(255, 255, 255, 0.14);
-  --tp-omada-glass-shadow: 0 4px 14px rgba(0, 0, 0, 0.36);
+  --tp-omada-glass-bg: linear-gradient(180deg, rgba(64, 68, 76, 0.44) 0%, rgba(28, 30, 34, 0.3) 100%);
+  --tp-omada-glass-border: rgba(255, 255, 255, 0.18);
+  --tp-omada-glass-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.38),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.08),
+    0 10px 26px rgba(0, 0, 0, 0.36),
+    0 2px 8px rgba(0, 0, 0, 0.22);
   --tp-omada-pill-muted-bg: rgba(255, 255, 255, 0.09);
   --tp-omada-skeleton-base: rgba(255, 255, 255, 0.08);
   --tp-omada-skeleton-shine: rgba(255, 255, 255, 0.16);
@@ -70,21 +82,39 @@
   overflow: hidden;
 }
 
+.tp-phone-frame--overlay-top .tp-phone-body > .tp-omada-screen {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .tp-omada-body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 6px 16px 24px;
+  padding: calc(var(--tp-phone-top-inset, 0px) + 56px) 16px 28px;
   box-sizing: border-box;
 }
 
-.tp-omada-body--with-tabbar {
-  padding-bottom: 92px;
+.tp-omada-body--with-subbar {
+  padding-top: calc(var(--tp-phone-top-inset, 0px) + 102px);
+}
+
+.tp-omada-body--no-header {
+  padding-top: 8px;
+}
+
+.tp-omada-body--with-tabbar,
+[data-overlay-bottom="true"] .tp-omada-body {
+  padding-bottom: 108px;
 }
 
 .tp-omada-scroll {
   flex: 1;
   min-height: 0;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -92,8 +122,29 @@
 
 /* Header glass wells & capsules */
 .tp-omada-header-wrap {
-  position: relative;
-  z-index: 25;
+  position: absolute;
+  top: var(--tp-phone-top-inset, 0px);
+  left: 0;
+  right: 0;
+  z-index: 28;
+  pointer-events: none;
+}
+
+.tp-omada-header-wrap .tp-header,
+.tp-omada-header-wrap .tp-segment,
+.tp-omada-header-wrap .tp-menu,
+.tp-omada-header-wrap .tp-omada-header-subbar {
+  pointer-events: auto;
+}
+
+.tp-omada-header-subbar {
+  background: rgba(247, 247, 247, 0.72);
+  backdrop-filter: blur(18px) saturate(185%);
+  -webkit-backdrop-filter: blur(18px) saturate(185%);
+}
+
+[data-tp-mode="dark"] .tp-omada-header-subbar {
+  background: rgba(16, 17, 19, 0.72);
 }
 
 .tp-omada-capsule-inner {
@@ -104,21 +155,55 @@
 }
 
 .tp-omada-glass-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 38px;
   height: 38px;
   border-radius: 999px;
-  border: 1px solid var(--tp-omada-glass-border);
+  border: none;
   background: var(--tp-omada-glass-bg);
   color: var(--tp-text-primary);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(22px) saturate(205%) brightness(1.08);
+  -webkit-backdrop-filter: blur(22px) saturate(205%) brightness(1.08);
   box-shadow: var(--tp-omada-glass-shadow);
   cursor: pointer;
   padding: 0;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  isolation: isolate;
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease;
+}
+
+.tp-omada-glass-btn::before,
+.tp-omada-glass-capsule::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.25px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.4) 36%,
+    rgba(15, 23, 42, 0.08) 54%,
+    rgba(255, 255, 255, 0.72) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+[data-tp-mode="dark"] .tp-omada-glass-btn::before,
+[data-tp-mode="dark"] .tp-omada-glass-capsule::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.14) 28%,
+    rgba(255, 255, 255, 0.04) 52%,
+    rgba(255, 255, 255, 0.12) 76%,
+    rgba(255, 255, 255, 0.34) 100%
+  );
 }
 
 .tp-omada-glass-btn:active {
@@ -126,17 +211,19 @@
 }
 
 .tp-omada-glass-capsule {
+  position: relative;
   display: inline-flex;
   align-items: center;
   height: 38px;
   padding: 0 4px;
   border-radius: 999px;
-  border: 1px solid var(--tp-omada-glass-border);
+  border: none;
   background: var(--tp-omada-glass-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(22px) saturate(205%) brightness(1.08);
+  -webkit-backdrop-filter: blur(22px) saturate(205%) brightness(1.08);
   box-shadow: var(--tp-omada-glass-shadow);
   gap: 2px;
+  isolation: isolate;
 }
 
 .tp-omada-glass-capsule-item {
@@ -194,8 +281,9 @@
   min-width: 176px;
 }
 
-/* Floating Toolkit FAB */
+/* Floating Toolkit FAB — Apple Liquid Glass tinted sphere */
 .tp-omada-fab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -203,16 +291,56 @@
   height: 44px;
   border-radius: 999px;
   border: none;
-  background: var(--tp-focus);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tp-focus, #00A870) 86%, rgba(255, 255, 255, 0.14)) 0%,
+    color-mix(in srgb, var(--tp-focus, #00A870) 76%, rgba(16, 17, 19, 0.08)) 100%
+  );
   color: #FFFFFF;
-  box-shadow: 0 6px 18px rgba(0, 168, 112, 0.38);
+  backdrop-filter: blur(18px) saturate(190%);
+  -webkit-backdrop-filter: blur(18px) saturate(190%);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.56),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.12),
+    0 8px 24px rgba(0, 168, 112, 0.32);
   cursor: pointer;
   padding: 0;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  isolation: isolate;
+  transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), filter 0.15s ease;
+}
+
+[data-tp-mode="dark"] .tp-omada-fab {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tp-focus, #00A870) 56%, rgba(255, 255, 255, 0.2)) 0%,
+    color-mix(in srgb, var(--tp-focus, #00A870) 42%, transparent) 100%
+  );
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.52),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.14),
+    0 8px 24px rgba(0, 168, 112, 0.32);
+}
+
+.tp-omada-fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.25px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.68) 0%,
+    rgba(255, 255, 255, 0.18) 38%,
+    rgba(255, 255, 255, 0.42) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .tp-omada-fab:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
 }
 
 .tp-omada-fab:active {
@@ -222,16 +350,45 @@
 .tp-omada-standalone-fab {
   position: absolute;
   right: 16px;
-  bottom: 88px;
-  z-index: 25;
+  bottom: 92px;
+  z-index: 32;
 }
 
 .tp-omada-standalone-tabbar {
   position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 10px;
-  z-index: 25;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 0 10px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.tp-omada-standalone-tabbar::before {
+  content: '';
+  position: absolute;
+  inset: -24px 0 0 0;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: blur(14px) saturate(165%);
+  -webkit-backdrop-filter: blur(14px) saturate(165%);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.38) 30%, #000000 85%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.38) 30%, #000000 85%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(247, 247, 247, 0.24) 48%,
+    rgba(247, 247, 247, 0.62) 100%
+  );
+}
+
+[data-tp-mode="dark"] .tp-omada-standalone-tabbar::before {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(16, 17, 19, 0.28) 48%,
+    rgba(16, 17, 19, 0.7) 100%
+  );
 }
 
 /* Upgrade Prompt override for authentic Omada blue banner */
@@ -802,7 +959,7 @@
   background: var(--tp-focus-10);
 }
 
-/* Topology diagram inside bottom sheet */
+/* Topology diagram inside bottom sheet & standalone block */
 .tp-omada-topo-tree {
   display: flex;
   flex-direction: column;
@@ -819,14 +976,93 @@
   border-radius: 10px;
   border: 1px solid var(--tp-divider);
   background: var(--tp-bg-card);
+  color: var(--tp-text-primary);
+  font-family: inherit;
+  cursor: pointer;
   width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.tp-omada-topo-node--active {
+  border-color: var(--tp-focus);
+  background: var(--tp-focus-10);
 }
 
 .tp-omada-topo-connector {
   width: 2px;
   height: 14px;
   background: var(--tp-color-green);
+}
+
+/* Physical Port Panel Faceplate */
+.tp-omada-chassis {
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--tp-bg-card);
+  border: 1px solid var(--tp-divider);
+  box-shadow: var(--tp-card-shadow);
+}
+
+.tp-omada-chassis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tp-omada-chassis-port {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border-radius: 9px;
+  border: 1px solid var(--tp-divider);
+  background: var(--tp-bg-page);
+  color: var(--tp-text-primary);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.tp-omada-chassis-port--selected {
+  border-color: var(--tp-focus);
+  background: var(--tp-focus-10);
+}
+
+.tp-omada-port-led {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--tp-text-disabled);
+}
+
+.tp-omada-port-led--up {
+  background: var(--tp-color-green);
+}
+
+.tp-omada-port-led--warn {
+  background: var(--tp-color-yellow);
+}
+
+.tp-omada-port-name {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tp-omada-port-speed {
+  font-size: 10px;
+  color: var(--tp-text-secondary);
+}
+
+.tp-omada-port-poe {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--tp-color-yellow);
 }
 
 /* Radial health gauge */

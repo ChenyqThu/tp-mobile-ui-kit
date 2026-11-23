@@ -10,6 +10,7 @@ import { TPSwitch } from '../../core/components/TPSwitch';
 import { TPBottomSheet } from '../../core/components/TPBottomSheet';
 import { TPIcon, TPMotion, type TPIconName } from '../../assets-lib';
 import { OmadaStandardInput } from '../components/OmadaStandardInput';
+import { OmadaPortPanelBlock } from '../blocks/OmadaPortPanelBlock';
 import {
   DEFAULT_OMADA_DEVICES,
   OmadaDeviceThumb,
@@ -137,18 +138,20 @@ export const OmadaDeviceDetailPage: React.FC<OmadaDeviceDetailPageProps> = ({
             </button>
           }
         />
+
+        <div className="tp-omada-header-subbar">
+          <TPSegment
+            variant="underline"
+            fullWidth
+            options={DETAIL_TABS}
+            value={tab}
+            onChange={(k) => setTab(k as DetailTab)}
+          />
+        </div>
       </div>
 
-      <TPSegment
-        variant="underline"
-        fullWidth
-        options={DETAIL_TABS}
-        value={tab}
-        onChange={(k) => setTab(k as DetailTab)}
-      />
-
       <div className="tp-omada-scroll">
-        <div className="tp-omada-body">
+        <div className="tp-omada-body tp-omada-body--with-subbar">
           {tab === 'overview' && (
             <>
               <section className="tp-omada-card">
@@ -197,59 +200,62 @@ export const OmadaDeviceDetailPage: React.FC<OmadaDeviceDetailPageProps> = ({
             </>
           )}
 
-          {tab === 'ports' && (
-            <>
-              <TPSectionHeader title="Select a Port to Inspect" />
-              <section className="tp-omada-card">
-                <div className="tp-omada-port-grid">
-                  {ports.map((port) => {
-                    const active = port.id === activePort.id;
-                    return (
-                      <button
-                        key={port.id}
-                        type="button"
-                        className={`tp-omada-port-tile ${active ? 'tp-omada-port-tile--active' : ''}`.trim()}
-                        onClick={() => setSelectedPortId(port.id)}
-                      >
-                        <TPIcon name={port.icon} size={20} />
-                        <span style={{ fontWeight: 500 }}>{port.label}</span>
-                        <span style={{ fontSize: 10, color: 'var(--tp-text-secondary)' }}>
-                          {port.link === 'Link Down' ? 'Down' : 'Up'}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
+          {tab === 'ports' &&
+            (device.type === 'ap' ? (
+              <>
+                <TPSectionHeader title="Select a Port to Inspect" />
+                <section className="tp-omada-card">
+                  <div className="tp-omada-port-grid">
+                    {ports.map((port) => {
+                      const active = port.id === activePort.id;
+                      return (
+                        <button
+                          key={port.id}
+                          type="button"
+                          className={`tp-omada-port-tile ${active ? 'tp-omada-port-tile--active' : ''}`.trim()}
+                          onClick={() => setSelectedPortId(port.id)}
+                        >
+                          <TPIcon name={port.icon} size={20} />
+                          <span style={{ fontWeight: 500 }}>{port.label}</span>
+                          <span style={{ fontSize: 10, color: 'var(--tp-text-secondary)' }}>
+                            {port.link === 'Link Down' ? 'Down' : 'Up'}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
 
-              {activePort && (
-                <section className="tp-omada-card" aria-label="Selected Port Details">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                    <TPMotion
-                      key={activePort.id}
-                      name="port-card-expand"
-                      width={76}
-                      height={76}
-                      playing
-                    />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 16, fontWeight: 600 }}>{activePort.label}</div>
-                      <div style={{ fontSize: 13, color: 'var(--tp-color-green)', marginTop: 2 }}>
-                        {activePort.link}
-                      </div>
-                      <div style={{ fontSize: 12, color: 'var(--tp-text-secondary)', marginTop: 2 }}>
-                        {activePort.vlan} • PoE: {activePort.poe}
+                {activePort && (
+                  <section className="tp-omada-card" aria-label="Selected Port Details">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                      <TPMotion
+                        key={activePort.id}
+                        name="port-card-expand"
+                        width={76}
+                        height={76}
+                        playing
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 16, fontWeight: 600 }}>{activePort.label}</div>
+                        <div style={{ fontSize: 13, color: 'var(--tp-color-green)', marginTop: 2 }}>
+                          {activePort.link}
+                        </div>
+                        <div style={{ fontSize: 12, color: 'var(--tp-text-secondary)', marginTop: 2 }}>
+                          {activePort.vlan} • PoE: {activePort.poe}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <TPListCard divided>
-                    <TPListItem title="Rx Bytes" value={activePort.rx} />
-                    <TPListItem title="Tx Bytes" value={activePort.tx} />
-                  </TPListCard>
-                </section>
-              )}
-            </>
-          )}
+                    <TPListCard divided>
+                      <TPListItem title="Rx Bytes" value={activePort.rx} />
+                      <TPListItem title="Tx Bytes" value={activePort.tx} />
+                    </TPListCard>
+                  </section>
+                )}
+              </>
+            ) : (
+              <OmadaPortPanelBlock showHeader={false} deviceModel={device.model} />
+            ))}
 
           {tab === 'config' && (
             <>

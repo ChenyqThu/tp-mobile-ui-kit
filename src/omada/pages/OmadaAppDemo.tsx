@@ -13,6 +13,10 @@ import {
 } from '../blocks/OmadaDeviceListBlock';
 import { OmadaWirelessNetworkBlock } from '../blocks/OmadaWirelessNetworkBlock';
 import { OmadaIncidentsBlock } from '../blocks/OmadaIncidentsBlock';
+import { OmadaScheduleBlock } from '../blocks/OmadaScheduleBlock';
+import { OmadaPortPanelBlock } from '../blocks/OmadaPortPanelBlock';
+import { OmadaTopologyBlock } from '../blocks/OmadaTopologyBlock';
+import { OmadaFirmwareUpdateBlock } from '../blocks/OmadaFirmwareUpdateBlock';
 import { OmadaLaunchLoadingPage } from './OmadaLaunchLoadingPage';
 import { OmadaControllerListPage } from './OmadaControllerListPage';
 import { OmadaSiteDashboardPage } from './OmadaSiteDashboardPage';
@@ -35,7 +39,11 @@ export type OmadaAppScreenId =
   | 'health-detail'
   | 'device-detail'
   | 'wireless-settings'
-  | 'incidents';
+  | 'incidents'
+  | 'schedule'
+  | 'firmware'
+  | 'topology'
+  | 'port-panel';
 
 export interface OmadaAppDemoProps {
   initialScreen?: OmadaAppScreenId;
@@ -166,6 +174,8 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
             logsCount={unreadLogsCount}
             showTabBar={false}
             onOpenWirelessNetworks={() => navigate('wireless-settings')}
+            onOpenSchedule={() => navigate('schedule')}
+            onOpenFirmware={() => navigate('firmware')}
             onOpenLogs={() => navigate('incidents')}
           />
         );
@@ -194,6 +204,26 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
             }
           />
         );
+      case 'schedule':
+        return <OmadaScheduleBlock onBack={() => navigate('settings')} />;
+      case 'firmware':
+        return <OmadaFirmwareUpdateBlock onBack={() => navigate('settings')} />;
+      case 'topology':
+        return (
+          <OmadaTopologyBlock
+            siteName={siteName}
+            showHeader
+            onBack={() => navigate('dashboard')}
+          />
+        );
+      case 'port-panel':
+        return (
+          <OmadaPortPanelBlock
+            deviceModel="ER7212PC"
+            showHeader
+            onBack={() => navigate('devices')}
+          />
+        );
       default:
         return null;
     }
@@ -204,11 +234,14 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
       <TPPhoneFrame
         device={device}
         showFrame={showFrame}
+        overlayTop
+        overlayBottom={hasBottomTabBar}
         className={className}
         style={style}
         statusBar={
           <TPStatusBar
             time="10:51"
+            transparent
             muted={currentScreen !== 'controllers'}
             locationActive={currentScreen === 'controllers'}
           />

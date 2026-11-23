@@ -40,9 +40,9 @@ export function App() {
 | Subpath | Contents |
 | :--- | :--- |
 | `@chenyqthu/tp-mobile-ui-kit` | Root barrel re-exporting theme, core, assets, and Omada modules |
-| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider`, `useTPTheme`, `TP_BRANDS`, `TP_THEME_PRESETS`, and all `TP*` core mobile primitives (`TPPhoneFrame`, `TPStatusBar`, `TPHeader`, `TPTabBar`, `TPSegment`, `TPButton`, `TPSwitch`, `TPSlider`, `TPListCard`, `TPListItem`, `TPAlert`, `TPActionSheet`, `TPBottomSheet`, `TPToast`, `TPToastProvider`, `useTPToast`, pickers, inputs, etc.) |
+| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider`, `useTPTheme`, `TP_BRANDS`, `TP_THEME_PRESETS`, and all `TP*` core mobile primitives (`TPPhoneFrame` with Liquid Glass `overlayTop`/`overlayBottom`, `TPLiquidGlass`, `TPStatusBar`, `TPHeader`, `TPTabBar`, `TPIconButton`, `TPSegment`, `TPButton`, `TPSwitch`, dual-thumb `TPSlider`, `TPCheckbox`, `TPRadio`, `TPListCard`, `TPListItem`, `TPSwipeRow`, `TPAlert`, `TPActionSheet`, `TPBottomSheet`, `TPFixedToast`, `TPTooltip`, `TPToast`, `useTPToast`, `TPProgress`, `TPSkeleton`, `TPStepper`, `TPDivider`, `TPAvatar`, `TPPinInput`, pickers, inputs) |
 | `@chenyqthu/tp-mobile-ui-kit/assets` | `TPIcon`, `TPIllustration`, `TPBrandLogo`, `TPMotion`, and asset manifests (`TP_ICONS`, `TP_ILLUSTRATIONS`, `TP_BRAND_LOGOS`, `TP_MOTIONS`) |
-| `@chenyqthu/tp-mobile-ui-kit/omada` | 7 restored Omada APP pages, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo`, V5.3 blocks (`OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`), and `OmadaStandardInput` |
+| `@chenyqthu/tp-mobile-ui-kit/omada` | 7 restored Omada APP pages, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo`, 7 V5.3 blocks (`OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`), and `OmadaStandardInput` |
 | `@chenyqthu/tp-mobile-ui-kit/style.css` | All `--tp-*` CSS token definitions and `.tp-*` component/Omada stylesheets |
 | `@chenyqthu/tp-mobile-ui-kit/standalone` | Browser IIFE bundle attaching everything to `window.TPMobileUI` |
 | `@chenyqthu/tp-mobile-ui-kit/catalog.json` | Machine-readable component, prop, token, asset, and template catalog |
@@ -135,15 +135,15 @@ Available motion slugs: `internet-connection`, `link-detection`, `update-network
   - `OmadaSiteDevicesPage` — `+ | ⋮` glass capsule, `Device List | Device Group` segment, expandable filter chips, firmware upgrade badges
   - `OmadaSiteClientsPage` — `Online | Offline | Blocked | All` tabs, `All | Wired | Wireless` chips, dBm RSSI status, client detail & block actions
   - `OmadaSiteSettingsPage` — 4 grouped `TPListCard` sections with Omada `settings-*` icons and drill-downs
-- **Drill-Downs & Orchestrator**: `OmadaHealthDetailPage`, `OmadaDeviceDetailPage` (Ports `port-card-expand` + Firmware Upgrade `update-network` PAG motions), `OmadaAppDemo`
-- **V5.3 Blocks & Inputs**: `OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock` (`deploy-config` PAG motion), `OmadaIncidentsBlock`, `OmadaStandardInput` (segmented IPv4, MAC, Port, Text)
+- **Drill-Downs & Orchestrator**: `OmadaHealthDetailPage`, `OmadaDeviceDetailPage` (Ports `port-card-expand` + Firmware Upgrade `update-network` PAG motions), `OmadaAppDemo` (Apple Liquid Glass floating overlay navigation)
+- **V5.3 Blocks & Inputs**: `OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock` (`deploy-config` PAG motion), `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaStandardInput` (segmented IPv4, MAC, Port, Text)
 
 ---
 
 ## 6. Live Showcase & Online Demos
 
 - **Interactive Showcase (GitHub Pages)**: **https://pages.chenge.ink/tp-mobile-ui-kit/**
-- Includes all **7 restored Omada APP real-device pages**, **6-Brand Theme Lab**, **Core 21 Components**, **Assets & Live PAG Motions**, and **Agent Skill Setup**.
+- Includes all **7 restored Omada APP real-device pages + 7 V5.3 blocks**, **6-Brand Theme Lab**, **Core Components (Liquid Glass & full TP-Design kit)**, **Assets & Live PAG Motions**, and **Agent Skill Setup**.
 
 ---
 

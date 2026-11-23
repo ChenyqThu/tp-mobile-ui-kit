@@ -113,34 +113,36 @@ export const OmadaIncidentsBlock: React.FC<OmadaIncidentsBlockProps> = ({
   return (
     <div className={`tp-omada-screen ${className}`.trim()} style={style}>
       {showHeader && (
-        <TPHeader
-          variant="floating"
-          title="Logs"
-          subtitle="Alerts & Site Events"
-          left={
-            onBack ? (
-              <button
-                type="button"
-                className="tp-omada-glass-btn"
-                onClick={onBack}
-                aria-label="Back"
-              >
-                <TPIcon name="nav-back" size={20} />
-              </button>
-            ) : undefined
-          }
-          right={
-            unreadCount > 0 ? (
-              <TPButton variant="text" size="sm" onClick={handleMarkAllRead}>
-                Mark All Read
-              </TPButton>
-            ) : undefined
-          }
-        />
+        <div className="tp-omada-header-wrap">
+          <TPHeader
+            variant="floating"
+            title="Logs"
+            subtitle="Alerts & Site Events"
+            left={
+              onBack ? (
+                <button
+                  type="button"
+                  className="tp-header-icon-btn"
+                  onClick={onBack}
+                  aria-label="Back"
+                >
+                  <TPIcon name="nav-back" size={20} />
+                </button>
+              ) : undefined
+            }
+            right={
+              unreadCount > 0 ? (
+                <TPButton variant="text" size="sm" onClick={handleMarkAllRead}>
+                  Mark All Read
+                </TPButton>
+              ) : undefined
+            }
+          />
+        </div>
       )}
 
       <div className="tp-omada-scroll">
-        <div className="tp-omada-body">
+        <div className={`tp-omada-body ${showHeader ? '' : 'tp-omada-body--no-header'}`.trim()}>
           <div className="tp-omada-chip-group">
             {FILTERS.map((f) => (
               <TPTag key={f.key} selected={filter === f.key} onClick={() => setFilter(f.key)}>

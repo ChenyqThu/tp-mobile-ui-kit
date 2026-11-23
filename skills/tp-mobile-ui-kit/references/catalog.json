@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T19:41:02.429Z",
+  "generatedAt": "2026-11-23T22:47:40.614Z",
   "package": {
     "name": "@chenyqthu/tp-mobile-ui-kit",
-    "version": "0.1.0",
-    "description": "TP-Link multi-brand mobile React UI component library (TP-Design 10-mode Theme Engine + Omada APP 5.3 Blocks & Real PAG Motion Assets + Single-file HTML standalone bundle)",
+    "version": "0.2.0",
+    "description": "TP-Link multi-brand mobile React UI component library (TP-Design 12-mode Theme Engine + Omada APP 5.3 Blocks & Real PAG Motion Assets + Single-file HTML standalone bundle)",
     "entries": {
       ".": "@chenyqthu/tp-mobile-ui-kit",
       "./core": "@chenyqthu/tp-mobile-ui-kit/core",
@@ -18,13 +18,13 @@
       "jsdelivrCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/style.css",
       "jsdelivrStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/standalone.js",
       "jsdelivrWasm": "https://cdn.jsdelivr.net/npm/libpag@4.5.85/lib/libpag.wasm",
-      "pinnedCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.1.0/dist/style.css",
-      "pinnedStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.1.0/dist/standalone.js"
+      "pinnedCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/style.css",
+      "pinnedStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/standalone.js"
     }
   },
   "counts": {
-    "components": 54,
-    "blocks": 3,
+    "components": 77,
+    "blocks": 7,
     "pages": 10,
     "hooksAndHelpers": 9,
     "brands": 6,
@@ -344,6 +344,62 @@
       ]
     },
     {
+      "name": "TPAvatar",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPAvatar.tsx",
+      "description": "User / account / device avatar supporting image, name initials, TPIcon, shape, and presence status dot.",
+      "propsType": "TPAvatarProps",
+      "props": [
+        {
+          "name": "src",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "icon",
+          "type": "TPIconName | React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "optional": true
+        },
+        {
+          "name": "status",
+          "type": "'online' | 'offline' | 'busy' | 'none'",
+          "optional": true
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'rounded'",
+          "optional": true
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "TPBadge",
       "category": "core-lists-inputs",
       "kind": "component",
@@ -380,6 +436,118 @@
         {
           "name": "children",
           "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPCheckbox",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPCheckbox.tsx",
+      "description": "TP-Design theme-adaptive checkbox with optional indeterminate state, label, and description.",
+      "propsType": "TPCheckboxProps",
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "optional": true
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPCheckboxGroup",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPCheckbox.tsx",
+      "description": "Vertical or horizontal group of TPCheckbox options.",
+      "propsType": "TPCheckboxGroupProps",
+      "props": [
+        {
+          "name": "options",
+          "type": "readonly TPCheckboxOption[]",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "type": "readonly string[]",
+          "optional": true
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly string[]",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(values: string[]) => void",
+          "optional": true
+        },
+        {
+          "name": "direction",
+          "type": "'vertical' | 'horizontal'",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
           "optional": true
         },
         {
@@ -502,6 +670,42 @@
       ]
     },
     {
+      "name": "TPDivider",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPDivider.tsx",
+      "description": "Hairline separator supporting inset alignment, optional centered label, and spacing presets.",
+      "propsType": "TPDividerProps",
+      "props": [
+        {
+          "name": "inset",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "spacing",
+          "type": "'sm' | 'md' | 'lg'",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "TPEmptyState",
       "category": "core-lists-inputs",
       "kind": "component",
@@ -571,6 +775,11 @@
       "description": "Form input supporting labels, controlled/uncontrolled value, clearable button, password visibility toggle, helper/error text, prefix/suffix, and multiline mode.",
       "propsType": "TPInputProps",
       "props": [
+        {
+          "name": "variant",
+          "type": "'standard' | 'list' | 'borderless' | 'icon'",
+          "optional": true
+        },
         {
           "name": "label",
           "type": "React.ReactNode",
@@ -681,6 +890,57 @@
         {
           "name": "showDash",
           "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPLast7DaysPicker",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPLast7DaysPicker.tsx",
+      "description": "Horizontal 7-day rolling calendar strip matching Figma `Picker / Last 7 Days 过去7天`.",
+      "propsType": "TPLast7DaysPickerProps",
+      "props": [
+        {
+          "name": "value",
+          "type": "Date",
+          "optional": true
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date",
+          "optional": true
+        },
+        {
+          "name": "referenceDate",
+          "type": "Date",
+          "optional": true
+        },
+        {
+          "name": "markedDates",
+          "type": "readonly string[]",
+          "optional": true
+        },
+        {
+          "name": "locale",
+          "type": "'en' | 'zh'",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(date: Date) => void",
           "optional": true
         },
         {
@@ -879,6 +1139,301 @@
       ]
     },
     {
+      "name": "TPMonthPicker",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPMonthPicker.tsx",
+      "description": "Year navigation + 12-month grid selector matching Figma `Picker / Month Picker 选择月份`.",
+      "propsType": "TPMonthPickerProps",
+      "props": [
+        {
+          "name": "value",
+          "type": "TPMonthPickerValue",
+          "optional": true
+        },
+        {
+          "name": "defaultValue",
+          "type": "TPMonthPickerValue",
+          "optional": true
+        },
+        {
+          "name": "minYear",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "maxYear",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "locale",
+          "type": "'en' | 'zh'",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(val: TPMonthPickerValue) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPPinInput",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPPinInput.tsx",
+      "description": "Multi-cell OTP / verification PIN code input with auto-advance, backspace stepping, and paste distribution.",
+      "propsType": "TPPinInputProps",
+      "props": [
+        {
+          "name": "length",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "masked",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "optional": true
+        },
+        {
+          "name": "onComplete",
+          "type": "(value: string) => void",
+          "optional": true
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPProgress",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPProgress.tsx",
+      "description": "Linear bar and circular SVG progress indicator driven by semantic `--tp-*` colors.",
+      "propsType": "TPProgressProps",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'linear' | 'circular'",
+          "optional": true
+        },
+        {
+          "name": "percent",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "tone",
+          "type": "'focus' | 'success' | 'warning' | 'alert' | 'info'",
+          "optional": true
+        },
+        {
+          "name": "size",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPRadio",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPRadio.tsx",
+      "description": "TP-Design theme-adaptive radio selection button.",
+      "propsType": "TPRadioProps",
+      "props": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "optional": true
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPRadioGroup",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPRadio.tsx",
+      "description": "Exclusive selection TPRadioGroup supporting vertical and horizontal layouts.",
+      "propsType": "TPRadioGroupProps",
+      "props": [
+        {
+          "name": "options",
+          "type": "readonly TPRadioOption[]",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "optional": true
+        },
+        {
+          "name": "direction",
+          "type": "'vertical' | 'horizontal'",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "TPSearchBar",
       "category": "core-lists-inputs",
       "kind": "component",
@@ -993,6 +1548,170 @@
           "name": "tone",
           "type": "'default' | 'warning' | 'alert'",
           "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPSkeleton",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPSkeleton.tsx",
+      "description": "Shimmer placeholder supporting text line stacks, rect, circle, and dashboard card geometries.",
+      "propsType": "TPSkeletonProps",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'text' | 'rect' | 'circle' | 'card'",
+          "optional": true
+        },
+        {
+          "name": "width",
+          "type": "number | string",
+          "optional": true
+        },
+        {
+          "name": "height",
+          "type": "number | string",
+          "optional": true
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "animated",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPStepper",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPStepper.tsx",
+      "description": "Horizontal or vertical multi-step progress stepper for onboarding and device setup flows.",
+      "propsType": "TPStepperProps",
+      "props": [
+        {
+          "name": "steps",
+          "type": "readonly TPStepperItem[]",
+          "optional": false
+        },
+        {
+          "name": "current",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "direction",
+          "type": "'horizontal' | 'vertical'",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPStepText",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPStepText.tsx",
+      "description": "Structured instructional list matching Figma `Text / Step Text`, `Numbered Text`, and `Bullet Point`.",
+      "propsType": "TPStepTextProps",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'step' | 'numbered' | 'bullet'",
+          "optional": true
+        },
+        {
+          "name": "items",
+          "type": "readonly TPStepTextItem[]",
+          "optional": false
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPSwipeRow",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPSwipeRow.tsx",
+      "description": "Mobile swipeable list row exposing trailing actions (`neutral`, `focus`, `warning`, `alert`). Supports pointer horizontal drag gestures as well as accessible click/controlled `open`.",
+      "propsType": "TPSwipeRowProps",
+      "props": [
+        {
+          "name": "actions",
+          "type": "readonly TPSwipeAction[]",
+          "optional": false
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "optional": false
         },
         {
           "name": "className",
@@ -1375,6 +2094,154 @@
       ]
     },
     {
+      "name": "TPIconButton",
+      "category": "core-nav-controls",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPIconButton.tsx",
+      "description": "Circular mobile icon button supporting Apple Liquid Glass, filled, tonal, and ghost variants.",
+      "propsType": "TPIconButtonProps",
+      "props": [
+        {
+          "name": "icon",
+          "type": "TPIconName | React.ReactNode",
+          "optional": false
+        },
+        {
+          "name": "variant",
+          "type": "'glass' | 'filled' | 'tonal' | 'ghost'",
+          "optional": true
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "optional": true
+        },
+        {
+          "name": "badge",
+          "type": "number | string | boolean",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "onClick",
+          "type": "(event: React.MouseEvent<HTMLButtonElement>) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPIconButtonGroup",
+      "category": "core-nav-controls",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPIconButton.tsx",
+      "description": "Floating pill capsule grouping multiple TPIconButton actions with shared Liquid Glass or solid backing.",
+      "propsType": "TPIconButtonGroupProps",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'glass' | 'solid'",
+          "optional": true
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "optional": false
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPLiquidGlass",
+      "category": "core-nav-controls",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPLiquidGlass.tsx",
+      "description": "Apple iOS 26/27 Liquid Glass surface primitive combining translucent refractive backdrop blur, a directional 135-degree specular rim highlight, and inner meniscus depth lighting.",
+      "propsType": "TPLiquidGlassProps",
+      "props": [
+        {
+          "name": "shape",
+          "type": "'pill' | 'circle' | 'rounded'",
+          "optional": true
+        },
+        {
+          "name": "tint",
+          "type": "'clear' | 'brand' | 'dark'",
+          "optional": true
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "as",
+          "type": "'div' | 'button' | 'nav' | 'section'",
+          "optional": true
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onClick",
+          "type": "(event: React.MouseEvent<HTMLElement>) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "TPPageControl",
       "category": "core-nav-controls",
       "kind": "component",
@@ -1451,6 +2318,16 @@
         },
         {
           "name": "showHomeIndicator",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "overlayTop",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "overlayBottom",
           "type": "boolean",
           "optional": true
         },
@@ -1584,6 +2461,31 @@
         {
           "name": "disabled",
           "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "range",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "rangeValue",
+          "type": "readonly [number, number]",
+          "optional": true
+        },
+        {
+          "name": "defaultRangeValue",
+          "type": "readonly [number, number]",
+          "optional": true
+        },
+        {
+          "name": "onRangeChange",
+          "type": "(value: [number, number]) => void",
+          "optional": true
+        },
+        {
+          "name": "onRangeAfterChange",
+          "type": "(value: [number, number]) => void",
           "optional": true
         },
         {
@@ -1760,6 +2662,11 @@
           "optional": true
         },
         {
+          "name": "extraAction",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
           "name": "className",
           "type": "string",
           "optional": true
@@ -1931,6 +2838,57 @@
           "name": "children",
           "type": "React.ReactNode",
           "optional": false
+        }
+      ]
+    },
+    {
+      "name": "TPFixedToast",
+      "category": "core-overlays",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPFixedToast.tsx",
+      "description": "Persistent inline/sticky notification bar matching Figma `Toast / Fixed Toast`.",
+      "propsType": "TPFixedToastProps",
+      "props": [
+        {
+          "name": "status",
+          "type": "'default' | 'info' | 'success' | 'warning' | 'danger'",
+          "optional": true
+        },
+        {
+          "name": "action",
+          "type": "'none' | 'close' | 'go-to' | 'button'",
+          "optional": true
+        },
+        {
+          "name": "actionLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onAction",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "message",
+          "type": "React.ReactNode",
+          "optional": false
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
         }
       ]
     },
@@ -2165,6 +3123,62 @@
       ]
     },
     {
+      "name": "TPTooltip",
+      "category": "core-overlays",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPTooltip.tsx",
+      "description": "Callout tooltip bubble matching Figma `Prompt 提示气泡` with 6 arrow placements and optional click toggle.",
+      "propsType": "TPTooltipProps",
+      "props": [
+        {
+          "name": "content",
+          "type": "React.ReactNode",
+          "optional": false
+        },
+        {
+          "name": "arrowPosition",
+          "type": "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'left' | 'right'",
+          "optional": true
+        },
+        {
+          "name": "contextAdaptive",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "optional": true
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "useTPToast",
       "category": "core-overlays",
       "kind": "hook",
@@ -2172,6 +3186,14 @@
       "sourcePath": "src/core/components/TPToast.tsx",
       "description": "Hook returning { show, dismiss } to trigger imperative TPToast notifications.",
       "signature": "(): TPToastContextValue"
+    },
+    {
+      "name": "DEFAULT_FIRMWARE_CANDIDATES",
+      "category": "omada-blocks",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaFirmwareUpdateBlock.tsx",
+      "description": ""
     },
     {
       "name": "DEFAULT_OMADA_DEVICES",
@@ -2187,6 +3209,30 @@
       "kind": "data",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/blocks/OmadaIncidentsBlock.tsx",
+      "description": ""
+    },
+    {
+      "name": "DEFAULT_OMADA_PORTS",
+      "category": "omada-blocks",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaPortPanelBlock.tsx",
+      "description": ""
+    },
+    {
+      "name": "DEFAULT_OMADA_SCHEDULES",
+      "category": "omada-blocks",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaScheduleBlock.tsx",
+      "description": ""
+    },
+    {
+      "name": "DEFAULT_TOPOLOGY_NODES",
+      "category": "omada-blocks",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaTopologyBlock.tsx",
       "description": ""
     },
     {
@@ -2244,6 +3290,47 @@
       ]
     },
     {
+      "name": "OmadaFirmwareUpdateBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaFirmwareUpdateBlock.tsx",
+      "description": "Reusable Omada v5.3+ batch firmware update workflow block (`SMBNET-4894`) combining `TPFixedToast`, `TPStepText`, `TPCheckbox`, `TPProgress`, and `update-network` PAG motion.",
+      "propsType": "OmadaFirmwareUpdateBlockProps",
+      "props": [
+        {
+          "name": "candidates",
+          "type": "readonly OmadaFirmwareCandidate[]",
+          "optional": true
+        },
+        {
+          "name": "showHeader",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onUpgradeStart",
+          "type": "(selectedIds: string[]) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "OmadaIncidentsBlock",
       "category": "omada-blocks",
       "kind": "component",
@@ -2270,6 +3357,139 @@
         {
           "name": "onUnreadCountChange",
           "type": "(count: number) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaPortPanelBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaPortPanelBlock.tsx",
+      "description": "Reusable Omada v5.3+ hardware port panel (`SMBNET-4185` / `SMBNET-4057`) showing RJ45 & SFP+ physical faceplate indicators, PoE wattage badges, VLAN assignment, and interactive inspection.",
+      "propsType": "OmadaPortPanelBlockProps",
+      "props": [
+        {
+          "name": "deviceModel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ports",
+          "type": "readonly OmadaHardwarePort[]",
+          "optional": true
+        },
+        {
+          "name": "showHeader",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onPortUpdate",
+          "type": "(updated: OmadaHardwarePort) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaScheduleBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaScheduleBlock.tsx",
+      "description": "Reusable Omada v5.3+ Schedule block (`SMBNET-3501`) supporting WLAN, PoE, and Reboot schedules with `TPDaySwitcher` weekday selection and `TPTimePicker` bottom sheet editing.",
+      "propsType": "OmadaScheduleBlockProps",
+      "props": [
+        {
+          "name": "rules",
+          "type": "readonly OmadaScheduleRule[]",
+          "optional": true
+        },
+        {
+          "name": "showHeader",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(rules: OmadaScheduleRule[]) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaTopologyBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaTopologyBlock.tsx",
+      "description": "Interactive Omada v5.3+ network topology diagram (`SMBNET-4433`) showing Internet WAN uplink, Gateway root, downlink Access Points, link rates, and loop-detection status.",
+      "propsType": "OmadaTopologyBlockProps",
+      "props": [
+        {
+          "name": "siteName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "nodes",
+          "type": "readonly OmadaTopologyNode[]",
+          "optional": true
+        },
+        {
+          "name": "showHeader",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onSelectNode",
+          "type": "(node: OmadaTopologyNode) => void",
           "optional": true
         },
         {
@@ -2928,7 +4148,7 @@
       "kind": "component",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/pages/OmadaSiteSettingsPage.tsx",
-      "description": "1:1 restoration of `SiteSettings.png`: centered `Settings` header, live `TPSearchBar`, 4 grouped `TPListCard`s with exact Omada `settings-*` icons, and drill-downs to Wireless Networks & Logs.",
+      "description": "1:1 restoration of `SiteSettings.png`: centered `Settings` header, live `TPSearchBar`, 4 grouped `TPListCard`s with exact Omada `settings-*` icons, and drill-downs to Wireless Networks, Schedules, Firmware Updates & Logs.",
       "propsType": "OmadaSiteSettingsPageProps",
       "props": [
         {
@@ -2948,6 +4168,16 @@
         },
         {
           "name": "onOpenWirelessNetworks",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onOpenSchedule",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onOpenFirmware",
           "type": "() => void",
           "optional": true
         },
@@ -11080,8 +12310,8 @@
         "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/standalone.js"
       },
       "pinnedUrls": {
-        "css": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.1.0/dist/style.css",
-        "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.1.0/dist/standalone.js"
+        "css": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/style.css",
+        "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/standalone.js"
       }
     },
     {

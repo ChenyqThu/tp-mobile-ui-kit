@@ -7,10 +7,10 @@ import { TPBottomSheet } from '../../core/components/TPBottomSheet';
 import { TPButton } from '../../core/components/TPButton';
 import { TPIcon, type TPIconName } from '../../assets-lib';
 import {
-  DEFAULT_OMADA_DEVICES,
   OMADA_SITE_TABS,
   type OmadaSiteTabKey,
 } from '../blocks/OmadaDeviceListBlock';
+import { OmadaTopologyBlock } from '../blocks/OmadaTopologyBlock';
 import '../../styles/tp-omada.css';
 
 export interface OmadaSiteDashboardPageProps {
@@ -428,35 +428,8 @@ export const OmadaSiteDashboardPage: React.FC<OmadaSiteDashboardPageProps> = ({
         subtitle="1 Gateway • 2 Access Points • 4 Clients"
         onClose={() => setTopoOpen(false)}
       >
-        <div className="tp-omada-topo-tree">
-          <div className="tp-omada-topo-node">
-            <TPIcon name="client-switch" size={32} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>ER7212PC (Gateway)</div>
-              <div style={{ fontSize: 12, color: 'var(--tp-text-secondary)' }}>
-                192.168.0.1 • WAN3 Connected
-              </div>
-            </div>
-            <span className="tp-omada-status-line tp-omada-status-line--good">1000M</span>
-          </div>
-
-          <div className="tp-omada-topo-connector" aria-hidden="true" />
-
-          {DEFAULT_OMADA_DEVICES.filter((d) => d.type === 'ap').map((ap) => (
-            <div key={ap.id} className="tp-omada-topo-node">
-              <TPIcon name="client-ap" size={30} color="#EBEBF0" />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 500 }}>
-                  {ap.model} ({ap.mac})
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--tp-text-secondary)' }}>
-                  {ap.ip} • 2.4G / 5G / 6G
-                </div>
-              </div>
-              <span className="tp-omada-status-line tp-omada-status-line--good">2 Clients</span>
-            </div>
-          ))}
-
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <OmadaTopologyBlock siteName={currentSite} showHeader={false} />
           <TPButton
             variant="secondary"
             block
