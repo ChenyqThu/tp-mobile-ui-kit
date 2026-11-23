@@ -21,7 +21,7 @@ body {
 /* Studio Shell Tokens driven by TPThemeProvider attributes */
 .studio-shell {
   --studio-bg: #f3f5f8;
-  --studio-surface: rgba(255, 255, 255, 0.88);
+  --studio-surface: rgba(255, 255, 255, 0.95);
   --studio-card: #ffffff;
   --studio-card-muted: #f8fafc;
   --studio-border: rgba(15, 23, 42, 0.09);
@@ -45,7 +45,7 @@ body {
 
 [data-tp-mode="dark"] .studio-shell {
   --studio-bg: #0b0d10;
-  --studio-surface: rgba(20, 22, 27, 0.84);
+  --studio-surface: rgba(20, 22, 27, 0.94);
   --studio-card: #15181e;
   --studio-card-muted: #1b1f27;
   --studio-border: rgba(255, 255, 255, 0.09);
@@ -888,6 +888,12 @@ body {
   gap: 18px;
 }
 
+.studio-skill-layout > *,
+.studio-skill-grid > * {
+  min-width: 0;
+  overflow: hidden;
+}
+
 .studio-skill-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -901,6 +907,10 @@ body {
 }
 
 .studio-code-box {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
   background: var(--studio-card-muted);
   border: 1px solid var(--studio-border);
   border-radius: 12px;
@@ -923,9 +933,12 @@ body {
 
 .studio-code-box pre {
   margin: 0;
+  max-width: 100%;
   font-size: 12px;
   line-height: 1.5;
   overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   color: var(--studio-text);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
