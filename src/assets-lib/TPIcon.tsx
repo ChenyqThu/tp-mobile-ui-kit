@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTPTheme } from '../theme/TPThemeProvider';
+import type { TPResolvedMode } from '../theme/tokens';
 import { TP_ICONS, type TPIconMeta, type TPIconName, type TPIconPack } from './iconsManifest';
 import { resolveRuntimeAssetUrl } from './runtimeUrl';
 
@@ -9,6 +11,17 @@ const OMADA_RAW_SVG = import.meta.glob<string>('../assets/icons/omada/*.svg', {
 });
 
 const OMADA_PNG_URL = import.meta.glob<string>('../assets/icons/omada/*.png', {
+  import: 'default',
+  eager: true,
+});
+
+const OMADA_DARK_RAW_SVG = import.meta.glob<string>('../assets/icons/omada-dark/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+const OMADA_DARK_PNG_URL = import.meta.glob<string>('../assets/icons/omada-dark/*.png', {
   import: 'default',
   eager: true,
 });
@@ -28,6 +41,8 @@ interface IconEntry {
   meta: TPIconMeta;
   rawSvg?: string;
   imgUrl?: string;
+  darkRawSvg?: string;
+  darkImgUrl?: string;
 }
 
 let cachedAutoLookup: Map<string, IconEntry> | null = null;
@@ -51,8 +66,15 @@ function ensureLookups() {
         ? (meta.pack === 'omada' ? OMADA_PNG_URL[key] : GENERAL_PNG_URL[key])
         : undefined;
 
-    if (!rawSvg && !imgUrl) continue;
-    const entry: IconEntry = { meta, rawSvg, imgUrl };
+    const darkKey = meta.darkRelPath ? `../assets/icons/${meta.darkRelPath}` : undefined;
+    const darkFormat = meta.darkFormat ?? meta.format;
+    const darkRawSvg =
+      darkKey && darkFormat === 'svg' ? OMADA_DARK_RAW_SVG[darkKey] : undefined;
+    const darkImgUrl =
+      darkKey && darkFormat === 'png' ? OMADA_DARK_PNG_URL[darkKey] : undefined;
+
+    if (!rawSvg && !imgUrl && !darkRawSvg && !darkImgUrl) continue;
+    const entry: IconEntry = { meta, rawSvg, imgUrl, darkRawSvg, darkImgUrl };
     byPack.set(`${meta.pack}:${meta.name}`, entry);
     // Omada icons take precedence in auto mode
     if (meta.pack === 'omada' || !auto.has(meta.name)) {
@@ -85,6 +107,8 @@ export function listTPIcons(pack?: TPIconPack): readonly TPIconMeta[] {
 export interface TPIconProps {
   name: TPIconName;
   pack?: 'auto' | TPIconPack;
+  /** Override dark/light icon asset variant (defaults to active TPThemeProvider resolvedMode) */
+  theme?: TPResolvedMode;
   size?: number | string;
   color?: string;
   className?: string;
@@ -100,6 +124,7 @@ export interface TPIconProps {
 export const TPIcon: React.FC<TPIconProps> = ({
   name,
   pack = 'auto',
+  theme,
   size = 24,
   color,
   className = '',
@@ -108,8 +133,14 @@ export const TPIcon: React.FC<TPIconProps> = ({
   'aria-label': ariaLabel,
   'aria-hidden': ariaHidden,
 }) => {
+  const { resolvedMode } = useTPTheme();
   const entry = findIconEntry(name, pack);
   if (!entry) return null;
+
+  const activeTheme = theme ?? resolvedMode;
+  const useDark = activeTheme === 'dark' && Boolean(entry.darkRawSvg || entry.darkImgUrl);
+  const activeImgUrl = useDark ? entry.darkImgUrl : entry.imgUrl;
+  const activeRawSvg = useDark ? entry.darkRawSvg : entry.rawSvg;
 
   const sizeValue = typeof size === 'number' ? `${size}px` : size;
   const baseStyle: React.CSSProperties = {
@@ -125,7 +156,7 @@ export const TPIcon: React.FC<TPIconProps> = ({
     ...style,
   };
 
-  if (entry.imgUrl) {
+  if (activeImgUrl) {
     return (
       <span
         role={ariaLabel ? 'img' : undefined}
@@ -134,12 +165,14 @@ export const TPIcon: React.FC<TPIconProps> = ({
         title={title}
         data-tp-icon={entry.meta.name}
         data-tp-icon-pack={entry.meta.pack}
+        data-tp-icon-theme={useDark ? 'dark' : 'light'}
+        data-tp-active-theme={activeTheme}
         data-monochrome="false"
         className={`tp-icon ${className}`.trim()}
         style={baseStyle}
       >
         <img
-          src={resolveRuntimeAssetUrl(entry.imgUrl)}
+          src={resolveRuntimeAssetUrl(activeImgUrl)}
           alt={ariaLabel ?? entry.meta.name}
           style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }}
         />
@@ -155,10 +188,12 @@ export const TPIcon: React.FC<TPIconProps> = ({
       title={title}
       data-tp-icon={entry.meta.name}
       data-tp-icon-pack={entry.meta.pack}
-      data-monochrome={String(entry.meta.monochrome)}
+      data-tp-icon-theme={useDark ? 'dark' : 'light'}
+      data-tp-active-theme={activeTheme}
+      data-monochrome={useDark ? 'false' : String(entry.meta.monochrome)}
       className={`tp-icon tp-icon--svg ${className}`.trim()}
       style={baseStyle}
-      dangerouslySetInnerHTML={{ __html: entry.rawSvg ?? '' }}
+      dangerouslySetInnerHTML={{ __html: activeRawSvg ?? '' }}
     />
   );
 };

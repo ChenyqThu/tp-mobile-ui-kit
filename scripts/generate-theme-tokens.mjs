@@ -101,6 +101,14 @@ function buildPreset(entry) {
     tokens[varName] = val;
   }
 
+  // Legacy Omada APP library dark-mode brightened functional colors
+  if (entry.brand === 'omada' && entry.mode === 'dark') {
+    tokens['General/Alert'] = '#FF4D62';
+    tokens['Red/10'] = 'rgba(255, 77, 98, 0.16)';
+    tokens['General/Yellow'] = '#F19151';
+    tokens['Yellow/10'] = 'rgba(241, 145, 81, 0.16)';
+  }
+
   return {
     brand: entry.brand,
     mode: entry.mode,

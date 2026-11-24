@@ -1,14 +1,15 @@
 import React, { useRef } from 'react';
 import { hasTPIcon, TPIcon } from '../../assets-lib';
+import { useTPTheme } from '../../theme/TPThemeProvider';
 import type { TPTabBarItem, TPTabBarProps } from '../types';
 import { TPLiquidGlassBackdrop } from './TPLiquidGlassBackdrop';
 import '../../styles/tp-core-nav-controls.css';
 
-function renderTabIcon(item: TPTabBarItem, isActive: boolean): React.ReactNode {
+function renderTabIcon(item: TPTabBarItem, isActive: boolean, iconSize: number): React.ReactNode {
   const iconSource = isActive && item.activeIcon !== undefined ? item.activeIcon : item.icon;
   if (typeof iconSource === 'string') {
     if (hasTPIcon(iconSource)) {
-      return <TPIcon name={iconSource} size={22} />;
+      return <TPIcon name={iconSource} size={iconSize} />;
     }
     return (
       <span className="tp-tabbar-icon-fallback" aria-hidden="true">
@@ -40,16 +41,30 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
   activeKey,
   onChange,
   variant = 'floating-pill',
+  os,
+  adaptiveOS = true,
+  iconSize,
   extraAction,
+  fab,
   className = '',
   style,
 }) => {
+  const { os: themeOS } = useTPTheme();
+  const resolvedOS = os ?? themeOS;
+  const effectiveVariant =
+    adaptiveOS && resolvedOS === 'android' && variant === 'floating-pill' ? 'docked' : variant;
+  const resolvedIconSize = iconSize ?? (effectiveVariant === 'docked' ? 26 : 22);
+
   const trackRef = useRef<HTMLDivElement>(null);
-  const hasExtra = extraAction !== undefined && extraAction !== null && variant === 'floating-pill';
+  const pillExtraNode = extraAction ?? fab;
+  const hasExtra =
+    pillExtraNode !== undefined && pillExtraNode !== null && effectiveVariant === 'floating-pill';
+  const hasAndroidFab =
+    effectiveVariant === 'docked' && fab !== undefined && fab !== null;
   const activeIndex = items.findIndex((item) => item.key === activeKey);
   const rootClass = [
     'tp-tabbar',
-    `tp-tabbar--${variant}`,
+    `tp-tabbar--${effectiveVariant}`,
     hasExtra ? 'tp-tabbar--has-extra' : '',
     className,
   ]
@@ -57,7 +72,7 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
     .join(' ');
 
   const lensStyle: React.CSSProperties | undefined =
-    variant === 'floating-pill' && activeIndex >= 0 && items.length > 0
+    effectiveVariant === 'floating-pill' && activeIndex >= 0 && items.length > 0
       ? {
           width: `calc((100% - 8px - ${(items.length - 1) * 4}px) / ${items.length})`,
           transform: `translateX(calc(${activeIndex} * (100% + 4px)))`,
@@ -67,12 +82,13 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
   return (
     <nav
       className={rootClass}
-      data-variant={variant}
+      data-variant={effectiveVariant}
+      data-os={resolvedOS}
       aria-label="Bottom Navigation"
       style={style}
     >
       <div ref={trackRef} className="tp-tabbar-track" role="tablist">
-        {variant === 'floating-pill' && (
+        {effectiveVariant === 'floating-pill' && (
           <TPLiquidGlassBackdrop
             hostRef={trackRef}
             shape="pill"
@@ -103,7 +119,9 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
               onClick={() => onChange(item.key)}
             >
               <span className="tp-tabbar-icon-wrap">
-                <span className="tp-tabbar-icon">{renderTabIcon(item, isActive)}</span>
+                <span className="tp-tabbar-icon">
+                  {renderTabIcon(item, isActive, resolvedIconSize)}
+                </span>
                 {renderTabBadge(item.badge)}
               </span>
               <span className="tp-tabbar-label">{item.label}</span>
@@ -112,7 +130,8 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
         })}
       </div>
 
-      {hasExtra && <div className="tp-tabbar-extra">{extraAction}</div>}
+      {hasExtra && <div className="tp-tabbar-extra">{pillExtraNode}</div>}
+      {hasAndroidFab && <div className="tp-tabbar-android-fab">{fab}</div>}
     </nav>
   );
 };

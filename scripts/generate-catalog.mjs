@@ -80,6 +80,7 @@ const CORE_LIST_INPUT_FILES = new Set([
   'TPDivider',
   'TPAvatar',
   'TPPinInput',
+  'TPLoadMore',
 ]);
 
 const CORE_OVERLAY_FILES = new Set([
@@ -92,6 +93,7 @@ const CORE_OVERLAY_FILES = new Set([
   'TPPrompt',
   'TPTooltip',
   'TPFixedToast',
+  'TPInfoSheet',
 ]);
 
 function classifySourcePath(relPath, symbolName) {
@@ -164,7 +166,14 @@ const DESCRIPTION_FALLBACKS = {
   TPDivider: 'Hairline separator supporting inset indentation, centered labels, and spacing presets.',
   TPAvatar: 'User or device avatar supporting image src, name initials, TPIcon, shapes, and presence dot.',
   TPPinInput: 'Multi-cell OTP and PIN code box input with auto-advance, backspace stepping, and paste distribution.',
+  TPLoadMore: 'List bottom footer displaying Load More trigger, Loading spinner, End-of-list state, or Retry action.',
+  TPInfoSheet: 'Informational bottom-sheet dialog presenting explanatory copy or bullet points above a confirmation CTA.',
+  TPLegendSheet: 'Bottom-sheet key/legend sheet displaying color swatches, icons, and badge explanations.',
   OmadaDeviceThumb: 'Device thumbnail icon helper rendering Omada access point, switch, or gateway icons.',
+  OmadaPortLegendSheet: 'Standardized Omada Port Panel speed color & badge icon legend sheet.',
+  getOmadaPortSpeedColor: 'Maps OmadaPortSpeed grades (10/100M to 100G, Disabled, Disconnected) to --tp-port-* theme variables.',
+  getOmadaPortBadgeIcon: 'Maps 17 Omada port badge keys (wan, poe, lag, stp-discard, etc.) to verified TPIcon names.',
+  computeOmadaAxisScale: 'Computes clean 1-2-5 nice-number chart axis ticks supporting negative dBm values and flat all-zero arrays.',
 };
 
 function getJsDocSummary(checker, symbol) {

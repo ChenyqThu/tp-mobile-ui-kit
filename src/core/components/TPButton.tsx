@@ -7,6 +7,7 @@ export const TPButton: React.FC<TPButtonProps> = ({
   size = 'lg',
   block = false,
   loading = false,
+  progress,
   htmlType = 'button',
   icon,
   disabled = false,
@@ -14,12 +15,18 @@ export const TPButton: React.FC<TPButtonProps> = ({
   children,
   ...rest
 }) => {
+  const clampedProgress =
+    typeof progress === 'number' && !Number.isNaN(progress)
+      ? Math.max(0, Math.min(100, progress))
+      : undefined;
+
   const rootClass = [
     'tp-btn',
     `tp-btn--${variant}`,
     `tp-btn--${size}`,
     block ? 'tp-btn--block' : '',
     loading ? 'tp-btn--loading' : '',
+    clampedProgress !== undefined ? 'tp-btn--has-progress' : '',
     className,
   ]
     .filter(Boolean)
@@ -34,7 +41,15 @@ export const TPButton: React.FC<TPButtonProps> = ({
       aria-busy={loading || undefined}
       data-variant={variant}
       data-size={size}
+      data-progress={clampedProgress !== undefined ? String(clampedProgress) : undefined}
     >
+      {clampedProgress !== undefined && (
+        <span
+          className="tp-btn-progress"
+          aria-hidden="true"
+          style={{ width: `${clampedProgress}%` }}
+        />
+      )}
       {loading ? (
         <span className="tp-btn-spinner" aria-hidden="true" />
       ) : icon !== undefined && icon !== null ? (

@@ -880,24 +880,30 @@
 }
 
 .tp-skeleton-text-group {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow: hidden;
 }
 
 .tp-skeleton-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 14px;
   border-radius: var(--tp-radius-card);
   background: var(--tp-bg-card);
+  overflow: hidden;
 }
 
 .tp-skeleton-item {
+  position: relative;
   display: block;
   border-radius: 6px;
-  background: rgba(120, 120, 128, 0.14);
+  background: var(--tp-skeleton-base, #F7F7F7);
+  overflow: hidden;
 }
 
 .tp-skeleton-item--circle {
@@ -905,24 +911,41 @@
   display: inline-block;
 }
 
-@keyframes tp-ext-shimmer {
+@keyframes tp-ext-sweep {
   0% {
-    background-position: 180% 0;
+    transform: translateX(-100%);
   }
   100% {
-    background-position: -180% 0;
+    transform: translateX(100%);
   }
 }
 
-.tp-skeleton-item--animated {
+/* Container-level synchronized shimmer across multi-bar card/text groups and standalone blocks */
+.tp-skeleton--animated::after,
+.tp-skeleton-item--animated::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background: linear-gradient(
     90deg,
-    rgba(120, 120, 128, 0.14) 20%,
-    rgba(120, 120, 128, 0.26) 50%,
-    rgba(120, 120, 128, 0.14) 80%
+    transparent 0%,
+    var(--tp-skeleton-highlight, #ECECEC) 50%,
+    transparent 100%
   );
-  background-size: 220% 100%;
-  animation: tp-ext-shimmer 1.6s ease-in-out infinite;
+  opacity: 0.92;
+  animation: tp-ext-sweep 1.6s ease-in-out infinite;
+}
+
+.tp-skeleton-card.tp-skeleton--animated::after,
+.tp-skeleton-text-group.tp-skeleton--animated::after {
+  mix-blend-mode: soft-light;
+}
+
+[data-tp-mode="dark"] .tp-skeleton-card.tp-skeleton--animated::after,
+[data-tp-mode="dark"] .tp-skeleton-text-group.tp-skeleton--animated::after {
+  mix-blend-mode: screen;
+  opacity: 0.45;
 }
 
 .tp-stepper {
@@ -1168,4 +1191,69 @@
 .tp-pin-error {
   font-size: 12px;
   color: var(--tp-color-alert);
+}
+
+/* ==========================================================================
+   TPLoadMore
+   ========================================================================== */
+
+.tp-load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  font-family: var(--tp-font-family);
+  font-size: 13px;
+  color: var(--tp-text-secondary);
+}
+
+.tp-load-more-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tp-load-more-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 2px solid var(--tp-focus, #00A870);
+  border-top-color: transparent;
+  animation: tp-spin 0.75s linear infinite;
+}
+
+.tp-load-more-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--tp-focus, #00A870);
+  cursor: pointer;
+}
+
+.tp-load-more-btn--error {
+  color: var(--tp-color-alert, #EE385C);
+}
+
+.tp-load-more-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 240px;
+}
+
+.tp-load-more-line {
+  flex: 1;
+  height: 1px;
+  background: var(--tp-divider);
+}
+
+.tp-load-more-end-text {
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--tp-text-secondary);
 }

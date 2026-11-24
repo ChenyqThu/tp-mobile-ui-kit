@@ -34,18 +34,35 @@ describe('Package Subpath & Standalone Exports', () => {
     expect(corePkg.TPDivider).toBeDefined();
     expect(corePkg.TPAvatar).toBeDefined();
     expect(corePkg.TPPinInput).toBeDefined();
+    expect(corePkg.TPLoadMore).toBeDefined();
+    expect(corePkg.TPInfoSheet).toBeDefined();
+    expect(corePkg.TPLegendSheet).toBeDefined();
 
     expect(assetsPkg.TPIcon).toBeDefined();
     expect(assetsPkg.TPIllustration).toBeDefined();
     expect(assetsPkg.TPBrandLogo).toBeDefined();
     expect(assetsPkg.TPMotion).toBeDefined();
-    expect(assetsPkg.TP_MOTIONS).toHaveLength(17);
+    expect(assetsPkg.TP_MOTIONS).toHaveLength(21);
 
     expect(omadaPkg.OmadaStandardInput).toBeDefined();
     expect(omadaPkg.OmadaSiteDashboardPage).toBeDefined();
     expect(omadaPkg.OmadaDeviceListBlock).toBeDefined();
     expect(omadaPkg.OmadaScheduleBlock).toBeDefined();
     expect(omadaPkg.OmadaPortPanelBlock).toBeDefined();
+    expect(omadaPkg.OmadaPortSelectorBlock).toBeDefined();
+    expect(omadaPkg.OmadaChartCard).toBeDefined();
+    expect(omadaPkg.computeOmadaAxisScale).toBeDefined();
+    expect(omadaPkg.OmadaFormRepeaterBlock).toBeDefined();
+    expect(omadaPkg.OmadaCustomOptionList).toBeDefined();
+    expect(omadaPkg.OmadaSiteListBlock).toBeDefined();
+    expect(omadaPkg.OmadaClientListBlock).toBeDefined();
+    expect(omadaPkg.OmadaSidebarDrawer).toBeDefined();
+    expect(omadaPkg.OmadaConfigFormPage).toBeDefined();
+    expect(omadaPkg.OmadaLanSettingsPage).toBeDefined();
+    expect(omadaPkg.OmadaPortDetailPage).toBeDefined();
+    expect(omadaPkg.OmadaAccessibilitySettingsPage).toBeDefined();
+    expect(omadaPkg.OmadaPrivacyPolicyPage).toBeDefined();
+    expect(omadaPkg.OmadaVoucherPreviewCard).toBeDefined();
     expect(omadaPkg.OmadaTopologyBlock).toBeDefined();
     expect(omadaPkg.OmadaFirmwareUpdateBlock).toBeDefined();
 

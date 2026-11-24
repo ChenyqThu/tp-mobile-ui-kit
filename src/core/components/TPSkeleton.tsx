@@ -14,14 +14,19 @@ export const TPSkeleton: React.FC<TPSkeletonProps> = ({
   className = '',
   style,
 }) => {
-  const animClass = animated ? 'tp-skeleton-item--animated' : '';
+  const containerAnimClass = animated ? 'tp-skeleton--animated' : '';
 
   if (variant === 'card') {
     return (
-      <div className={`tp-skeleton-card ${className}`.trim()} aria-busy="true" style={style}>
-        <div className={`tp-skeleton-item ${animClass}`.trim()} style={{ width: '48%', height: 18 }} />
-        <div className={`tp-skeleton-item ${animClass}`.trim()} style={{ width: '100%', height: 64, borderRadius: 10 }} />
-        <div className={`tp-skeleton-item ${animClass}`.trim()} style={{ width: '76%', height: 12 }} />
+      <div
+        className={`tp-skeleton-card ${containerAnimClass} ${className}`.trim()}
+        aria-busy="true"
+        data-animated={String(animated)}
+        style={style}
+      >
+        <div className="tp-skeleton-item" style={{ width: '48%', height: 18 }} />
+        <div className="tp-skeleton-item" style={{ width: '100%', height: 64, borderRadius: 10 }} />
+        <div className="tp-skeleton-item" style={{ width: '76%', height: 12 }} />
       </div>
     );
   }
@@ -31,7 +36,8 @@ export const TPSkeleton: React.FC<TPSkeletonProps> = ({
     return (
       <span
         aria-busy="true"
-        className={`tp-skeleton-item tp-skeleton-item--circle ${animClass} ${className}`.trim()}
+        data-animated={String(animated)}
+        className={`tp-skeleton-item tp-skeleton-item--circle ${containerAnimClass} ${animated ? 'tp-skeleton-item--animated' : ''} ${className}`.trim()}
         style={{ width: dim, height: dim, ...style }}
       />
     );
@@ -41,18 +47,24 @@ export const TPSkeleton: React.FC<TPSkeletonProps> = ({
     return (
       <div
         aria-busy="true"
-        className={`tp-skeleton-item ${animClass} ${className}`.trim()}
+        data-animated={String(animated)}
+        className={`tp-skeleton-item ${containerAnimClass} ${animated ? 'tp-skeleton-item--animated' : ''} ${className}`.trim()}
         style={{ width: width ?? '100%', height: height ?? 80, ...style }}
       />
     );
   }
 
   return (
-    <div className={`tp-skeleton-text-group ${className}`.trim()} aria-busy="true" style={style}>
+    <div
+      className={`tp-skeleton-text-group ${containerAnimClass} ${className}`.trim()}
+      aria-busy="true"
+      data-animated={String(animated)}
+      style={style}
+    >
       {Array.from({ length: Math.max(1, lines) }).map((_, i) => (
         <div
           key={i}
-          className={`tp-skeleton-item ${animClass}`.trim()}
+          className="tp-skeleton-item"
           style={{
             width: i === lines - 1 && lines > 1 ? '68%' : width ?? '100%',
             height: height ?? 13,

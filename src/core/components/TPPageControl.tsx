@@ -5,26 +5,40 @@ import '../../styles/tp-core-nav-controls.css';
 export const TPPageControl: React.FC<TPPageControlProps> = ({
   total,
   current,
+  variant = 'dots',
   onChange,
   className = '',
   style,
 }) => {
   if (total <= 0) return null;
 
-  const rootClass = ['tp-page-control', className].filter(Boolean).join(' ');
+  const rootClass = [
+    'tp-page-control',
+    `tp-page-control--${variant}`,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div
       className={rootClass}
       role="navigation"
       aria-label="Page indicator"
+      data-variant={variant}
       style={style}
     >
       {Array.from({ length: total }, (_, index) => {
-        const isActive = index === current;
+        const isActive = variant === 'process' ? index <= current : index === current;
+        const isCurrent = index === current;
         const dotClass = [
-          'tp-page-control-dot',
-          isActive ? 'tp-page-control-dot--active' : '',
+          variant === 'process' ? 'tp-page-control-bar' : 'tp-page-control-dot',
+          isActive
+            ? variant === 'process'
+              ? 'tp-page-control-bar--active'
+              : 'tp-page-control-dot--active'
+            : '',
+          isCurrent && variant === 'process' ? 'tp-page-control-bar--current' : '',
         ]
           .filter(Boolean)
           .join(' ');
@@ -36,7 +50,7 @@ export const TPPageControl: React.FC<TPPageControlProps> = ({
               type="button"
               className={dotClass}
               aria-label={`Page ${index + 1}`}
-              aria-current={isActive ? 'page' : undefined}
+              aria-current={isCurrent ? 'page' : undefined}
               data-active={String(isActive)}
               onClick={() => onChange(index)}
             />
@@ -48,7 +62,7 @@ export const TPPageControl: React.FC<TPPageControlProps> = ({
             key={index}
             className={dotClass}
             data-active={String(isActive)}
-            aria-current={isActive ? 'page' : undefined}
+            aria-current={isCurrent ? 'page' : undefined}
           />
         );
       })}

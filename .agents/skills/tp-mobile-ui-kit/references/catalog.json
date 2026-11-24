@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-24T00:52:09.764Z",
+  "generatedAt": "2026-11-24T06:28:28.246Z",
   "package": {
     "name": "@chenyqthu/tp-mobile-ui-kit",
-    "version": "0.2.1",
-    "description": "TP-Link multi-brand mobile React UI component library (TP-Design 12-mode Theme Engine + Omada APP 5.3 Blocks & Real PAG Motion Assets + Single-file HTML standalone bundle)",
+    "version": "0.3.0",
+    "description": "TP-Link multi-brand mobile React UI component library (TP-Design 12-mode + WCAG High Contrast Theme Engine, 669 Figma Icons + Dark Variants, Omada APP V5.3–6.3 Blocks & Real PAG Motion Assets, Single-file HTML standalone bundle)",
     "entries": {
       ".": "@chenyqthu/tp-mobile-ui-kit",
       "./core": "@chenyqthu/tp-mobile-ui-kit/core",
@@ -18,23 +18,23 @@
       "jsdelivrCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/style.css",
       "jsdelivrStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/standalone.js",
       "jsdelivrWasm": "https://cdn.jsdelivr.net/npm/libpag@4.5.85/lib/libpag.wasm",
-      "pinnedCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/style.css",
-      "pinnedStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/standalone.js"
+      "pinnedCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.3.0/dist/style.css",
+      "pinnedStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.3.0/dist/standalone.js"
     }
   },
   "counts": {
-    "components": 77,
-    "blocks": 7,
-    "pages": 10,
-    "hooksAndHelpers": 11,
+    "components": 94,
+    "blocks": 16,
+    "pages": 15,
+    "hooksAndHelpers": 14,
     "brands": 6,
     "themePresets": 12,
     "templates": 3,
-    "icons": 626,
+    "icons": 669,
     "illustrations": 42,
     "logos": 16,
-    "motions": 11,
-    "motionFiles": 17
+    "motions": 15,
+    "motionFiles": 21
   },
   "components": [
     {
@@ -182,6 +182,12 @@
           "name": "pack",
           "type": "'auto' | TPIconPack",
           "optional": true
+        },
+        {
+          "name": "theme",
+          "type": "TPResolvedMode",
+          "optional": true,
+          "description": "Override dark/light icon asset variant (defaults to active TPThemeProvider resolvedMode)"
         },
         {
           "name": "size",
@@ -568,9 +574,14 @@
       "kind": "component",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
       "sourcePath": "src/core/components/TPDatePicker.tsx",
-      "description": "Mobile date wheel picker with Year / Month / Day columns, leap-year clamping, and header actions.",
+      "description": "Mobile date wheel picker with Year / Month / Day columns, leap-year clamping, single & range modes, and header actions.",
       "propsType": "TPDatePickerProps",
       "props": [
+        {
+          "name": "mode",
+          "type": "'single' | 'range'",
+          "optional": true
+        },
         {
           "name": "value",
           "type": "Date",
@@ -579,6 +590,16 @@
         {
           "name": "defaultValue",
           "type": "Date",
+          "optional": true
+        },
+        {
+          "name": "rangeValue",
+          "type": "readonly [string, string]",
+          "optional": true
+        },
+        {
+          "name": "defaultRangeValue",
+          "type": "readonly [string, string]",
           "optional": true
         },
         {
@@ -599,6 +620,16 @@
         {
           "name": "onConfirm",
           "type": "(date: Date) => void",
+          "optional": true
+        },
+        {
+          "name": "onRangeChange",
+          "type": "(range: [string, string]) => void",
+          "optional": true
+        },
+        {
+          "name": "onRangeConfirm",
+          "type": "(range: [string, string]) => void",
           "optional": true
         },
         {
@@ -755,6 +786,11 @@
           "optional": true
         },
         {
+          "name": "size",
+          "type": "'full' | 'compact'",
+          "optional": true
+        },
+        {
           "name": "className",
           "type": "string",
           "optional": true
@@ -777,7 +813,7 @@
       "props": [
         {
           "name": "variant",
-          "type": "'standard' | 'list' | 'borderless' | 'icon'",
+          "type": "'standard' | 'list' | 'borderless' | 'icon' | 'underline'",
           "optional": true
         },
         {
@@ -818,6 +854,11 @@
         {
           "name": "rows",
           "type": "number",
+          "optional": true
+        },
+        {
+          "name": "showCount",
+          "type": "boolean",
           "optional": true
         },
         {
@@ -1122,7 +1163,73 @@
           "optional": true
         },
         {
+          "name": "layout",
+          "type": "'default' | 'form-field'",
+          "optional": true
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
           "name": "onClick",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPLoadMore",
+      "category": "core-lists-inputs",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPLoadMore.tsx",
+      "description": "List bottom footer displaying Load More trigger, Loading spinner, End-of-list state, or Retry action.",
+      "propsType": "TPLoadMoreProps",
+      "props": [
+        {
+          "name": "status",
+          "type": "'idle' | 'loading' | 'no-more' | 'error'",
+          "optional": true
+        },
+        {
+          "name": "idleText",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "loadingText",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "noMoreText",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "errorText",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "onLoadMore",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onRetry",
           "type": "() => void",
           "optional": true
         },
@@ -1483,6 +1590,11 @@
           "optional": true
         },
         {
+          "name": "shape",
+          "type": "'auto' | 'pill' | 'rounded'",
+          "optional": true
+        },
+        {
           "name": "className",
           "type": "string",
           "optional": true
@@ -1741,7 +1853,7 @@
         },
         {
           "name": "tone",
-          "type": "'focus' | 'neutral' | 'success' | 'warning' | 'alert' | 'info'",
+          "type": "TPTagTone",
           "optional": true
         },
         {
@@ -1751,7 +1863,17 @@
         },
         {
           "name": "size",
-          "type": "'sm' | 'md'",
+          "type": "'xs' | 'sm' | 'md'",
+          "optional": true
+        },
+        {
+          "name": "shape",
+          "type": "'pill' | 'rect'",
+          "optional": true
+        },
+        {
+          "name": "appearance",
+          "type": "'soft' | 'solid' | 'outline'",
           "optional": true
         },
         {
@@ -1847,6 +1969,11 @@
           "optional": true
         },
         {
+          "name": "format",
+          "type": "'24h' | '12h'",
+          "optional": true
+        },
+        {
           "name": "minuteStep",
           "type": "number",
           "optional": true
@@ -1938,7 +2065,7 @@
       "props": [
         {
           "name": "variant",
-          "type": "'primary' | 'secondary' | 'text' | 'alert' | 'tonal' | 'in-card'",
+          "type": "TPButtonVariant",
           "optional": true
         },
         {
@@ -1955,6 +2082,12 @@
           "name": "loading",
           "type": "boolean",
           "optional": true
+        },
+        {
+          "name": "progress",
+          "type": "number",
+          "optional": true,
+          "description": "Optional deterministic progress fill percentage (0-100) rendered behind the label"
         },
         {
           "name": "htmlType",
@@ -1980,13 +2113,18 @@
       "props": [
         {
           "name": "layout",
-          "type": "'single' | 'dual-horizontal' | 'dual-vertical'",
+          "type": "'single' | 'dual-horizontal' | 'dual-vertical' | 'triple'",
           "optional": true
         },
         {
           "name": "primaryText",
           "type": "string",
           "optional": false
+        },
+        {
+          "name": "primaryVariant",
+          "type": "TPButtonVariant",
+          "optional": true
         },
         {
           "name": "onPrimaryClick",
@@ -2015,7 +2153,27 @@
         },
         {
           "name": "secondaryVariant",
-          "type": "'secondary' | 'text' | 'alert'",
+          "type": "TPButtonVariant",
+          "optional": true
+        },
+        {
+          "name": "tertiaryText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onTertiaryClick",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "tertiaryVariant",
+          "type": "TPButtonVariant",
+          "optional": true
+        },
+        {
+          "name": "tertiaryDisabled",
+          "type": "boolean",
           "optional": true
         },
         {
@@ -2056,8 +2214,19 @@
         },
         {
           "name": "variant",
-          "type": "'standard' | 'floating'",
+          "type": "'standard' | 'floating' | 'large' | 'tabs'",
           "optional": true
+        },
+        {
+          "name": "os",
+          "type": "'ios' | 'android'",
+          "optional": true
+        },
+        {
+          "name": "adaptiveOS",
+          "type": "boolean",
+          "optional": true,
+          "description": "Automatically adapt floating Liquid Glass to traditional chrome on Android (default true)"
         },
         {
           "name": "left",
@@ -2097,6 +2266,26 @@
         {
           "name": "translucent",
           "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "tabs",
+          "type": "readonly TPHeaderTabItem[]",
+          "optional": true
+        },
+        {
+          "name": "activeTab",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onTabChange",
+          "type": "(key: string) => void",
           "optional": true
         },
         {
@@ -2299,6 +2488,11 @@
           "optional": false
         },
         {
+          "name": "variant",
+          "type": "'dots' | 'process'",
+          "optional": true
+        },
+        {
           "name": "onChange",
           "type": "(index: number) => void",
           "optional": true
@@ -2427,7 +2621,7 @@
         },
         {
           "name": "variant",
-          "type": "'underline' | 'pill'",
+          "type": "'underline' | 'pill' | 'segmented'",
           "optional": true
         },
         {
@@ -2700,7 +2894,28 @@
           "optional": true
         },
         {
+          "name": "os",
+          "type": "'ios' | 'android'",
+          "optional": true
+        },
+        {
+          "name": "adaptiveOS",
+          "type": "boolean",
+          "optional": true,
+          "description": "Automatically adapt floating pill to docked bar on Android (default true)"
+        },
+        {
+          "name": "iconSize",
+          "type": "number",
+          "optional": true
+        },
+        {
           "name": "extraAction",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "fab",
           "type": "React.ReactNode",
           "optional": true
         },
@@ -2894,6 +3109,12 @@
           "optional": true
         },
         {
+          "name": "tone",
+          "type": "'default' | 'info' | 'success' | 'warning' | 'danger'",
+          "optional": true,
+          "description": "Convenience alias matching status tones"
+        },
+        {
           "name": "action",
           "type": "'none' | 'close' | 'go-to' | 'button'",
           "optional": true
@@ -2917,6 +3138,128 @@
           "name": "message",
           "type": "React.ReactNode",
           "optional": false
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPInfoSheet",
+      "category": "core-overlays",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPInfoSheet.tsx",
+      "description": "Informational bottom-sheet dialog presenting explanatory copy or bullet points above a confirmation CTA.",
+      "propsType": "TPInfoSheetProps",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "optional": false
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "subtitle",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "bullets",
+          "type": "readonly React.ReactNode[]",
+          "optional": true
+        },
+        {
+          "name": "confirmText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onConfirm",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "optional": false
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "TPLegendSheet",
+      "category": "core-overlays",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/components/TPInfoSheet.tsx",
+      "description": "Bottom-sheet key/legend sheet displaying color swatches, icons, and badge explanations.",
+      "propsType": "TPLegendSheetProps",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "optional": false
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "subtitle",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "items",
+          "type": "readonly TPLegendItem[]",
+          "optional": false
+        },
+        {
+          "name": "columns",
+          "type": "1 | 2",
+          "optional": true
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "optional": false
+        },
+        {
+          "name": "footer",
+          "type": "React.ReactNode",
+          "optional": true
         },
         {
           "name": "className",
@@ -3226,11 +3569,28 @@
       "signature": "(): TPToastContextValue"
     },
     {
+      "name": "computeOmadaAxisScale",
+      "category": "omada-blocks",
+      "kind": "helper",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaChartCard.tsx",
+      "description": "Computes nice human-readable axis ticks supporting all-zero datasets and negative dBm ranges.",
+      "signature": "(values: readonly number[], options?: { tickCount?: number | undefined; allowNegative?: boolean | undefined; zeroBaseline?: boolean | undefined; } | undefined): OmadaChartScaleResult"
+    },
+    {
       "name": "DEFAULT_FIRMWARE_CANDIDATES",
       "category": "omada-blocks",
       "kind": "data",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/blocks/OmadaFirmwareUpdateBlock.tsx",
+      "description": ""
+    },
+    {
+      "name": "DEFAULT_OMADA_CLIENT_LIST",
+      "category": "omada-blocks",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaClientListBlock.tsx",
       "description": ""
     },
     {
@@ -3266,12 +3626,38 @@
       "description": ""
     },
     {
+      "name": "DEFAULT_OMADA_SITES",
+      "category": "omada-blocks",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaSiteListBlock.tsx",
+      "description": ""
+    },
+    {
       "name": "DEFAULT_TOPOLOGY_NODES",
       "category": "omada-blocks",
       "kind": "data",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/blocks/OmadaTopologyBlock.tsx",
       "description": ""
+    },
+    {
+      "name": "getOmadaPortBadgeIcon",
+      "category": "omada-blocks",
+      "kind": "helper",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaPortPanelBlock.tsx",
+      "description": "Maps 17 Omada port badge keys (wan, poe, lag, stp-discard, etc.) to verified TPIcon names.",
+      "signature": "(badge: OmadaPortBadgeType): string"
+    },
+    {
+      "name": "getOmadaPortSpeedColor",
+      "category": "omada-blocks",
+      "kind": "helper",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaPortPanelBlock.tsx",
+      "description": "Maps OmadaPortSpeed grades (10/100M to 100G, Disabled, Disconnected) to --tp-port-* theme variables.",
+      "signature": "(speed: OmadaPortSpeed): string"
     },
     {
       "name": "OMADA_SITE_TABS",
@@ -3282,12 +3668,215 @@
       "description": ""
     },
     {
+      "name": "OmadaChartCard",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaChartCard.tsx",
+      "description": "Reusable Omada data-visualization card supporting line, area, bar, stacked-bar, donut, and speed-bar charts with dual Y-axes, negative dBm scaling, tooltips, loading, and empty states.",
+      "propsType": "OmadaChartCardProps",
+      "props": [
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "type",
+          "type": "OmadaChartType",
+          "optional": true
+        },
+        {
+          "name": "labels",
+          "type": "readonly string[]",
+          "optional": true
+        },
+        {
+          "name": "series",
+          "type": "readonly OmadaChartSeries[]",
+          "optional": false
+        },
+        {
+          "name": "secondarySeries",
+          "type": "readonly OmadaChartSeries[]",
+          "optional": true
+        },
+        {
+          "name": "unit",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "secondaryUnit",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "timeRanges",
+          "type": "readonly OmadaChartTimeRangeOption[]",
+          "optional": true
+        },
+        {
+          "name": "activeTimeRange",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onTimeRangeChange",
+          "type": "(key: string) => void",
+          "optional": true
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "empty",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "emptyTitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "emptyDescription",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "extra",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaClientListBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaClientListBlock.tsx",
+      "description": "Reusable Omada Client List block featuring dark-adaptive client icons, Wi-Fi band tags, RSSI signal strength, live Rx/Tx rates, filter chips, and quick block/unblock action.",
+      "propsType": "OmadaClientListBlockProps",
+      "props": [
+        {
+          "name": "clients",
+          "type": "readonly OmadaClientListItem[]",
+          "optional": true
+        },
+        {
+          "name": "searchable",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "filterable",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onSelectClient",
+          "type": "(client: OmadaClientListItem) => void",
+          "optional": true
+        },
+        {
+          "name": "onToggleBlock",
+          "type": "(client: OmadaClientListItem) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaCustomOptionList",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaFormRepeaterBlock.tsx",
+      "description": "Single-select option list with preset choices plus an inline Custom value entry row.",
+      "propsType": "OmadaCustomOptionListProps",
+      "props": [
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "options",
+          "type": "readonly OmadaCustomOption[]",
+          "optional": false
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "customLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "customPlaceholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "OmadaDeviceListBlock",
       "category": "omada-blocks",
       "kind": "component",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/blocks/OmadaDeviceListBlock.tsx",
-      "description": "Reusable Omada v5.3+ Device List block matching real-device `SiteDevices.png` row geometry.",
+      "description": "Reusable Omada v5.3+ Device List block matching real-device `SiteDevices.png` row geometry, extended with 6+ device statuses, 7 selectable secondary metrics, Display Options sheet, and row selection.",
       "propsType": "OmadaDeviceListBlockProps",
       "props": [
         {
@@ -3298,6 +3887,46 @@
         {
           "name": "grouped",
           "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "secondaryMetric",
+          "type": "OmadaDeviceSecondaryMetric",
+          "optional": true
+        },
+        {
+          "name": "onSecondaryMetricChange",
+          "type": "(metric: OmadaDeviceSecondaryMetric) => void",
+          "optional": true
+        },
+        {
+          "name": "thumbSize",
+          "type": "OmadaDeviceThumbSize",
+          "optional": true
+        },
+        {
+          "name": "onThumbSizeChange",
+          "type": "(size: OmadaDeviceThumbSize) => void",
+          "optional": true
+        },
+        {
+          "name": "showDisplayOptions",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "selectable",
+          "type": "'none' | 'single' | 'multi'",
+          "optional": true
+        },
+        {
+          "name": "selectedIds",
+          "type": "readonly string[]",
+          "optional": true
+        },
+        {
+          "name": "onSelectionChange",
+          "type": "(selectedIds: string[]) => void",
           "optional": true
         },
         {
@@ -3369,6 +3998,87 @@
       ]
     },
     {
+      "name": "OmadaFormRepeaterBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaFormRepeaterBlock.tsx",
+      "description": "Repeatable dynamic form row block (`Add Item` / delete row / bounded count) for DNS servers, DHCP options, VLAN subnets, or ACL match rules.",
+      "propsType": "OmadaFormRepeaterBlockProps",
+      "props": [
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "items",
+          "type": "readonly OmadaFormRepeaterItem[]",
+          "optional": true
+        },
+        {
+          "name": "defaultItems",
+          "type": "readonly OmadaFormRepeaterItem[]",
+          "optional": true
+        },
+        {
+          "name": "keyLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "keyPlaceholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "valueLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "valuePlaceholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "addText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "minItems",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "maxItems",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(next: OmadaFormRepeaterItem[]) => void",
+          "optional": true
+        },
+        {
+          "name": "renderRow",
+          "type": "( item: OmadaFormRepeaterItem, index: number, update: (patch: Partial<OmadaFormRepeaterItem>) => void, ) => React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "OmadaIncidentsBlock",
       "category": "omada-blocks",
       "kind": "component",
@@ -3410,12 +4120,38 @@
       ]
     },
     {
+      "name": "OmadaPortLegendSheet",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaPortPanelBlock.tsx",
+      "description": "Standardized Omada Port Panel speed color & badge icon legend sheet (`TPLegendSheet`).",
+      "propsType": "OmadaPortLegendSheetProps",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "optional": false
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "optional": false
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "OmadaPortPanelBlock",
       "category": "omada-blocks",
       "kind": "component",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/blocks/OmadaPortPanelBlock.tsx",
-      "description": "Reusable Omada v5.3+ hardware port panel (`SMBNET-4185` / `SMBNET-4057`) showing RJ45 & SFP+ physical faceplate indicators, PoE wattage badges, VLAN assignment, and interactive inspection.",
+      "description": "Reusable Omada v5.3+ hardware port panel (`SMBNET-4185` / `SMBNET-4057`) supporting 10 Omada speed colors, 17 port badge types, single-row & dual-row switch faceplates, legend sheet, PoE & VLAN controls.",
       "propsType": "OmadaPortPanelBlockProps",
       "props": [
         {
@@ -3429,7 +4165,17 @@
           "optional": true
         },
         {
+          "name": "layout",
+          "type": "'single-row' | 'dual-row'",
+          "optional": true
+        },
+        {
           "name": "showHeader",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "showLegendButton",
           "type": "boolean",
           "optional": true
         },
@@ -3441,6 +4187,77 @@
         {
           "name": "onPortUpdate",
           "type": "(updated: OmadaHardwarePort) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaPortSelectorBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaPortSelectorBlock.tsx",
+      "description": "Interactive Omada port selector supporting generic port selection, compact icon-grid selection, and Link Aggregation (LAG) member selection with speed mismatch & count validation.",
+      "propsType": "OmadaPortSelectorBlockProps",
+      "props": [
+        {
+          "name": "ports",
+          "type": "readonly OmadaHardwarePort[]",
+          "optional": true
+        },
+        {
+          "name": "mode",
+          "type": "OmadaPortSelectorMode",
+          "optional": true
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "value",
+          "type": "readonly string[]",
+          "optional": true
+        },
+        {
+          "name": "defaultValue",
+          "type": "readonly string[]",
+          "optional": true
+        },
+        {
+          "name": "lagGroupName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "minLagPorts",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "maxLagPorts",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "onChange",
+          "type": "(selectedIds: string[]) => void",
           "optional": true
         },
         {
@@ -3497,6 +4314,118 @@
       ]
     },
     {
+      "name": "OmadaSidebarDrawer",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaSidebarDrawer.tsx",
+      "description": "Slide-over controller navigation drawer triggered from the top bar menu/avatar button.",
+      "propsType": "OmadaSidebarDrawerProps",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "optional": false
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "optional": false
+        },
+        {
+          "name": "controllerName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "siteName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "userRole",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "activeKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "items",
+          "type": "readonly OmadaSidebarNavItem[]",
+          "optional": true
+        },
+        {
+          "name": "footerItems",
+          "type": "readonly OmadaSidebarNavItem[]",
+          "optional": true
+        },
+        {
+          "name": "onSelectItem",
+          "type": "(key: string) => void",
+          "optional": true
+        },
+        {
+          "name": "onSwitchSite",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaSiteListBlock",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaSiteListBlock.tsx",
+      "description": "Reusable Omada site switcher & multi-site overview list with alert counts, online device ratio, and search.",
+      "propsType": "OmadaSiteListBlockProps",
+      "props": [
+        {
+          "name": "sites",
+          "type": "readonly OmadaSiteItem[]",
+          "optional": true
+        },
+        {
+          "name": "activeSiteId",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "searchable",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onSelectSite",
+          "type": "(site: OmadaSiteItem) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "OmadaTopologyBlock",
       "category": "omada-blocks",
       "kind": "component",
@@ -3528,6 +4457,72 @@
         {
           "name": "onSelectNode",
           "type": "(node: OmadaTopologyNode) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaVoucherPreviewCard",
+      "category": "omada-blocks",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/blocks/OmadaVoucherPreviewCard.tsx",
+      "description": "Printable & shareable Hotspot Voucher preview card showing access code, copy action, rate limits, data cap, and expiration timestamp.",
+      "propsType": "OmadaVoucherPreviewCardProps",
+      "props": [
+        {
+          "name": "code",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "status",
+          "type": "OmadaVoucherStatus",
+          "optional": true
+        },
+        {
+          "name": "durationLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "bandwidthLimit",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "dataQuota",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "validUntil",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "concurrentDevices",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "notes",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onCopy",
+          "type": "(code: string) => void",
           "optional": true
         },
         {
@@ -3610,7 +4605,7 @@
       "kind": "component",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/components/OmadaStandardInput.tsx",
-      "description": "Figma `【Omada】Standard Input` supporting segmented IPv4 (`0-255`), segmented MAC (`8C-86-DD-A6-A7-5F`), port, and text fields.",
+      "description": "Figma `【Omada】Standard Input` supporting segmented IPv4 (`0-255`), segmented MAC (`8C-86-DD-A6-A7-5F`), port, text, IP Range, CIDR subnet, IP:Port, and Time Range structured inputs.",
       "propsType": "OmadaStandardInputProps",
       "props": [
         {
@@ -3702,12 +4697,46 @@
       "description": ""
     },
     {
+      "name": "DEFAULT_OMADA_LAN_CONFIG",
+      "category": "omada-pages",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/pages/OmadaLanSettingsPage.tsx",
+      "description": ""
+    },
+    {
+      "name": "OmadaAccessibilitySettingsPage",
+      "category": "omada-pages",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/pages/OmadaAccessibilitySettingsPage.tsx",
+      "description": "Legacy-Omada Accessibility & Display Settings screen controlling WCAG 4.5:1 High Contrast mode (`Title 1` Bold + underlined links + accessible Tag contrast) and dynamic Font Scale.",
+      "propsType": "OmadaAccessibilitySettingsPageProps",
+      "props": [
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "OmadaAppDemo",
       "category": "omada-pages",
       "kind": "component",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
       "sourcePath": "src/omada/pages/OmadaAppDemo.tsx",
-      "description": "Interactive end-to-end Omada APP v5.3–6.3 prototype wiring all 7 real-device screens and drill-down sub-pages inside `TPPhoneFrame`.",
+      "description": "Interactive end-to-end Omada APP v5.3–6.3 prototype wiring all core screens, OS-adaptive Liquid Glass (iOS) / Traditional (Android) chrome, sidebar drawer, and sub-pages inside `TPPhoneFrame`.",
       "propsType": "OmadaAppDemoProps",
       "props": [
         {
@@ -3734,6 +4763,102 @@
           "name": "showFrame",
           "type": "boolean",
           "optional": true
+        },
+        {
+          "name": "initialDrawerOpen",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "drawerOpen",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onDrawerOpenChange",
+          "type": "(open: boolean) => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaConfigFormPage",
+      "category": "omada-pages",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/pages/OmadaConfigFormPage.tsx",
+      "description": "Reusable Omada configuration form & edit page wrapper implementing create/edit/subpage chrome, Save/Apply header button, and automatic `Discard Changes?` confirmation when navigating back dirty.",
+      "propsType": "OmadaConfigFormPageProps",
+      "props": [
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "optional": false
+        },
+        {
+          "name": "subtitle",
+          "type": "React.ReactNode",
+          "optional": true
+        },
+        {
+          "name": "mode",
+          "type": "OmadaConfigFormMode",
+          "optional": true
+        },
+        {
+          "name": "dirty",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "saving",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "saveText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "showBottomBar",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "secondaryText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onSecondaryClick",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onSave",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "optional": false
         },
         {
           "name": "className",
@@ -3876,6 +5001,47 @@
       ]
     },
     {
+      "name": "OmadaLanSettingsPage",
+      "category": "omada-pages",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/pages/OmadaLanSettingsPage.tsx",
+      "description": "Legacy-Omada-aligned Wired LAN / VLAN Edit page combining `OmadaConfigFormPage`, underline/form-field rows, structured CIDR & IP Range inputs, and DNS repeater.",
+      "propsType": "OmadaLanSettingsPageProps",
+      "props": [
+        {
+          "name": "initialConfig",
+          "type": "OmadaLanNetworkConfig",
+          "optional": true
+        },
+        {
+          "name": "mode",
+          "type": "'create' | 'edit'",
+          "optional": true
+        },
+        {
+          "name": "onSave",
+          "type": "(config: OmadaLanNetworkConfig) => void",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
       "name": "OmadaLaunchLoadingPage",
       "category": "omada-pages",
       "kind": "component",
@@ -3942,6 +5108,93 @@
         {
           "name": "showFloatingAction",
           "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaPortDetailPage",
+      "category": "omada-pages",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/pages/OmadaPortDetailPage.tsx",
+      "description": "Dedicated Switch/Gateway Port Detail & Edit screen with status badges, speed/duplex selector, PoE output switch, VLAN profile picker, and Rx/Tx traffic spark chart.",
+      "propsType": "OmadaPortDetailPageProps",
+      "props": [
+        {
+          "name": "port",
+          "type": "OmadaHardwarePort",
+          "optional": true
+        },
+        {
+          "name": "deviceModel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "onSave",
+          "type": "(updated: OmadaHardwarePort) => void",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "OmadaPrivacyPolicyPage",
+      "category": "omada-pages",
+      "kind": "component",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/omada",
+      "sourcePath": "src/omada/pages/OmadaPrivacyPolicyPage.tsx",
+      "description": "Legacy-Omada Privacy Policy & Telemetry Consent page with structured sections, diagnostics opt-in switch, and `TPFixedButtonBar` consent actions.",
+      "propsType": "OmadaPrivacyPolicyPageProps",
+      "props": [
+        {
+          "name": "analyticsEnabled",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "onAnalyticsChange",
+          "type": "(enabled: boolean) => void",
+          "optional": true
+        },
+        {
+          "name": "onAccept",
+          "type": "(consent: { analyticsEnabled: boolean }) => void",
+          "optional": true
+        },
+        {
+          "name": "onDecline",
+          "type": "() => void",
+          "optional": true
+        },
+        {
+          "name": "onBack",
+          "type": "() => void",
           "optional": true
         },
         {
@@ -4247,12 +5500,52 @@
       ]
     },
     {
+      "name": "OMADA_EXTENDED_COLORS",
+      "category": "theme",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/theme/tokens.ts",
+      "description": ""
+    },
+    {
+      "name": "OMADA_HIGH_CONTRAST_LIGHT_TOKENS",
+      "category": "theme",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/theme/tokens.ts",
+      "description": ""
+    },
+    {
+      "name": "OMADA_PORT_SPEED_COLORS",
+      "category": "theme",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/theme/tokens.ts",
+      "description": ""
+    },
+    {
       "name": "TP_BRANDS",
       "category": "theme",
       "kind": "data",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
       "sourcePath": "src/theme/tokens.ts",
       "description": "Metadata array of the 6 supported TP-Design brands (omada, tapo, tether, mercusys, deco, ux)."
+    },
+    {
+      "name": "TP_SCREEN_DIMENSIONS",
+      "category": "theme",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/theme/tokens.ts",
+      "description": ""
+    },
+    {
+      "name": "TP_TEXT_STYLES",
+      "category": "theme",
+      "kind": "data",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/theme/tokens.ts",
+      "description": ""
     },
     {
       "name": "TP_THEME_PRESETS",
@@ -4312,6 +5605,26 @@
         {
           "name": "screenSize",
           "type": "TPScreenSize",
+          "optional": true
+        },
+        {
+          "name": "highContrast",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "defaultHighContrast",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "fontScale",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "defaultFontScale",
+          "type": "number",
           "optional": true
         },
         {
@@ -4578,12 +5891,12 @@
           "textInversePrimary": "#2B2B2B",
           "textInverseSecondary": "#999999",
           "textHighlighted": "#33A0E9",
-          "alert": "#EE385C",
-          "alertSoft10": "rgba(238, 56, 92, 0.1)",
+          "alert": "#FF4D62",
+          "alertSoft10": "rgba(255, 77, 98, 0.16)",
           "green": "#00A870",
           "greenSoft10": "rgba(0, 168, 112, 0.1)",
-          "yellow": "#FF8C27",
-          "yellowSoft10": "rgba(255, 140, 39, 0.1)",
+          "yellow": "#F19151",
+          "yellowSoft10": "rgba(241, 145, 81, 0.16)",
           "buttonPrimaryFill": "#008055",
           "buttonSecondaryFill": "rgba(255, 255, 255, 0)",
           "buttonSecondaryStroke": 2,
@@ -5317,13 +6630,17 @@
       "log",
       "nav",
       "network tools",
+      "omada",
       "picker",
       "popup",
       "quick action",
       "select",
       "settings",
+      "sim",
+      "swipe",
       "tabbar",
       "toast",
+      "topo",
       "wifi-signal",
       "平台",
       "状态",
@@ -9643,6 +10960,56 @@
         "height": 24
       },
       {
+        "name": "all-in-one",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/一体机",
+        "format": "svg",
+        "monochrome": false,
+        "width": 12,
+        "height": 12
+      },
+      {
+        "name": "arrow-left",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/箭头左",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 24
+      },
+      {
+        "name": "arrow-left-disabled",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/箭头左_不可点",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 24
+      },
+      {
+        "name": "arrow-right",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/箭头右",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 24
+      },
+      {
+        "name": "arrow-right-disabled",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/箭头右_不可点",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 24
+      },
+      {
         "name": "avatar-log-in",
         "pack": "omada",
         "category": "general",
@@ -9663,6 +11030,26 @@
         "height": 80
       },
       {
+        "name": "bulb",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/bulb",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "clear-circle",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/消除",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
+      },
+      {
         "name": "client-android-phone",
         "pack": "omada",
         "category": "general",
@@ -9681,6 +11068,16 @@
         "monochrome": true,
         "width": 40,
         "height": 40
+      },
+      {
+        "name": "client-ap-node",
+        "pack": "omada",
+        "category": "topo",
+        "title": "omada-图标-topo/icon/client ap",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
       },
       {
         "name": "client-computer",
@@ -9871,6 +11268,46 @@
         "monochrome": true,
         "width": 40,
         "height": 40
+      },
+      {
+        "name": "cloud-standard",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/Cloud- standard",
+        "format": "svg",
+        "monochrome": false,
+        "width": 40,
+        "height": 40
+      },
+      {
+        "name": "connected-wrong",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/connected wrong",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "copy",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/copy",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "current-wlan",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/icon_current_wlan 1",
+        "format": "svg",
+        "monochrome": true,
+        "width": 24,
+        "height": 24
       },
       {
         "name": "dashboard-alert",
@@ -10073,6 +11510,16 @@
         "height": 24
       },
       {
+        "name": "expand",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/expand",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
+      },
+      {
         "name": "file",
         "pack": "omada",
         "category": "general",
@@ -10103,12 +11550,92 @@
         "height": 40
       },
       {
+        "name": "import",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/import",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "in-suit",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/in suit",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 16
+      },
+      {
         "name": "invisible",
         "pack": "omada",
         "category": "通用",
         "title": "omada-图标-通用/Property 1=invisable",
         "format": "svg",
         "monochrome": true,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "keys",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/keys",
+        "format": "svg",
+        "monochrome": true,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "lighting-off",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/Lighting off",
+        "format": "svg",
+        "monochrome": true,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "lighting-on",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/Lighting on",
+        "format": "svg",
+        "monochrome": true,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "loading-green",
+        "pack": "omada",
+        "category": "loading",
+        "title": "omada-图标-loading/icon/loading_green",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "loading-grey",
+        "pack": "omada",
+        "category": "loading",
+        "title": "omada-图标-loading/icon/loading_grey",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "locate",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/locate",
+        "format": "svg",
+        "monochrome": false,
         "width": 24,
         "height": 24
       },
@@ -10161,6 +11688,36 @@
         "monochrome": false,
         "width": 16,
         "height": 16
+      },
+      {
+        "name": "main-ap",
+        "pack": "omada",
+        "category": "topo",
+        "title": "omada-图标-topo/icon/main-ap",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
+      },
+      {
+        "name": "main-badge",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/main",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "manually",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/manually",
+        "format": "svg",
+        "monochrome": true,
+        "width": 24,
+        "height": 24
       },
       {
         "name": "nav-31",
@@ -10443,6 +12000,16 @@
         "height": 24
       },
       {
+        "name": "photo",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/photo",
+        "format": "svg",
+        "monochrome": true,
+        "width": 24,
+        "height": 24
+      },
+      {
         "name": "platform-omada",
         "pack": "omada",
         "category": "平台",
@@ -10531,6 +12098,16 @@
         "monochrome": false,
         "width": 16,
         "height": 16
+      },
+      {
+        "name": "port-list",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/port list",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
       },
       {
         "name": "port-mirror",
@@ -10731,6 +12308,16 @@
         "monochrome": true,
         "width": 24,
         "height": 24
+      },
+      {
+        "name": "remaining-poe",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/Remaining PoE",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 16
       },
       {
         "name": "select-multi-select",
@@ -11113,6 +12700,26 @@
         "height": 14
       },
       {
+        "name": "sim-1",
+        "pack": "omada",
+        "category": "sim",
+        "title": "omada-图标-sim/icon/sim 1",
+        "format": "svg",
+        "monochrome": true,
+        "width": 36,
+        "height": 28
+      },
+      {
+        "name": "sim-2",
+        "pack": "omada",
+        "category": "sim",
+        "title": "omada-图标-sim/icon/sim 2",
+        "format": "svg",
+        "monochrome": true,
+        "width": 36,
+        "height": 28
+      },
+      {
         "name": "sort",
         "pack": "omada",
         "category": "通用",
@@ -11151,6 +12758,16 @@
         "monochrome": true,
         "width": 24,
         "height": 24
+      },
+      {
+        "name": "standalone-host",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/standalone hosticon",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 16
       },
       {
         "name": "star-off",
@@ -11193,6 +12810,16 @@
         "height": 24
       },
       {
+        "name": "status-migrating",
+        "pack": "omada",
+        "category": "状态",
+        "title": "omada-图标-状态/status/Migrating",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 16
+      },
+      {
         "name": "status-success",
         "pack": "omada",
         "category": "状态",
@@ -11231,6 +12858,66 @@
         "monochrome": false,
         "width": 24,
         "height": 24
+      },
+      {
+        "name": "stp-discard",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/stp_discard_black 1",
+        "format": "svg",
+        "monochrome": true,
+        "width": 16,
+        "height": 16
+      },
+      {
+        "name": "swipe-block",
+        "pack": "omada",
+        "category": "swipe",
+        "title": "omada-图标-swipe/block解绑",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
+      },
+      {
+        "name": "swipe-delete",
+        "pack": "omada",
+        "category": "swipe",
+        "title": "omada-图标-swipe/icon/delete",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
+      },
+      {
+        "name": "swipe-details",
+        "pack": "omada",
+        "category": "swipe",
+        "title": "omada-图标-swipe/nav",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
+      },
+      {
+        "name": "swipe-edit",
+        "pack": "omada",
+        "category": "swipe",
+        "title": "omada-图标-swipe/icon/edit",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
+      },
+      {
+        "name": "swipe-unblock",
+        "pack": "omada",
+        "category": "swipe",
+        "title": "omada-图标-swipe/unblock",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
       },
       {
         "name": "tabbar-client-off",
@@ -11473,6 +13160,16 @@
         "height": 24
       },
       {
+        "name": "topo-offline",
+        "pack": "omada",
+        "category": "topo",
+        "title": "omada-图标-topo/topo icon/掉线",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
+      },
+      {
         "name": "topo-vertical",
         "pack": "omada",
         "category": "general",
@@ -11481,6 +13178,36 @@
         "monochrome": true,
         "width": 24,
         "height": 24
+      },
+      {
+        "name": "topo-vertical-20",
+        "pack": "omada",
+        "category": "topo",
+        "title": "omada-图标-topo/icon/上下topo_20",
+        "format": "svg",
+        "monochrome": true,
+        "width": 20,
+        "height": 20
+      },
+      {
+        "name": "topology",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/topology",
+        "format": "svg",
+        "monochrome": false,
+        "width": 20,
+        "height": 20
+      },
+      {
+        "name": "upgrade",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/upgrade",
+        "format": "svg",
+        "monochrome": false,
+        "width": 16,
+        "height": 16
       },
       {
         "name": "upload",
@@ -11527,6 +13254,16 @@
         "pack": "omada",
         "category": "通用",
         "title": "omada-图标-通用/Property 1=visable",
+        "format": "svg",
+        "monochrome": true,
+        "width": 24,
+        "height": 24
+      },
+      {
+        "name": "wifi-24",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/Wi-Fi_24",
         "format": "svg",
         "monochrome": true,
         "width": 24,
@@ -11591,6 +13328,16 @@
         "monochrome": false,
         "width": 48,
         "height": 48
+      },
+      {
+        "name": "zoom-fit",
+        "pack": "omada",
+        "category": "omada",
+        "title": "omada-图标-omada/icon/全局放大",
+        "format": "svg",
+        "monochrome": false,
+        "width": 24,
+        "height": 24
       }
     ],
     "illustrations": [
@@ -12212,6 +13959,26 @@
     ],
     "motions": [
       {
+        "name": "accessibility-zoom",
+        "title": "Accessibility Dynamic Focus",
+        "category": "component",
+        "themes": [
+          "light"
+        ],
+        "format": "svg",
+        "bytes": 0
+      },
+      {
+        "name": "ap-scan",
+        "title": "AP Channel Scan",
+        "category": "network",
+        "themes": [
+          "light"
+        ],
+        "format": "svg",
+        "bytes": 0
+      },
+      {
         "name": "connecting",
         "title": "Device Connecting",
         "category": "onboarding",
@@ -12231,6 +13998,16 @@
         ],
         "format": "pag",
         "bytes": 6321
+      },
+      {
+        "name": "device-pairing",
+        "title": "Device Pairing Radar",
+        "category": "onboarding",
+        "themes": [
+          "light"
+        ],
+        "format": "svg",
+        "bytes": 0
       },
       {
         "name": "discover-device",
@@ -12285,6 +14062,16 @@
         ],
         "format": "pag",
         "bytes": 100363
+      },
+      {
+        "name": "search-rotate",
+        "title": "Search & Discovery",
+        "category": "feedback",
+        "themes": [
+          "light"
+        ],
+        "format": "svg",
+        "bytes": 0
       },
       {
         "name": "tab-dropdown-mask",
@@ -12348,8 +14135,8 @@
         "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/standalone.js"
       },
       "pinnedUrls": {
-        "css": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/style.css",
-        "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/standalone.js"
+        "css": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.3.0/dist/style.css",
+        "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.3.0/dist/standalone.js"
       }
     },
     {

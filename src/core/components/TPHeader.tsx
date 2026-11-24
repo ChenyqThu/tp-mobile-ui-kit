@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useTPTheme } from '../../theme/TPThemeProvider';
 import type { TPHeaderProps } from '../types';
 import { TPLiquidGlassBackdrop } from './TPLiquidGlassBackdrop';
 import '../../styles/tp-core-nav-controls.css';
@@ -25,6 +26,8 @@ export const TPHeader: React.FC<TPHeaderProps> = ({
   title,
   subtitle,
   variant = 'standard',
+  os,
+  adaptiveOS = true,
   left,
   right,
   showBack = false,
@@ -33,10 +36,21 @@ export const TPHeader: React.FC<TPHeaderProps> = ({
   onTitleClick,
   rightBadge,
   translucent = false,
+  loading = false,
+  tabs,
+  activeTab,
+  onTabChange,
   className = '',
   style,
 }) => {
-  const isFloating = variant === 'floating';
+  const { os: themeOS } = useTPTheme();
+  const resolvedOS = os ?? themeOS;
+  const effectiveVariant =
+    adaptiveOS && resolvedOS === 'android' && variant === 'floating' ? 'standard' : variant;
+  const isFloating = effectiveVariant === 'floating';
+  const isLarge = effectiveVariant === 'large';
+  const hasTabs = (effectiveVariant === 'tabs' || Boolean(tabs?.length)) && Boolean(tabs?.length);
+
   const hasLeftContent = showBack || (left !== undefined && left !== null);
   const hasBadge =
     rightBadge !== undefined &&
@@ -76,6 +90,9 @@ export const TPHeader: React.FC<TPHeaderProps> = ({
       {title !== undefined && title !== null && (
         <span className="tp-header-title">{title}</span>
       )}
+      {loading && (
+        <span className="tp-header-loading" aria-label="Loading" role="status" />
+      )}
       {titleDropdown && (
         <span className="tp-header-chevron" aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
@@ -94,56 +111,101 @@ export const TPHeader: React.FC<TPHeaderProps> = ({
 
   const rootClass = [
     'tp-header',
-    `tp-header--${variant}`,
-    translucent ? 'tp-header--translucent' : '',
+    `tp-header--${effectiveVariant}`,
+    translucent && !isFloating ? 'tp-header--translucent' : '',
+    hasTabs ? 'tp-header--with-tabs' : '',
     className,
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
-    <header className={rootClass} data-variant={variant} style={style}>
-      <div className="tp-header-left">
-        {hasLeftContent ? (
-          isFloating ? (
-            <FloatingGlassWell>{leftNodes}</FloatingGlassWell>
-          ) : (
-            leftNodes
-          )
-        ) : null}
-      </div>
-
-      <div className="tp-header-center">
-        {(title !== undefined && title !== null) || titleDropdown ? (
-          onTitleClick || titleDropdown ? (
-            <button
-              type="button"
-              className="tp-header-title-btn"
-              onClick={onTitleClick}
-            >
-              {titleContent}
-            </button>
-          ) : (
-            <div className="tp-header-title-wrap">{titleContent}</div>
-          )
-        ) : null}
-        {subtitle !== undefined && subtitle !== null && (
-          <div className="tp-header-subtitle">{subtitle}</div>
-        )}
-      </div>
-
-      <div className="tp-header-right">
-        {hasRightContent ? (
-          <div className="tp-header-right-slot">
-            {isFloating ? (
-              <FloatingGlassWell>{right}</FloatingGlassWell>
+    <header
+      className={rootClass}
+      data-variant={effectiveVariant}
+      data-os={resolvedOS}
+      style={style}
+    >
+      <div className="tp-header-bar">
+        <div className="tp-header-left">
+          {hasLeftContent ? (
+            isFloating ? (
+              <FloatingGlassWell>{leftNodes}</FloatingGlassWell>
             ) : (
-              right
-            )}
-            {hasBadge && <span className="tp-header-badge">{rightBadge}</span>}
-          </div>
-        ) : null}
+              leftNodes
+            )
+          ) : null}
+        </div>
+
+        <div className="tp-header-center">
+          {!isLarge && ((title !== undefined && title !== null) || titleDropdown || loading) ? (
+            onTitleClick || titleDropdown ? (
+              <button
+                type="button"
+                className="tp-header-title-btn"
+                onClick={onTitleClick}
+              >
+                {titleContent}
+              </button>
+            ) : (
+              <div className="tp-header-title-wrap">{titleContent}</div>
+            )
+          ) : null}
+          {!isLarge && subtitle !== undefined && subtitle !== null && (
+            <div className="tp-header-subtitle">{subtitle}</div>
+          )}
+        </div>
+
+        <div className="tp-header-right">
+          {hasRightContent ? (
+            <div className="tp-header-right-slot">
+              {isFloating ? (
+                <FloatingGlassWell>{right}</FloatingGlassWell>
+              ) : (
+                right
+              )}
+              {hasBadge && <span className="tp-header-badge">{rightBadge}</span>}
+            </div>
+          ) : null}
+        </div>
       </div>
+
+      {isLarge && (title !== undefined || subtitle !== undefined) && (
+        <div className="tp-header-large-row">
+          <div className="tp-header-large-title-wrap">
+            <h1 className="tp-header-large-title">{title}</h1>
+            {loading && (
+              <span className="tp-header-loading" aria-label="Loading" role="status" />
+            )}
+          </div>
+          {subtitle !== undefined && subtitle !== null && (
+            <div className="tp-header-large-subtitle">{subtitle}</div>
+          )}
+        </div>
+      )}
+
+      {hasTabs && tabs && (
+        <div className="tp-header-tabs" role="tablist">
+          {tabs.map((tab) => {
+            const isActive = tab.key === activeTab;
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`tp-header-tab ${isActive ? 'tp-header-tab--active' : ''}`.trim()}
+                onClick={() => onTabChange?.(tab.key)}
+              >
+                <span>{tab.label}</span>
+                {tab.badge !== undefined && tab.badge !== null && tab.badge !== '' && (
+                  <span className="tp-header-tab-badge">{tab.badge}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </header>
   );
 };

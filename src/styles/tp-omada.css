@@ -60,8 +60,10 @@
 }
 
 /* Adapt multicolor Omada Figma SVGs that use dark #2B2B2B strokes on dark surfaces */
+[data-tp-mode="dark"] .tp-icon--svg[data-tp-active-theme="dark"] svg [stroke="#2B2B2B"],
+[data-tp-mode="dark"] .tp-icon--svg[data-tp-active-theme="dark"] svg [stroke="#2b2b2b"],
 [data-tp-mode="dark"] .tp-omada-adapt-svg svg [stroke="#2B2B2B"] {
-  stroke: rgba(255, 255, 255, 0.82) !important;
+  stroke: rgba(255, 255, 255, 0.86) !important;
 }
 
 /* Screen shell */
@@ -108,7 +110,7 @@
 
 .tp-omada-body--with-tabbar,
 [data-overlay-bottom="true"] .tp-omada-body {
-  padding-bottom: 108px;
+  padding-bottom: 132px;
 }
 
 .tp-omada-scroll {
@@ -1019,4 +1021,494 @@
   align-items: center;
   gap: 8px;
   padding: 10px 0;
+}
+
+/* ==========================================================================
+   OmadaChartCard & P0 Business Blocks
+   ========================================================================== */
+
+.tp-omada-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tp-omada-chart-heading {
+  min-width: 0;
+  flex: 1;
+}
+
+.tp-omada-chart-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tp-text-primary);
+  line-height: 1.3;
+}
+
+.tp-omada-chart-subtitle {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-omada-chart-body {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tp-omada-chart-tooltip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--tp-bg-page);
+  font-size: 11.5px;
+  color: var(--tp-text-primary);
+}
+
+.tp-omada-chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.tp-omada-chart-axis-text {
+  font-size: 9px;
+  fill: var(--tp-text-secondary, #999999);
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-omada-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding-top: 4px;
+}
+
+.tp-omada-chart-legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-omada-chart-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.tp-omada-chart-donut-wrap {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tp-omada-chart-donut-svg {
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+}
+
+.tp-omada-chart-donut-total {
+  font-size: 16px;
+  font-weight: 700;
+  fill: var(--tp-text-primary);
+}
+
+.tp-omada-chart-donut-unit {
+  font-size: 10px;
+  fill: var(--tp-text-secondary);
+}
+
+.tp-omada-chart-donut-legend {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tp-omada-chart-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.tp-omada-chart-legend-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--tp-text-secondary-alt);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tp-omada-chart-legend-val {
+  font-weight: 600;
+  color: var(--tp-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-omada-speed-bars {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tp-omada-speed-bar-row {
+  display: grid;
+  grid-template-columns: 76px 1fr 56px;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tp-omada-speed-bar-label {
+  font-size: 12px;
+  color: var(--tp-text-secondary-alt);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tp-omada-speed-bar-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--tp-bg-search);
+  overflow: hidden;
+}
+
+.tp-omada-speed-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+}
+
+.tp-omada-speed-bar-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tp-text-primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Port dual-row switch faceplate & extended speed strip */
+.tp-omada-chassis-dual {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.tp-omada-chassis-rj45-rows {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tp-omada-chassis-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 6px;
+}
+
+.tp-omada-chassis-sfp-col {
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.tp-omada-port-speed-bar {
+  width: 100%;
+  height: 3px;
+  border-radius: 9999px;
+  margin-bottom: 2px;
+}
+
+.tp-omada-port-badge-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.tp-omada-port-badge-more {
+  font-size: 9px;
+  color: var(--tp-text-secondary);
+}
+
+.tp-omada-port-selector-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tp-omada-port-selector-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tp-omada-port-selector-check {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--tp-focus);
+  min-height: 12px;
+}
+
+.tp-omada-port-selector-summary {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-omada-std-seg-input--short {
+  max-width: 56px;
+  flex: 0 0 56px;
+}
+
+.tp-omada-repeater {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tp-omada-repeater-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
+.tp-omada-repeater-fields {
+  flex: 1;
+  min-width: 0;
+}
+
+.tp-omada-repeater-default-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tp-omada-repeater-del {
+  margin-top: 22px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   P1 & P2 Omada Extensions (Device Toolbar, Drawer, Voucher, Accessibility)
+   ========================================================================== */
+
+.tp-omada-device-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tp-omada-drawer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: var(--tp-bg-overlay, rgba(0, 0, 0, 0.32));
+  display: flex;
+  justify-content: flex-start;
+}
+
+.tp-omada-drawer {
+  width: min(82%, 300px);
+  height: 100%;
+  background: var(--tp-bg-card);
+  color: var(--tp-text-primary);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 8px 0 28px rgba(0, 0, 0, 0.18);
+  font-family: var(--tp-font-family);
+}
+
+.tp-omada-drawer-head {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--tp-divider);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tp-omada-drawer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--tp-focus-10);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tp-omada-drawer-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tp-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tp-omada-drawer-sub {
+  font-size: 12px;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-omada-drawer-site-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--tp-divider);
+  border-radius: 10px;
+  background: var(--tp-bg-page);
+  color: var(--tp-text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tp-omada-drawer-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tp-omada-drawer-footer {
+  padding: 10px;
+  border-top: 1px solid var(--tp-divider);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tp-omada-drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--tp-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tp-omada-drawer-item--active {
+  background: var(--tp-focus-10);
+  color: var(--tp-focus);
+  font-weight: 600;
+}
+
+.tp-omada-drawer-item-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.tp-omada-voucher-card {
+  border: 1px dashed var(--tp-focus, #00A870);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tp-omada-voucher-code-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--tp-bg-page);
+}
+
+.tp-omada-voucher-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--tp-text-primary);
+}
+
+.tp-omada-voucher-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tp-omada-voucher-meta-cell {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--tp-bg-page);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tp-omada-voucher-meta-label {
+  font-size: 11px;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-omada-voucher-meta-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tp-text-primary);
+}
+
+.tp-omada-fab--android {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 9999px;
+  background: var(--tp-btn-primary-bg, #00A870);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.24);
+  cursor: pointer;
 }

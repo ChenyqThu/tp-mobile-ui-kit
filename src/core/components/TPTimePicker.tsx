@@ -34,17 +34,19 @@ function normalizeTimeValue(raw: TimeValue, use12Hour: boolean): TimeValue {
 export const TPTimePicker: React.FC<TPTimePickerProps> = ({
   value,
   use12Hour = false,
+  format,
   minuteStep = 1,
   onChange,
   className = '',
   style,
 }) => {
+  const effective12Hour = format ? format === '12h' : use12Hour;
   const [internalValue, setInternalValue] = useState<TimeValue>(() =>
-    normalizeTimeValue({ hour: use12Hour ? 9 : 9, minute: 0, period: 'AM' }, use12Hour),
+    normalizeTimeValue({ hour: 9, minute: 0, period: 'AM' }, effective12Hour),
   );
 
   const isControlled = value !== undefined;
-  const activeValue = normalizeTimeValue(isControlled ? value : internalValue, use12Hour);
+  const activeValue = normalizeTimeValue(isControlled ? value : internalValue, effective12Hour);
   const step = Math.max(1, minuteStep);
 
   const minuteOptions = useMemo(() => {
@@ -70,7 +72,7 @@ export const TPTimePicker: React.FC<TPTimePickerProps> = ({
   }, [activeValue.minute, minuteOptions]);
 
   const columns = useMemo<TPWheelPickerColumn[]>(() => {
-    const hourOptions = use12Hour
+    const hourOptions = effective12Hour
       ? Array.from({ length: 12 }, (_, idx) => {
           const h = idx + 1;
           return { value: String(h), label: String(h).padStart(2, '0') };
@@ -85,7 +87,7 @@ export const TPTimePicker: React.FC<TPTimePickerProps> = ({
       { key: 'minute', options: minuteOptions, value: String(closestMinute) },
     ];
 
-    if (use12Hour) {
+    if (effective12Hour) {
       cols.push({
         key: 'period',
         options: [
@@ -97,13 +99,13 @@ export const TPTimePicker: React.FC<TPTimePickerProps> = ({
     }
 
     return cols;
-  }, [use12Hour, activeValue.hour, activeValue.period, minuteOptions, closestMinute]);
+  }, [effective12Hour, activeValue.hour, activeValue.period, minuteOptions, closestMinute]);
 
   const handleColumnChange = (key: string, nextVal: string) => {
     const next: TimeValue = {
       hour: activeValue.hour,
       minute: closestMinute,
-      ...(use12Hour ? { period: activeValue.period ?? 'AM' } : {}),
+      ...(effective12Hour ? { period: activeValue.period ?? 'AM' } : {}),
     };
 
     if (key === 'hour') next.hour = Number(nextVal);
@@ -117,7 +119,11 @@ export const TPTimePicker: React.FC<TPTimePickerProps> = ({
   };
 
   return (
-    <div className={`tp-time-picker ${className}`.trim()} style={style}>
+    <div
+      className={`tp-time-picker ${className}`.trim()}
+      data-format={effective12Hour ? '12h' : '24h'}
+      style={style}
+    >
       <TPWheelPicker columns={columns} onChange={handleColumnChange} />
     </div>
   );

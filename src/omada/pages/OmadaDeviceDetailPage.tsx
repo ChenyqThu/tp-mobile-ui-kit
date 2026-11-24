@@ -229,13 +229,23 @@ export const OmadaDeviceDetailPage: React.FC<OmadaDeviceDetailPageProps> = ({
                 {activePort && (
                   <section className="tp-omada-card" aria-label="Selected Port Details">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                      <TPMotion
-                        key={activePort.id}
-                        name="port-card-expand"
-                        width={76}
-                        height={76}
-                        playing
-                      />
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          borderRadius: 10,
+                          overflow: 'hidden',
+                          background: '#F5F7FA',
+                          flexShrink: 0,
+                        }}
+                      >
+                        <TPMotion
+                          key={activePort.id}
+                          name="port-card-expand"
+                          width={76}
+                          height={76}
+                          playing
+                        />
+                      </span>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: 16, fontWeight: 600 }}>{activePort.label}</div>
                         <div style={{ fontSize: 13, color: 'var(--tp-color-green)', marginTop: 2 }}>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import type { TPPhoneFrameProps } from '../../core/types';
+import { useTPTheme } from '../../theme/TPThemeProvider';
 import { TPPhoneFrame } from '../../core/components/TPPhoneFrame';
 import { TPStatusBar } from '../../core/components/TPStatusBar';
 import { TPTabBar } from '../../core/components/TPTabBar';
 import { TPBottomSheet } from '../../core/components/TPBottomSheet';
+import { TPButton } from '../../core/components/TPButton';
 import { TPLiquidGlass } from '../../core/components/TPLiquidGlass';
 import { TPIcon, type TPIconName } from '../../assets-lib';
 import {
@@ -18,6 +20,9 @@ import { OmadaScheduleBlock } from '../blocks/OmadaScheduleBlock';
 import { OmadaPortPanelBlock } from '../blocks/OmadaPortPanelBlock';
 import { OmadaTopologyBlock } from '../blocks/OmadaTopologyBlock';
 import { OmadaFirmwareUpdateBlock } from '../blocks/OmadaFirmwareUpdateBlock';
+import { OmadaSiteListBlock } from '../blocks/OmadaSiteListBlock';
+import { OmadaSidebarDrawer } from '../blocks/OmadaSidebarDrawer';
+import { OmadaVoucherPreviewCard } from '../blocks/OmadaVoucherPreviewCard';
 import { OmadaLaunchLoadingPage } from './OmadaLaunchLoadingPage';
 import { OmadaControllerListPage } from './OmadaControllerListPage';
 import { OmadaSiteDashboardPage } from './OmadaSiteDashboardPage';
@@ -27,6 +32,11 @@ import { OmadaSiteClientsPage } from './OmadaSiteClientsPage';
 import { OmadaSiteSettingsPage } from './OmadaSiteSettingsPage';
 import { OmadaHealthDetailPage } from './OmadaHealthDetailPage';
 import { OmadaDeviceDetailPage } from './OmadaDeviceDetailPage';
+import { OmadaLanSettingsPage } from './OmadaLanSettingsPage';
+import { OmadaPortDetailPage } from './OmadaPortDetailPage';
+import { OmadaAccessibilitySettingsPage } from './OmadaAccessibilitySettingsPage';
+import { OmadaPrivacyPolicyPage } from './OmadaPrivacyPolicyPage';
+import { OmadaConfigFormPage } from './OmadaConfigFormPage';
 import '../../styles/tp-omada.css';
 
 export type OmadaAppScreenId =
@@ -44,7 +54,13 @@ export type OmadaAppScreenId =
   | 'schedule'
   | 'firmware'
   | 'topology'
-  | 'port-panel';
+  | 'port-panel'
+  | 'sites'
+  | 'lan-settings'
+  | 'port-detail'
+  | 'accessibility'
+  | 'privacy'
+  | 'voucher-preview';
 
 export interface OmadaAppDemoProps {
   initialScreen?: OmadaAppScreenId;
@@ -52,6 +68,9 @@ export interface OmadaAppDemoProps {
   onScreenChange?: (screen: OmadaAppScreenId) => void;
   device?: TPPhoneFrameProps['device'];
   showFrame?: boolean;
+  initialDrawerOpen?: boolean;
+  drawerOpen?: boolean;
+  onDrawerOpenChange?: (open: boolean) => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -75,8 +94,8 @@ const TOOLKIT_ITEMS: readonly { key: string; label: string; icon: TPIconName; su
 ];
 
 /**
- * Interactive end-to-end Omada APP v5.3–6.3 prototype wiring all 7 real-device screens
- * and drill-down sub-pages inside `TPPhoneFrame`.
+ * Interactive end-to-end Omada APP v5.3–6.3 prototype wiring all core screens,
+ * OS-adaptive Liquid Glass (iOS) / Traditional (Android) chrome, sidebar drawer, and sub-pages inside `TPPhoneFrame`.
  */
 export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
   initialScreen = 'dashboard',
@@ -84,9 +103,13 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
   onScreenChange,
   device = 'iphone16pro',
   showFrame = true,
+  initialDrawerOpen = false,
+  drawerOpen: controlledDrawerOpen,
+  onDrawerOpenChange,
   className = '',
   style,
 }) => {
+  const { os } = useTPTheme();
   const [uncontrolledScreen, setUncontrolledScreen] = useState<OmadaAppScreenId>(initialScreen);
   const currentScreen = controlledScreen ?? uncontrolledScreen;
 
@@ -96,6 +119,14 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
   const [unreadLogsCount, setUnreadLogsCount] = useState(1);
   const [previousScreen, setPreviousScreen] = useState<OmadaAppScreenId>('dashboard');
   const [toolkitOpen, setToolkitOpen] = useState(false);
+  const [uncontrolledDrawerOpen, setUncontrolledDrawerOpen] = useState(initialDrawerOpen);
+  const drawerOpen = controlledDrawerOpen ?? uncontrolledDrawerOpen;
+  const setDrawerOpen = (next: boolean) => {
+    if (controlledDrawerOpen === undefined) {
+      setUncontrolledDrawerOpen(next);
+    }
+    onDrawerOpenChange?.(next);
+  };
   const [toolSummary, setToolSummary] = useState<string | null>(null);
 
   const navigate = (next: OmadaAppScreenId) => {
@@ -113,6 +144,7 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
       : (currentScreen as OmadaSiteTabKey);
 
   const showToolkitFab = currentScreen === 'launch' || currentScreen === 'dashboard';
+  const isAndroid = os === 'android';
 
   const renderScreen = () => {
     switch (currentScreen) {
@@ -225,6 +257,53 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
             onBack={() => navigate('devices')}
           />
         );
+      case 'sites':
+        return (
+          <OmadaConfigFormPage
+            title="Switch Site"
+            subtitle={controllerName}
+            mode="subpage"
+            onBack={() => navigate('dashboard')}
+          >
+            <OmadaSiteListBlock
+              onSelectSite={(site) => {
+                setSiteName(site.name);
+                navigate('dashboard');
+              }}
+            />
+          </OmadaConfigFormPage>
+        );
+      case 'lan-settings':
+        return <OmadaLanSettingsPage onBack={() => navigate('settings')} />;
+      case 'port-detail':
+        return <OmadaPortDetailPage onBack={() => navigate('port-panel')} />;
+      case 'accessibility':
+        return <OmadaAccessibilitySettingsPage onBack={() => navigate('settings')} />;
+      case 'privacy':
+        return (
+          <OmadaPrivacyPolicyPage
+            onAccept={() => navigate('dashboard')}
+            onBack={() => navigate('settings')}
+          />
+        );
+      case 'voucher-preview':
+        return (
+          <OmadaConfigFormPage
+            title="Hotspot Vouchers"
+            subtitle={`Site ${siteName}`}
+            mode="subpage"
+            onBack={() => navigate('settings')}
+          >
+            <OmadaVoucherPreviewCard
+              code="OMD-8492-5109"
+              status="valid"
+              durationLabel="72 Hours"
+              dataQuota="10 GB"
+              bandwidthLimit="↓ 100 Mbps · ↑ 30 Mbps"
+              notes="Lobby Reception"
+            />
+          </OmadaConfigFormPage>
+        );
       default:
         return null;
     }
@@ -236,7 +315,7 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
         device={device}
         showFrame={showFrame}
         overlayTop
-        overlayBottom={hasBottomTabBar}
+        overlayBottom={!isAndroid && hasBottomTabBar}
         className={className}
         style={style}
         statusBar={
@@ -249,24 +328,36 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
         }
         floatingAction={
           showToolkitFab ? (
-            <TPLiquidGlass
-              as="button"
-              shape="circle"
-              tint="brand"
-              interactive
-              blur={1.8}
-              className="tp-omada-fab"
-              ariaLabel="Network Toolkit"
-              onClick={() => setToolkitOpen(true)}
-            >
-              <TPIcon name="settings-network-tools" size={22} color="#FFFFFF" />
-            </TPLiquidGlass>
+            isAndroid ? (
+              <button
+                type="button"
+                className="tp-omada-fab tp-omada-fab--android"
+                aria-label="Network Toolkit"
+                onClick={() => setToolkitOpen(true)}
+              >
+                <TPIcon name="settings-network-tools" size={22} color="#FFFFFF" />
+              </button>
+            ) : (
+              <TPLiquidGlass
+                as="button"
+                shape="circle"
+                tint="brand"
+                interactive
+                blur={1.8}
+                className="tp-omada-fab"
+                ariaLabel="Network Toolkit"
+                onClick={() => setToolkitOpen(true)}
+              >
+                <TPIcon name="settings-network-tools" size={22} color="#FFFFFF" />
+              </TPLiquidGlass>
+            )
           ) : undefined
         }
         bottomBar={
           hasBottomTabBar ? (
             <TPTabBar
               variant="floating-pill"
+              os={os}
               items={OMADA_SITE_TABS}
               activeKey={activeTabKey}
               onChange={(key) => navigate(key as OmadaAppScreenId)}
@@ -275,6 +366,16 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
         }
       >
         {renderScreen()}
+
+        <OmadaSidebarDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          controllerName={controllerName}
+          siteName={siteName}
+          activeKey={currentScreen}
+          onSwitchSite={() => navigate('sites')}
+          onSelectItem={(key) => navigate(key as OmadaAppScreenId)}
+        />
       </TPPhoneFrame>
 
       <TPBottomSheet
@@ -310,6 +411,17 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
               {toolSummary}
             </div>
           )}
+          <TPButton
+            variant="secondary"
+            size="md"
+            block
+            onClick={() => {
+              setToolkitOpen(false);
+              setDrawerOpen(true);
+            }}
+          >
+            Open Workspace Drawer
+          </TPButton>
         </div>
       </TPBottomSheet>
     </>

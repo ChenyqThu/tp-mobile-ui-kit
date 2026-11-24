@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  OMADA_HIGH_CONTRAST_LIGHT_TOKENS,
   TP_BRANDS,
   TP_THEME_PRESETS,
   TPThemeProvider,
@@ -7,6 +8,7 @@ import {
   type TPBrand,
   type TPPlatformOS,
   type TPResolvedMode,
+  type TPThemeTokens,
 } from '../theme';
 import {
   TPBrandLogo,
@@ -39,6 +41,8 @@ import {
   TPHeader,
   TPIconButton,
   TPIconButtonGroup,
+  TPInfoSheet,
+  TPLegendSheet,
   TPInput,
   TPKeyboard,
   TPLast7DaysPicker,
@@ -46,6 +50,7 @@ import {
   TPListButton,
   TPListCard,
   TPListItem,
+  TPLoadMore,
   TPMenu,
   TPMonthPicker,
   TPPageControl,
@@ -88,8 +93,15 @@ import {
   OmadaStandardInput,
   type OmadaAppScreenId,
 } from '../omada';
+import { OmadaBlocksTab } from './OmadaBlocksTab';
 
-type StudioTabId = 'omada-app' | 'theme-lab' | 'core-kit' | 'assets-motion' | 'agent-skill';
+type StudioTabId =
+  | 'omada-app'
+  | 'omada-blocks'
+  | 'theme-lab'
+  | 'core-kit'
+  | 'assets-motion'
+  | 'agent-skill';
 type CoreCategoryId = 'all' | 'nav-controls' | 'display-lists' | 'inputs-pickers' | 'overlays-feedback';
 type AssetsSubTabId = 'motions' | 'omada-icons' | 'general-icons' | 'illustrations' | 'logos';
 
@@ -238,6 +250,60 @@ const OMADA_SCREEN_META: readonly OmadaScreenMeta[] = [
       'OmadaFirmwareUpdateBlock (SMBNET-4894) combining TPFixedToast release notes, TPStepText changelog, TPCheckbox targets, TPProgress, and update-network PAG motion.',
     components: ['OmadaFirmwareUpdateBlock', 'TPFixedToast', 'TPStepText', 'TPCheckbox', 'TPProgress', 'TPMotion'],
   },
+  {
+    id: 'sites',
+    label: 'Site Switcher',
+    badge: 'P1 Block',
+    group: 'drilldown',
+    description:
+      'OmadaSiteListBlock searchable multi-site directory with controller kind tags, device/client counts, and alert badges.',
+    components: ['OmadaConfigFormPage', 'OmadaSiteListBlock', 'TPSearchBar', 'TPTag', 'TPBadge'],
+  },
+  {
+    id: 'lan-settings',
+    label: 'LAN / VLAN Settings',
+    badge: 'P1 Page',
+    group: 'drilldown',
+    description:
+      'OmadaLanSettingsPage using OmadaConfigFormPage (dirty-check Discard alert), underline TPInput, CIDR/IP-Range OmadaStandardInput, and OmadaFormRepeaterBlock.',
+    components: ['OmadaLanSettingsPage', 'OmadaConfigFormPage', 'TPInput (underline)', 'OmadaStandardInput (cidr)', 'OmadaFormRepeaterBlock'],
+  },
+  {
+    id: 'port-detail',
+    label: 'Port Detail Edit',
+    badge: 'P1 Page',
+    group: 'drilldown',
+    description:
+      'OmadaPortDetailPage featuring 10-speed port status badge strip, throughput OmadaChartCard, PoE output toggle, and VLAN profile selector.',
+    components: ['OmadaPortDetailPage', 'OmadaChartCard', 'TPTag (xs rect)', 'TPSwitch'],
+  },
+  {
+    id: 'accessibility',
+    label: 'Accessibility & Display',
+    badge: 'P2 Page',
+    group: 'drilldown',
+    description:
+      'OmadaAccessibilitySettingsPage toggling WCAG 4.5:1 High Contrast (Bold Title 1 + underlined links) and dynamic Font Scale (140%+ form stacking).',
+    components: ['OmadaAccessibilitySettingsPage', 'useTPTheme', 'TPText', 'TPTag', 'TPMotion (accessibility-zoom)'],
+  },
+  {
+    id: 'privacy',
+    label: 'Privacy & Consent',
+    badge: 'P2 Page',
+    group: 'drilldown',
+    description:
+      'OmadaPrivacyPolicyPage structured legal/telemetry agreement with diagnostics toggle switch and TPFixedButtonBar actions.',
+    components: ['OmadaPrivacyPolicyPage', 'TPSwitch', 'TPFixedButtonBar'],
+  },
+  {
+    id: 'voucher-preview',
+    label: 'Hotspot Voucher',
+    badge: 'P2 Block',
+    group: 'drilldown',
+    description:
+      'OmadaVoucherPreviewCard printable access voucher with monospace code copy action, bandwidth limits, quota, and expiry metadata.',
+    components: ['OmadaVoucherPreviewCard', 'TPIconButton', 'TPTag', 'TPIcon (keys, copy)'],
+  },
 ];
 
 const BRAND_LOGO_MAP: Record<TPBrand, TPBrandLogoName> = {
@@ -271,11 +337,12 @@ function copyTextWithToast(snippet: string, showToast: (msg: string) => void) {
   showToast(`Copied: ${snippet}`);
 }
 
-const ThemeLabTab: React.FC<{ onApplyBrand?: (brand: TPBrand, mode: TPResolvedMode, os: TPPlatformOS) => void }> = ({
-  onApplyBrand,
-}) => {
+const ThemeLabTab: React.FC<{
+  onApplyBrand?: (brand: TPBrand, mode: TPResolvedMode, os: TPPlatformOS, highContrast?: boolean) => void;
+}> = ({ onApplyBrand }) => {
   const [labMode, setLabMode] = useState<TPResolvedMode>('light');
   const [labOS, setLabOS] = useState<TPPlatformOS>('ios');
+  const [labHighContrast, setLabHighContrast] = useState(false);
   const [switchStates, setSwitchStates] = useState<Record<TPBrand, boolean>>({
     omada: true,
     tapo: true,
@@ -324,7 +391,10 @@ const ThemeLabTab: React.FC<{ onApplyBrand?: (brand: TPBrand, mode: TPResolvedMo
             <button
               type="button"
               className={`studio-seg-btn ${labMode === 'dark' ? 'studio-seg-btn--active' : ''}`}
-              onClick={() => setLabMode('dark')}
+              onClick={() => {
+                setLabMode('dark');
+                setLabHighContrast(false);
+              }}
             >
               Dark Mode
             </button>
@@ -345,18 +415,44 @@ const ThemeLabTab: React.FC<{ onApplyBrand?: (brand: TPBrand, mode: TPResolvedMo
               Android
             </button>
           </div>
+          <div className="studio-segmented" role="group" aria-label="Theme Lab Contrast">
+            <button
+              type="button"
+              className={`studio-seg-btn ${!labHighContrast ? 'studio-seg-btn--active' : ''}`}
+              onClick={() => setLabHighContrast(false)}
+            >
+              Normal
+            </button>
+            <button
+              type="button"
+              className={`studio-seg-btn ${labHighContrast ? 'studio-seg-btn--active' : ''}`}
+              onClick={() => {
+                setLabHighContrast(true);
+                setLabMode('light');
+              }}
+            >
+              High Contrast (Omada)
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="studio-brand-grid">
         {TP_BRANDS.map((b) => {
-          const preset = TP_THEME_PRESETS[b.id][labMode];
+          const isOmadaHC = labHighContrast && b.id === 'omada' && labMode === 'light';
+          const preset: TPThemeTokens = isOmadaHC
+            ? {
+                ...TP_THEME_PRESETS.omada.light,
+                ...OMADA_HIGH_CONTRAST_LIGHT_TOKENS,
+                figmaMode: 'Omada - High Contrast',
+              }
+            : TP_THEME_PRESETS[b.id][labMode];
           const isChecked = switchStates[b.id];
           const sliderVal = sliderValues[b.id];
 
           return (
             <div key={b.id} className="studio-brand-card-outer">
-              <TPThemeProvider scoped brand={b.id} mode={labMode} os={labOS}>
+              <TPThemeProvider scoped brand={b.id} mode={labMode} os={labOS} highContrast={isOmadaHC}>
                 <div className="studio-brand-surface">
                   <div className="studio-brand-card-head">
                     <div className="studio-brand-card-id">
@@ -372,7 +468,7 @@ const ThemeLabTab: React.FC<{ onApplyBrand?: (brand: TPBrand, mode: TPResolvedMo
                       <TPButton
                         variant="in-card"
                         size="sm"
-                        onClick={() => onApplyBrand(b.id, labMode, labOS)}
+                        onClick={() => onApplyBrand(b.id, labMode, labOS, isOmadaHC)}
                       >
                         Use in APP
                       </TPButton>
@@ -380,6 +476,7 @@ const ThemeLabTab: React.FC<{ onApplyBrand?: (brand: TPBrand, mode: TPResolvedMo
                   </div>
 
                   <div className="studio-spec-row">
+                    {isOmadaHC && <span className="studio-spec-badge">HC 4.5:1</span>}
                     <span className="studio-spec-badge">Btn {preset.radiusButton}px</span>
                     <span className="studio-spec-badge">Card {preset.radiusCard}px</span>
                     <span className="studio-spec-badge">
@@ -483,7 +580,20 @@ const CoreKitTab: React.FC<{
   phoneDevice: NonNullable<TPPhoneFrameProps['device']>;
   onPhoneDeviceChange: (d: NonNullable<TPPhoneFrameProps['device']>) => void;
 }> = ({ phoneDevice, onPhoneDeviceChange }) => {
-  const { brand, mode, resolvedMode, os, tokens, setBrand, setMode, setOS } = useTPTheme();
+  const {
+    brand,
+    mode,
+    resolvedMode,
+    os,
+    highContrast,
+    fontScale,
+    tokens,
+    setBrand,
+    setMode,
+    setOS,
+    setHighContrast,
+    setFontScale,
+  } = useTPTheme();
   const toast = useTPToast();
 
   const [category, setCategory] = useState<CoreCategoryId>('all');
@@ -497,21 +607,25 @@ const CoreKitTab: React.FC<{
   }, [category]);
 
   // Navigation & Controls state
-  const [headerVariant, setHeaderVariant] = useState<'standard' | 'floating'>('floating');
+  const [headerVariant, setHeaderVariant] = useState<'standard' | 'floating' | 'large' | 'tabs'>('floating');
+  const [headerLoading, setHeaderLoading] = useState(false);
+  const [headerTab, setHeaderTab] = useState('stats');
   const [btnVariant, setBtnVariant] = useState<
-    'primary' | 'secondary' | 'text' | 'alert' | 'tonal' | 'in-card'
+    'primary' | 'secondary' | 'text' | 'alert' | 'alert-strong' | 'tonal' | 'in-card' | 'in-card-alert'
   >('primary');
   const [btnSize, setBtnSize] = useState<'lg' | 'md' | 'sm'>('md');
   const [btnLoading, setBtnLoading] = useState(false);
-  const [fixedLayout, setFixedLayout] = useState<'single' | 'dual-horizontal' | 'dual-vertical'>(
-    'dual-horizontal',
-  );
+  const [btnProgress, setBtnProgress] = useState(false);
+  const [fixedLayout, setFixedLayout] = useState<
+    'single' | 'dual-horizontal' | 'dual-vertical' | 'triple'
+  >('dual-horizontal');
   const [switchOn, setSwitchOn] = useState(true);
   const [sliderVal, setSliderVal] = useState(60);
   const [rangeVal, setRangeVal] = useState<[number, number]>([20, 75]);
-  const [segVariant, setSegVariant] = useState<'pill' | 'underline'>('pill');
+  const [segVariant, setSegVariant] = useState<'pill' | 'underline' | 'segmented'>('pill');
   const [segVal, setSegVal] = useState('5g');
   const [pageIdx, setPageIdx] = useState(1);
+  const [pageControlVariant, setPageControlVariant] = useState<'dots' | 'process'>('dots');
   const [tabVariant, setTabVariant] = useState<'floating-pill' | 'docked'>('floating-pill');
   const [showTabExtra, setShowTabExtra] = useState(true);
   const [activeTabKey, setActiveTabKey] = useState('home');
@@ -529,17 +643,28 @@ const CoreKitTab: React.FC<{
   // Inputs & Pickers state
   const [inputText, setInputText] = useState('Office_Main_WLAN');
   const [inputPwd, setInputPwd] = useState('Omada@2026');
+  const [underlineVal, setUnderlineVal] = useState('Guest Wi-Fi VLAN 20');
   const [inputNotes, setInputNotes] = useState('Guest VLAN isolated from LAN subnet.');
   const [listInputVal, setListInputVal] = useState('192.168.0.1');
   const [pinCode, setPinCode] = useState('2468');
   const [checkedBands, setCheckedBands] = useState<string[]>(['5g', '6g']);
   const [radioSecurity, setRadioSecurity] = useState('wpa3');
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchShape, setSearchShape] = useState<'auto' | 'rounded' | 'pill'>('auto');
   const [stdIp, setStdIp] = useState('192.168.0.1');
   const [stdMac, setStdMac] = useState('8C-86-DD-A6-A7-5F');
   const [stdPort, setStdPort] = useState('443');
+  const [stdCidr, setStdCidr] = useState('192.168.10.0/24');
+  const [stdIpRange, setStdIpRange] = useState('192.168.10.100-192.168.10.200');
+  const [stdIpPort, setStdIpPort] = useState('192.168.0.1:8043');
+  const [stdTimeRange, setStdTimeRange] = useState('08:00-18:00');
   const [wheelValues, setWheelValues] = useState({ band: '5g', channel: '36' });
+  const [dateMode, setDateMode] = useState<'single' | 'range'>('single');
   const [pickedDate, setPickedDate] = useState<Date>(() => new Date(2026, 10, 23));
+  const [pickedDateRange, setPickedDateRange] = useState<[string, string]>([
+    '2026-11-20',
+    '2026-11-27',
+  ]);
   const [pickedMonth, setPickedMonth] = useState<TPMonthPickerValue>({ year: 2026, month: 11 });
   const [last7Date, setLast7Date] = useState<Date>(() => new Date(2026, 10, 23));
   const [pickedTime, setPickedTime] = useState<{
@@ -556,6 +681,8 @@ const CoreKitTab: React.FC<{
   // Overlays & Feedback state
   const [tooltipOpen, setTooltipOpen] = useState(true);
   const [fixedToastStatus, setFixedToastStatus] = useState<'info' | 'success' | 'warning' | 'danger'>('warning');
+  const [infoSheetOpen, setInfoSheetOpen] = useState(false);
+  const [legendSheetOpen, setLegendSheetOpen] = useState(false);
   const [alertState, setAlertState] = useState<{
     open: boolean;
     os: TPPlatformOS;
@@ -704,6 +831,39 @@ const CoreKitTab: React.FC<{
                 </div>
               </div>
             </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              <div className="studio-control-row">
+                <span className="studio-control-label">Contrast</span>
+                <div className="studio-segmented" role="group" aria-label="Core Contrast">
+                  {([false, true] as const).map((hc) => (
+                    <button
+                      key={String(hc)}
+                      type="button"
+                      className={`studio-seg-btn ${highContrast === hc ? 'studio-seg-btn--active' : ''}`}
+                      onClick={() => setHighContrast(hc)}
+                    >
+                      {hc ? 'High' : 'Normal'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="studio-control-row">
+                <span className="studio-control-label">Font Scale</span>
+                <div className="studio-segmented" role="group" aria-label="Core Font Scale">
+                  {([1, 1.4] as const).map((fs) => (
+                    <button
+                      key={fs}
+                      type="button"
+                      className={`studio-seg-btn ${Math.abs(fontScale - fs) < 0.1 ? 'studio-seg-btn--active' : ''}`}
+                      onClick={() => setFontScale(fs)}
+                    >
+                      {fs === 1 ? '100%' : '140%'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -771,6 +931,17 @@ const CoreKitTab: React.FC<{
             variant={headerVariant}
             title="Core UI Kit"
             subtitle={`${tokens.figmaMode} • ${os.toUpperCase()}`}
+            loading={headerLoading}
+            tabs={
+              headerVariant === 'tabs'
+                ? [
+                    { key: 'stats', label: 'Statistics' },
+                    { key: 'config', label: 'Config', badge: 2 },
+                  ]
+                : undefined
+            }
+            activeTab={headerTab}
+            onTabChange={setHeaderTab}
             showBack
             onBack={() => toast.show({ type: 'info', message: 'Header Back tapped' })}
             rightBadge={3}
@@ -795,15 +966,26 @@ const CoreKitTab: React.FC<{
                     <span className="studio-core-section-badge">{headerVariant}</span>
                   </div>
                   <div className="studio-flex-wrap">
-                    <TPButton
-                      variant={headerVariant === 'floating' ? 'primary' : 'secondary'}
+                    {(['floating', 'standard', 'large', 'tabs'] as const).map((hv) => (
+                      <TPTag
+                        key={hv}
+                        selected={headerVariant === hv}
+                        size="sm"
+                        onClick={() => setHeaderVariant(hv)}
+                      >
+                        {hv}
+                      </TPTag>
+                    ))}
+                    <TPTag
+                      selected={headerLoading}
+                      tone="info"
                       size="sm"
-                      onClick={() =>
-                        setHeaderVariant((prev) => (prev === 'floating' ? 'standard' : 'floating'))
-                      }
+                      onClick={() => setHeaderLoading((p) => !p)}
                     >
-                      Header: {headerVariant}
-                    </TPButton>
+                      loading: {headerLoading ? 'on' : 'off'}
+                    </TPTag>
+                  </div>
+                  <div className="studio-flex-wrap">
                     <TPButton
                       variant={tabVariant === 'floating-pill' ? 'primary' : 'secondary'}
                       size="sm"
@@ -905,7 +1087,7 @@ const CoreKitTab: React.FC<{
                     </span>
                   </div>
                   <div className="studio-flex-wrap">
-                    {(['primary', 'secondary', 'text', 'alert', 'tonal', 'in-card'] as const).map(
+                    {(['primary', 'secondary', 'text', 'alert', 'alert-strong', 'tonal', 'in-card', 'in-card-alert'] as const).map(
                       (v) => (
                         <TPTag
                           key={v}
@@ -937,12 +1119,21 @@ const CoreKitTab: React.FC<{
                     >
                       loading: {btnLoading ? 'on' : 'off'}
                     </TPTag>
+                    <TPTag
+                      selected={btnProgress}
+                      tone="info"
+                      size="sm"
+                      onClick={() => setBtnProgress((p) => !p)}
+                    >
+                      progress: {btnProgress ? '68%' : 'off'}
+                    </TPTag>
                   </div>
                   <div className="studio-flex-wrap">
                     <TPButton
                       variant={btnVariant}
                       size={btnSize}
                       loading={btnLoading}
+                      progress={btnProgress ? 68 : undefined}
                       onClick={() =>
                         toast.show({
                           type: 'success',
@@ -950,7 +1141,7 @@ const CoreKitTab: React.FC<{
                         })
                       }
                     >
-                      Apply Setting
+                      {btnProgress ? 'Uploading 68%' : 'Apply Setting'}
                     </TPButton>
                     <TPButton variant="secondary" size={btnSize} disabled>
                       Disabled
@@ -1015,6 +1206,13 @@ const CoreKitTab: React.FC<{
                     >
                       underline
                     </TPTag>
+                    <TPTag
+                      selected={segVariant === 'segmented'}
+                      size="sm"
+                      onClick={() => setSegVariant('segmented')}
+                    >
+                      segmented
+                    </TPTag>
                   </div>
                   <TPSegment
                     variant={segVariant}
@@ -1037,7 +1235,12 @@ const CoreKitTab: React.FC<{
                     >
                       Prev
                     </TPButton>
-                    <TPPageControl total={5} current={pageIdx} onChange={setPageIdx} />
+                    <TPPageControl
+                      total={5}
+                      current={pageIdx}
+                      variant={pageControlVariant}
+                      onChange={setPageIdx}
+                    />
                     <TPButton
                       variant="text"
                       size="sm"
@@ -1046,13 +1249,25 @@ const CoreKitTab: React.FC<{
                       Next
                     </TPButton>
                   </div>
+                  <div className="studio-flex-wrap">
+                    {(['dots', 'process'] as const).map((pv) => (
+                      <TPTag
+                        key={pv}
+                        selected={pageControlVariant === pv}
+                        size="sm"
+                        onClick={() => setPageControlVariant(pv)}
+                      >
+                        {pv}
+                      </TPTag>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="studio-core-section" style={{ padding: 0, overflow: 'hidden' }}>
-                  <div style={{ padding: '12px 14px 4px', display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ padding: '12px 14px 4px', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
                     <h4 className="studio-core-section-title">TPFixedButtonBar</h4>
                     <div className="studio-flex-wrap">
-                      {(['single', 'dual-horizontal', 'dual-vertical'] as const).map((lay) => (
+                      {(['single', 'dual-horizontal', 'dual-vertical', 'triple'] as const).map((lay) => (
                         <TPTag
                           key={lay}
                           selected={fixedLayout === lay}
@@ -1068,9 +1283,11 @@ const CoreKitTab: React.FC<{
                     layout={fixedLayout}
                     primaryText="Confirm Provision"
                     secondaryText="Cancel"
+                    tertiaryText="Skip for Now"
                     note="Applies profile to 2 managed EAP723 units"
                     onPrimaryClick={() => toast.show({ type: 'success', message: 'Provision confirmed' })}
                     onSecondaryClick={() => toast.show('Cancelled')}
+                    onTertiaryClick={() => toast.show({ type: 'info', message: 'Skipped step' })}
                   />
                 </div>
               </>
@@ -1122,6 +1339,23 @@ const CoreKitTab: React.FC<{
                       </TPTag>
                     )}
                   </div>
+                  <div className="studio-flex-wrap">
+                    <TPTag size="xs" shape="rect" appearance="soft" tone="purple">
+                      6 GHz MLO
+                    </TPTag>
+                    <TPTag size="xs" shape="rect" appearance="solid" tone="indigo">
+                      VLAN 20
+                    </TPTag>
+                    <TPTag size="xs" shape="rect" appearance="outline" tone="focus">
+                      PoE+ 24W
+                    </TPTag>
+                    <TPTag size="xs" shape="rect" appearance="soft" tone="warning">
+                      Adopting
+                    </TPTag>
+                    <TPTag size="xs" shape="rect" appearance="solid" tone="alert">
+                      Isolated
+                    </TPTag>
+                  </div>
                   <div className="studio-flex-wrap" style={{ gap: 14 }}>
                     <TPBadge count={5} tone="alert">
                       <TPIcon name="nav-log" size={24} />
@@ -1136,7 +1370,7 @@ const CoreKitTab: React.FC<{
                   </div>
                 </div>
 
-                <TPSectionHeader title="TPListCard & TPListItem" count={3} action="Edit" />
+                <TPSectionHeader title="TPListCard & TPListItem" count={4} action="Edit" />
                 <TPListCard divided>
                   <TPListItem
                     leading={<TPIcon name="settings-wireless-settings" size={20} />}
@@ -1155,6 +1389,13 @@ const CoreKitTab: React.FC<{
                     badge={2}
                     arrow
                     onClick={() => toast.show({ type: 'info', message: 'Opened VPN list row' })}
+                  />
+                  <TPListItem
+                    layout="form-field"
+                    title="Subnet Mask (form-field layout)"
+                    value="255.255.255.0 (/24)"
+                    arrow
+                    onClick={() => toast.show({ type: 'info', message: 'Opened form-field row' })}
                   />
                   <TPListButton
                     tone="alert"
@@ -1268,9 +1509,22 @@ const CoreKitTab: React.FC<{
                 <div className="studio-core-section">
                   <div className="studio-core-section-head">
                     <h4 className="studio-core-section-title">TPSearchBar &amp; TPInput</h4>
+                    <div className="studio-flex-wrap">
+                      {(['auto', 'rounded', 'pill'] as const).map((sh) => (
+                        <TPTag
+                          key={sh}
+                          size="xs"
+                          selected={searchShape === sh}
+                          onClick={() => setSearchShape(sh)}
+                        >
+                          {sh}
+                        </TPTag>
+                      ))}
+                    </div>
                   </div>
                   <TPSearchBar
                     value={searchQuery}
+                    shape={searchShape}
                     placeholder="Search SSID, MAC, or IP"
                     showCancel
                     onChange={setSearchQuery}
@@ -1282,6 +1536,15 @@ const CoreKitTab: React.FC<{
                     clearable
                     onChange={setInputText}
                     helperText="Broadcast SSID visible to wireless clients"
+                  />
+                  <TPInput
+                    variant="underline"
+                    label="VLAN Description (Underline + Count)"
+                    value={underlineVal}
+                    showCount
+                    maxLength={32}
+                    clearable
+                    onChange={setUnderlineVal}
                   />
                   <TPInput
                     label="WPA3 Passphrase"
@@ -1338,8 +1601,8 @@ const CoreKitTab: React.FC<{
 
                 <div className="studio-core-section">
                   <div className="studio-core-section-head">
-                    <h4 className="studio-core-section-title">OmadaStandardInput</h4>
-                    <span className="studio-core-section-badge">IPv4 / MAC / Port</span>
+                    <h4 className="studio-core-section-title">OmadaStandardInput (8 Types)</h4>
+                    <span className="studio-core-section-badge">IPv4 / CIDR / Range / Time</span>
                   </div>
                   <OmadaStandardInput
                     type="ip"
@@ -1358,6 +1621,30 @@ const CoreKitTab: React.FC<{
                     label="HTTPS Management Port"
                     value={stdPort}
                     onChange={setStdPort}
+                  />
+                  <OmadaStandardInput
+                    type="cidr"
+                    label="Subnet CIDR"
+                    value={stdCidr}
+                    onChange={setStdCidr}
+                  />
+                  <OmadaStandardInput
+                    type="ip-range"
+                    label="DHCP Pool Range"
+                    value={stdIpRange}
+                    onChange={setStdIpRange}
+                  />
+                  <OmadaStandardInput
+                    type="ip-port"
+                    label="RADIUS Server (IP:Port)"
+                    value={stdIpPort}
+                    onChange={setStdIpPort}
+                  />
+                  <OmadaStandardInput
+                    type="time-range"
+                    label="Maintenance Window"
+                    value={stdTimeRange}
+                    onChange={setStdTimeRange}
                   />
                 </div>
 
@@ -1397,14 +1684,46 @@ const CoreKitTab: React.FC<{
                 </div>
 
                 <div className="studio-core-section" style={{ padding: 0, overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      padding: '10px 14px 4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 8,
+                    }}
+                  >
+                    <h4 className="studio-core-section-title">TPDatePicker ({dateMode})</h4>
+                    <div className="studio-flex-wrap">
+                      {(['single', 'range'] as const).map((dm) => (
+                        <TPTag
+                          key={dm}
+                          size="xs"
+                          selected={dateMode === dm}
+                          onClick={() => setDateMode(dm)}
+                        >
+                          {dm}
+                        </TPTag>
+                      ))}
+                    </div>
+                  </div>
                   <TPDatePicker
-                    title="Maintenance Date"
+                    mode={dateMode}
+                    title={dateMode === 'range' ? 'Report Date Range' : 'Maintenance Date'}
                     value={pickedDate}
+                    rangeValue={pickedDateRange}
                     onChange={setPickedDate}
+                    onRangeChange={setPickedDateRange}
                     onConfirm={(d) =>
                       toast.show({
                         type: 'success',
                         message: `Date set: ${d.toLocaleDateString()}`,
+                      })
+                    }
+                    onRangeConfirm={(r) =>
+                      toast.show({
+                        type: 'success',
+                        message: `Range: ${r[0]} -> ${r[1]}`,
                       })
                     }
                     onCancel={() => toast.show('Date picker cancelled')}
@@ -1648,6 +1967,20 @@ const CoreKitTab: React.FC<{
                     >
                       Popup Bottom
                     </TPButton>
+                    <TPButton
+                      variant="tonal"
+                      size="sm"
+                      onClick={() => setInfoSheetOpen(true)}
+                    >
+                      TPInfoSheet
+                    </TPButton>
+                    <TPButton
+                      variant="tonal"
+                      size="sm"
+                      onClick={() => setLegendSheetOpen(true)}
+                    >
+                      TPLegendSheet
+                    </TPButton>
                   </div>
                   <div className="studio-flex-wrap">
                     {(['default', 'info', 'success', 'warning', 'error', 'loading'] as const).map(
@@ -1663,6 +1996,10 @@ const CoreKitTab: React.FC<{
                       ),
                     )}
                   </div>
+                  <TPLoadMore
+                    status="idle"
+                    onLoadMore={() => toast.show({ type: 'info', message: 'Loaded next page' })}
+                  />
                 </div>
               </>
             )}
@@ -1671,6 +2008,28 @@ const CoreKitTab: React.FC<{
       </section>
 
       {/* Live Overlay Modals */}
+      <TPInfoSheet
+        open={infoSheetOpen}
+        title="Legacy Omada Parity"
+        description="High Contrast WCAG 4.5:1 mode, Android Chrome fallback, and dark icon auto-switching are active."
+        bullets={['TPHeader floating -> standard on Android', 'Title 1 Bold (700) under High Contrast']}
+        onClose={() => setInfoSheetOpen(false)}
+      />
+      <TPLegendSheet
+        open={legendSheetOpen}
+        title="Port & Link Legend"
+        subtitle="Standard Omada hardware port speeds & badges"
+        columns={2}
+        items={[
+          { key: '10g', label: '10 Gbps SFP+', color: 'var(--tp-port-10g, #00C9D4)' },
+          { key: '2.5g', label: '2.5 Gbps RJ45', color: 'var(--tp-port-2-5g, #00D076)' },
+          { key: '1g', label: '1 Gbps Full', color: 'var(--tp-port-1g, #95CC00)' },
+          { key: '100m', label: '10/100 Mbps', color: 'var(--tp-port-100m, #F9B200)' },
+          { key: 'poe', label: 'PoE Supplying', icon: <TPIcon name="port-poe" size={18} /> },
+          { key: 'lag', label: 'LAG Bonded', icon: <TPIcon name="port-lag" size={18} /> },
+        ]}
+        onClose={() => setLegendSheetOpen(false)}
+      />
       <TPAlert
         open={alertState.open}
         os={alertState.os}
@@ -1784,11 +2143,24 @@ const AssetsMotionTab: React.FC = () => {
 
   // Icons & Illustrations & Logos preview theme
   const [iconCategory, setIconCategory] = useState<string>('all');
+  const [darkOnly, setDarkOnly] = useState(false);
   const [assetPreviewMode, setAssetPreviewMode] = useState<TPResolvedMode>(resolvedMode);
   const [illusViewMode, setIllusViewMode] = useState<'swap' | 'all'>('swap');
 
   const omadaIcons = useMemo(() => TP_ICONS.filter((i) => i.pack === 'omada'), []);
   const generalIcons = useMemo(() => TP_ICONS.filter((i) => i.pack === 'general'), []);
+  const darkIconCount = useMemo(
+    () => omadaIcons.filter((i) => Boolean(i.darkRelPath)).length,
+    [omadaIcons],
+  );
+  const pagMotionsCount = useMemo(
+    () => TP_MOTIONS.filter((m) => m.format === 'pag').length,
+    [],
+  );
+  const svgMotionsCount = useMemo(
+    () => TP_MOTIONS.filter((m) => m.format === 'svg').length,
+    [],
+  );
 
   const uniqueIllustrationNames = useMemo(() => {
     const seen = new Set<string>();
@@ -1837,6 +2209,7 @@ const AssetsMotionTab: React.FC = () => {
   const filteredIcons = useMemo(() => {
     const q = search.trim().toLowerCase();
     return activeIconPool.filter((icon) => {
+      if (subTab === 'omada-icons' && darkOnly && !icon.darkRelPath) return false;
       if (iconCategory !== 'all' && icon.category !== iconCategory) return false;
       if (!q) return true;
       return (
@@ -1845,7 +2218,7 @@ const AssetsMotionTab: React.FC = () => {
         icon.category.toLowerCase().includes(q)
       );
     });
-  }, [activeIconPool, iconCategory, search]);
+  }, [activeIconPool, iconCategory, search, subTab, darkOnly]);
 
   const filteredSwapIllustrations = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -1883,6 +2256,7 @@ const AssetsMotionTab: React.FC = () => {
   const handleSubTabChange = (next: AssetsSubTabId) => {
     setSubTab(next);
     setIconCategory('all');
+    setDarkOnly(false);
   };
 
   return (
@@ -1890,18 +2264,20 @@ const AssetsMotionTab: React.FC = () => {
       <div className="studio-toolbar">
         <div className="studio-toolbar-left">
           <h2 className="studio-toolbar-title">
-            Assets &amp; Live PAG Motions
+            Assets &amp; Live Motions
           </h2>
           <div className="studio-toolbar-sub">
-            17 Tencent PAG motion files (<code>libpag</code> WASM), 196 Omada Icons, 430 General Icons,
-            81 Light/Dark Illustrations, and 16 official App Logos.
+            {pagMotionsCount} Tencent PAG (<code>libpag</code> WASM) + {svgMotionsCount} procedural SVG
+            motions, {omadaIcons.length} Omada Icons ({darkIconCount} dark variants),{' '}
+            {generalIcons.length} General Icons, {uniqueIllustrationNames.length} Light/Dark
+            Illustrations ({TP_ILLUSTRATIONS.length} assets), and {TP_BRAND_LOGOS.length} official App Logos.
           </div>
         </div>
 
         <div className="studio-segmented" role="tablist" aria-label="Asset Sections">
           {(
             [
-              { id: 'motions', label: `Live PAG Motions (${TP_MOTIONS.length})` },
+              { id: 'motions', label: `Live Motions (${TP_MOTIONS.length})` },
               { id: 'omada-icons', label: `Omada Icons (${omadaIcons.length})` },
               { id: 'general-icons', label: `General Icons (${generalIcons.length})` },
               { id: 'illustrations', label: `Illustrations (${TP_ILLUSTRATIONS.length})` },
@@ -2044,6 +2420,15 @@ const AssetsMotionTab: React.FC = () => {
               {cat} ({count})
             </button>
           ))}
+          {subTab === 'omada-icons' && (
+            <button
+              type="button"
+              className={`studio-cat-pill ${darkOnly ? 'studio-cat-pill--active' : ''}`}
+              onClick={() => setDarkOnly((p) => !p)}
+            >
+              Dark Variants ({darkIconCount})
+            </button>
+          )}
         </div>
       )}
 
@@ -2078,7 +2463,9 @@ const AssetsMotionTab: React.FC = () => {
                 </div>
                 <span className="studio-motion-sub">{motion.name}</span>
                 <span className="studio-motion-sub">
-                  {motion.category} • {(motion.bytes / 1024).toFixed(1)} KB
+                  {motion.format === 'svg' || motion.bytes === 0
+                    ? `${motion.category} • SVG Procedural`
+                    : `${motion.category} • PAG • ${(motion.bytes / 1024).toFixed(1)} KB`}
                 </span>
               </div>
             </button>
@@ -2106,8 +2493,18 @@ const AssetsMotionTab: React.FC = () => {
                   )
                 }
               >
-                <TPIcon name={icon.name as TPIconName} pack={icon.pack} size={28} />
+                <TPIcon
+                  name={icon.name as TPIconName}
+                  pack={icon.pack}
+                  theme={assetPreviewMode}
+                  size={28}
+                />
                 <span className="studio-icon-name">{icon.name}</span>
+                {icon.darkRelPath && (
+                  <span className="studio-code-chip" style={{ fontSize: 10, padding: '1px 5px' }}>
+                    dark
+                  </span>
+                )}
               </button>
             );
           })}
@@ -2318,7 +2715,10 @@ const AgentSkillTab: React.FC = () => {
             <pre><code>{htmlStarter}</code></pre>
           </div>
           <div style={{ fontSize: 12, color: 'var(--studio-text-muted)', lineHeight: 1.55 }}>
-            Includes all 626 Figma icons, 81 Light/Dark illustrations, 16 brand logos, and 17 real Tencent <code>.pag</code> motion files inline with automatic CDN fallback for <code>libpag.wasm</code>.
+            Includes all {TP_ICONS.length} Figma icons ({TP_ICONS.filter((i) => Boolean(i.darkRelPath)).length} dark variants),{' '}
+            {TP_ILLUSTRATIONS.length} Light/Dark illustration assets, {TP_BRAND_LOGOS.length} brand logos,{' '}
+            {TP_MOTIONS.length} PAG &amp; SVG motions, 16 Omada blocks, and 15 Omada pages inline with automatic
+            CDN fallback for <code>libpag.wasm</code>.
           </div>
         </div>
       </div>
@@ -2351,10 +2751,24 @@ const AgentSkillTab: React.FC = () => {
 };
 
 const ShowcaseStudio: React.FC = () => {
-  const { brand, mode, resolvedMode, os, tokens, setBrand, setMode, setOS } = useTPTheme();
+  const {
+    brand,
+    mode,
+    resolvedMode,
+    os,
+    highContrast,
+    fontScale,
+    tokens,
+    setBrand,
+    setMode,
+    setOS,
+    setHighContrast,
+    setFontScale,
+  } = useTPTheme();
 
   const [activeTab, setActiveTab] = useState<StudioTabId>('omada-app');
   const [activeScreen, setActiveScreen] = useState<OmadaAppScreenId>('dashboard');
+  const [appDrawerOpen, setAppDrawerOpen] = useState(false);
   const [phoneDevice, setPhoneDevice] =
     useState<NonNullable<TPPhoneFrameProps['device']>>('iphone16pro');
 
@@ -2383,10 +2797,12 @@ const ShowcaseStudio: React.FC = () => {
     nextBrand: TPBrand,
     nextMode: TPResolvedMode,
     nextOS: TPPlatformOS,
+    nextHighContrast?: boolean,
   ) => {
     setBrand(nextBrand);
     setMode(nextMode);
     setOS(nextOS);
+    setHighContrast(Boolean(nextHighContrast));
     setPhoneDevice(nextOS === 'android' ? 'android' : 'iphone16pro');
     setActiveTab('omada-app');
   };
@@ -2399,7 +2815,7 @@ const ShowcaseStudio: React.FC = () => {
           <div className="studio-brand-text">
             <h1 className="studio-brand-title">TP-Mobile UI Kit</h1>
             <div className="studio-brand-subtitle">
-              TP-Design 12-Mode Theme Engine × Omada APP V5.3
+              TP-Design 12-Mode + WCAG High Contrast × Omada APP V5.3–6.3
             </div>
           </div>
         </div>
@@ -2407,10 +2823,11 @@ const ShowcaseStudio: React.FC = () => {
         <nav className="studio-nav" aria-label="Showcase Studio Navigation">
           {(
             [
-              { id: 'omada-app', label: 'Omada APP 实机还原' },
+              { id: 'omada-app', label: 'Omada Pages (21)' },
+              { id: 'omada-blocks', label: 'Omada Blocks & Kit' },
               { id: 'theme-lab', label: '6-Brand Theme Lab' },
               { id: 'core-kit', label: 'Core Components' },
-              { id: 'assets-motion', label: 'Assets & Live PAG Motions' },
+              { id: 'assets-motion', label: 'Assets & Motions' },
               { id: 'agent-skill', label: 'Agent Skill' },
             ] as const
           ).map((tab) => {
@@ -2432,6 +2849,8 @@ const ShowcaseStudio: React.FC = () => {
         <div className="studio-topbar-meta">
           <span className="studio-status-pill">
             {tokens.figmaMode} • {resolvedMode.toUpperCase()} • {os.toUpperCase()}
+            {highContrast ? ' • HC' : ''}
+            {fontScale > 1.05 ? ` • ${Math.round(fontScale * 100)}%` : ''}
           </span>
         </div>
       </header>
@@ -2496,6 +2915,40 @@ const ShowcaseStudio: React.FC = () => {
                       </div>
                     </div>
                   </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    <div className="studio-control-row">
+                      <span className="studio-control-label">Contrast</span>
+                      <div className="studio-segmented" role="group" aria-label="Contrast Mode">
+                        {([false, true] as const).map((hc) => (
+                          <button
+                            key={String(hc)}
+                            type="button"
+                            className={`studio-seg-btn ${highContrast === hc ? 'studio-seg-btn--active' : ''}`}
+                            onClick={() => setHighContrast(hc)}
+                          >
+                            {hc ? 'High' : 'Normal'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="studio-control-row">
+                      <span className="studio-control-label">Font Scale</span>
+                      <div className="studio-segmented" role="group" aria-label="Font Scale">
+                        {([1, 1.4] as const).map((fs) => (
+                          <button
+                            key={fs}
+                            type="button"
+                            className={`studio-seg-btn ${Math.abs(fontScale - fs) < 0.1 ? 'studio-seg-btn--active' : ''}`}
+                            onClick={() => setFontScale(fs)}
+                          >
+                            {fs === 1 ? '100%' : '140%'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -2520,7 +2973,9 @@ const ShowcaseStudio: React.FC = () => {
               </div>
 
               <div className="studio-panel">
-                <h3 className="studio-panel-title">8 V5.3 Drill-Down &amp; Block Views</h3>
+                <h3 className="studio-panel-title">
+                  {drilldownItems.length} Drill-Down, Config &amp; Block Views
+                </h3>
                 <div className="studio-screen-list">
                   {drilldownItems.map((item, idx) => (
                     <button
@@ -2556,9 +3011,18 @@ const ShowcaseStudio: React.FC = () => {
 
             <section className="studio-stage">
               <div className="studio-stage-bar">
-                <span className="studio-stage-hint">
-                  Interactive prototype — tap rows, headers, bottom tabs, Topology, or Network Toolkit FAB
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <TPButton
+                    variant="tonal"
+                    size="sm"
+                    onClick={() => setAppDrawerOpen(true)}
+                  >
+                    Open Drawer
+                  </TPButton>
+                  <span className="studio-stage-hint">
+                    Interactive prototype — tap rows, headers, bottom tabs, Topology, or Network Toolkit FAB
+                  </span>
+                </div>
                 <div className="studio-segmented" role="group" aria-label="Phone Frame Preset">
                   {(['iphone16pro', 'iphone14', 'android', 'compact'] as const).map((dev) => (
                     <button
@@ -2577,11 +3041,20 @@ const ShowcaseStudio: React.FC = () => {
                 <OmadaAppDemo
                   screen={activeScreen}
                   onScreenChange={setActiveScreen}
+                  drawerOpen={appDrawerOpen}
+                  onDrawerOpenChange={setAppDrawerOpen}
                   device={phoneDevice}
                 />
               </TPToastProvider>
             </section>
           </div>
+        )}
+
+        {activeTab === 'omada-blocks' && (
+          <OmadaBlocksTab
+            phoneDevice={phoneDevice}
+            onPhoneDeviceChange={setPhoneDevice}
+          />
         )}
 
         {activeTab === 'theme-lab' && (

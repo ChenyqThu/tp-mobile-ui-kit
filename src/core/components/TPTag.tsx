@@ -10,6 +10,8 @@ export const TPTag: React.FC<TPTagProps> = ({
   tone,
   selected,
   size = 'md',
+  shape = 'pill',
+  appearance = 'soft',
   closable = false,
   onClose,
   onClick,
@@ -27,6 +29,8 @@ export const TPTag: React.FC<TPTagProps> = ({
   const classes = [
     'tp-tag',
     `tp-tag--${size}`,
+    `tp-tag--shape-${shape}`,
+    `tp-tag--appearance-${appearance}`,
     `tp-tag--tone-${resolvedTone}`,
     selectionClass,
     onClick ? 'tp-tag--clickable' : '',
@@ -62,6 +66,10 @@ export const TPTag: React.FC<TPTagProps> = ({
         type="button"
         className={classes}
         style={style}
+        data-tone={resolvedTone}
+        data-shape={shape}
+        data-appearance={appearance}
+        data-size={size}
         aria-pressed={selected !== undefined ? selected : undefined}
         onClick={onClick}
       >
@@ -74,6 +82,10 @@ export const TPTag: React.FC<TPTagProps> = ({
     <span
       className={classes}
       style={style}
+      data-tone={resolvedTone}
+      data-shape={shape}
+      data-appearance={appearance}
+      data-size={size}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       aria-pressed={onClick && selected !== undefined ? selected : undefined}

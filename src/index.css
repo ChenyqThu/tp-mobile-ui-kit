@@ -767,6 +767,11 @@ body {
   color: #2b2b2b;
 }
 
+.studio-icon-tile--light .studio-code-chip {
+  background: rgba(15, 23, 42, 0.08);
+  color: #334155;
+}
+
 .studio-icon-tile--dark {
   background: #1a1d23;
   color: rgba(255, 255, 255, 0.9);

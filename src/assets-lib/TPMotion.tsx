@@ -9,6 +9,109 @@ const PAG_ASSET_URLS = import.meta.glob<string>('../assets/motion/**/*.pag', {
   eager: true,
 });
 
+const ProceduralSvgMotion: React.FC<{
+  name: string;
+  title: string;
+  playing: boolean;
+}> = ({ name, title, playing }) => {
+  switch (name) {
+    case 'device-pairing':
+      return (
+        <svg width="100%" height="100%" viewBox="0 0 80 80" fill="none" aria-label={title}>
+          <circle cx="40" cy="40" r="14" stroke="var(--tp-focus, #00A870)" strokeWidth="2.5">
+            {playing && (
+              <>
+                <animate attributeName="r" values="14;34" dur="1.8s" repeatCount="indefinite" />
+                <animate attributeName="stroke-opacity" values="0.8;0" dur="1.8s" repeatCount="indefinite" />
+              </>
+            )}
+          </circle>
+          <circle cx="40" cy="40" r="14" stroke="var(--tp-focus, #00A870)" strokeWidth="2" strokeOpacity="0.45">
+            {playing && (
+              <>
+                <animate attributeName="r" values="14;34" begin="0.9s" dur="1.8s" repeatCount="indefinite" />
+                <animate attributeName="stroke-opacity" values="0.65;0" begin="0.9s" dur="1.8s" repeatCount="indefinite" />
+              </>
+            )}
+          </circle>
+          <rect x="30" y="30" width="20" height="20" rx="5" fill="var(--tp-focus, #00A870)" />
+          <circle cx="40" cy="40" r="3" fill="#FFFFFF" />
+        </svg>
+      );
+    case 'ap-scan':
+      return (
+        <svg width="100%" height="100%" viewBox="0 0 80 80" fill="none" aria-label={title}>
+          <circle cx="40" cy="40" r="28" stroke="var(--tp-divider, #ECECEC)" strokeWidth="2" />
+          <circle cx="40" cy="40" r="18" stroke="var(--tp-divider, #ECECEC)" strokeWidth="1.5" strokeDasharray="3 3" />
+          <path
+            d="M40 40 L40 12 A28 28 0 0 1 65 27 Z"
+            fill="var(--tp-focus, #00A870)"
+            fillOpacity="0.28"
+          >
+            {playing && (
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 40 40"
+                to="360 40 40"
+                dur="2.2s"
+                repeatCount="indefinite"
+              />
+            )}
+          </path>
+          <circle cx="40" cy="40" r="4" fill="var(--tp-focus, #00A870)" />
+        </svg>
+      );
+    case 'accessibility-zoom':
+      return (
+        <svg width="100%" height="100%" viewBox="0 0 80 80" fill="none" aria-label={title}>
+          <rect x="14" y="18" width="52" height="44" rx="10" stroke="var(--tp-focus, #00A870)" strokeWidth="2" strokeOpacity="0.4" />
+          <text
+            x="40"
+            y="47"
+            textAnchor="middle"
+            fill="var(--tp-focus, #00A870)"
+            fontWeight="700"
+            fontSize="22"
+          >
+            Aa
+            {playing && (
+              <animate attributeName="font-size" values="18;25;18" dur="2.2s" repeatCount="indefinite" />
+            )}
+          </text>
+        </svg>
+      );
+    case 'search-rotate':
+    default:
+      return (
+        <svg width="100%" height="100%" viewBox="0 0 80 80" fill="none" aria-label={title}>
+          <circle
+            cx="40"
+            cy="40"
+            r="26"
+            stroke="var(--tp-focus, #00A870)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeDasharray="64 96"
+          >
+            {playing && (
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="0 40 40"
+                to="360 40 40"
+                dur="1.4s"
+                repeatCount="indefinite"
+              />
+            )}
+          </circle>
+          <circle cx="37" cy="37" r="9" stroke="var(--tp-text-primary, #2B2B2B)" strokeWidth="2.2" />
+          <path d="M44 44 L51 51" stroke="var(--tp-text-primary, #2B2B2B)" strokeWidth="2.4" strokeLinecap="round" />
+        </svg>
+      );
+  }
+};
+
 const CDN_WASM_URL = 'https://cdn.jsdelivr.net/npm/libpag@4.5.85/lib/libpag.wasm';
 
 let pagPromise: Promise<PAGTypes.PAG> | null = null;
@@ -164,11 +267,13 @@ export const TPMotion: React.FC<TPMotionProps> = ({
     );
   }, [name, activeTheme]);
 
-  const assetUrl = meta ? PAG_ASSET_URLS[`../assets/motion/${meta.relPath}`] : undefined;
+  const isSvgMotion = meta?.format === 'svg';
+  const assetUrl =
+    meta && !isSvgMotion ? PAG_ASSET_URLS[`../assets/motion/${meta.relPath}`] : undefined;
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !assetUrl) return;
+    if (isSvgMotion || !canvas || !assetUrl) return;
     if (!hasWebGLSupport()) {
       setFallback(true);
       return;
@@ -203,10 +308,25 @@ export const TPMotion: React.FC<TPMotionProps> = ({
         pagView.setRepeatCount(loop ? 0 : 1);
         if (typeof progress === 'number') {
           pagView.setProgress(Math.max(0, Math.min(1, progress)));
-          await pagView.flush();
+          await pagView.flush().catch(() => {});
+          if (cancelled) {
+            try {
+              pagView.destroy();
+            } catch {
+              // Ignore teardown errors
+            }
+            try {
+              pagFile.destroy();
+            } catch {
+              // Ignore teardown errors
+            }
+            viewRef.current = null;
+            fileRef.current = null;
+            return;
+          }
         }
         if (playing) {
-          void pagView.play();
+          void pagView.play().catch(() => {});
         }
         onReady?.();
       } catch (err) {
@@ -219,33 +339,52 @@ export const TPMotion: React.FC<TPMotionProps> = ({
 
     return () => {
       cancelled = true;
-      try {
-        viewRef.current?.stop(false);
-        viewRef.current?.destroy();
-      } catch {
-        // Ignore teardown errors
-      }
-      try {
-        fileRef.current?.destroy();
-      } catch {
-        // Ignore teardown errors
-      }
+      const view = viewRef.current;
+      const file = fileRef.current;
       viewRef.current = null;
       fileRef.current = null;
+
+      if (view) {
+        try {
+          view.pause();
+        } catch {
+          // Ignore pause errors
+        }
+      }
+
+      const destroyResources = () => {
+        try {
+          view?.destroy();
+        } catch {
+          // Ignore teardown errors
+        }
+        try {
+          file?.destroy();
+        } catch {
+          // Ignore teardown errors
+        }
+      };
+
+      const isFlushing = Boolean((view as { flushingNextFrame?: boolean } | null)?.flushingNextFrame);
+      if (isFlushing && typeof window !== 'undefined') {
+        window.setTimeout(destroyResources, 60);
+      } else {
+        destroyResources();
+      }
     };
   }, [assetUrl, useCanvas2D, wasmUrl]);
 
   useEffect(() => {
     const view = viewRef.current;
-    if (!view) return;
+    if (!view || (view as { isDestroyed?: boolean }).isDestroyed) return;
     try {
       view.setRepeatCount(loop ? 0 : 1);
       if (typeof progress === 'number') {
         view.setProgress(Math.max(0, Math.min(1, progress)));
-        void view.flush();
+        void view.flush().catch(() => {});
       }
       if (playing) {
-        void view.play();
+        void view.play().catch(() => {});
       } else {
         view.pause();
       }
@@ -259,7 +398,7 @@ export const TPMotion: React.FC<TPMotionProps> = ({
   const pixelW = typeof width === 'number' ? width : 160;
   const pixelH = typeof height === 'number' ? height : 160;
 
-  if (!meta || !assetUrl) {
+  if (!meta || (!isSvgMotion && !assetUrl)) {
     return null;
   }
 
@@ -267,7 +406,8 @@ export const TPMotion: React.FC<TPMotionProps> = ({
     <div
       data-tp-motion={meta.name}
       data-tp-motion-theme={meta.theme}
-      data-tp-motion-fallback={fallback ? 'true' : 'false'}
+      data-tp-motion-format={meta.format}
+      data-tp-motion-fallback={isSvgMotion ? 'false' : fallback ? 'true' : 'false'}
       className={`tp-motion ${className}`.trim()}
       style={{
         position: 'relative',
@@ -279,7 +419,9 @@ export const TPMotion: React.FC<TPMotionProps> = ({
         ...style,
       }}
     >
-      {fallback ? (
+      {isSvgMotion ? (
+        <ProceduralSvgMotion name={meta.name} title={meta.title} playing={playing} />
+      ) : fallback ? (
         <svg
           width="100%"
           height="100%"

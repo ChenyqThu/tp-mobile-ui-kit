@@ -57,6 +57,7 @@ const FixedToastStatusIcon: React.FC<{ status: NonNullable<TPFixedToastProps['st
  */
 export const TPFixedToast: React.FC<TPFixedToastProps> = ({
   status = 'default',
+  tone,
   action = 'none',
   actionLabel = 'Details',
   onAction,
@@ -65,16 +66,17 @@ export const TPFixedToast: React.FC<TPFixedToastProps> = ({
   className = '',
   style,
 }) => {
+  const resolvedStatus = tone ?? status;
   return (
     <div
-      role={status === 'danger' ? 'alert' : 'status'}
-      data-status={status}
+      role={resolvedStatus === 'danger' ? 'alert' : 'status'}
+      data-status={resolvedStatus}
       data-action={action}
-      className={`tp-fixed-toast tp-fixed-toast--${status} ${className}`.trim()}
+      className={`tp-fixed-toast tp-fixed-toast--${resolvedStatus} ${className}`.trim()}
       style={style}
     >
       <span className="tp-fixed-toast-icon">
-        <FixedToastStatusIcon status={status} />
+        <FixedToastStatusIcon status={resolvedStatus} />
       </span>
 
       <div className="tp-fixed-toast-message">{message}</div>

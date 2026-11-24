@@ -61,4 +61,43 @@ describe('TPThemeProvider & TP-Design 12 Theme Presets', () => {
     act(() => screen.getByText('toggle-mode').click());
     expect(rootEl.getAttribute('data-tp-mode')).toBe('light');
   });
+
+  it('supports Omada dark brightened alert/yellow colors, WCAG High Contrast, and Large Font scaling', () => {
+    expect(TP_THEME_PRESETS.omada.dark.alert).toBe('#FF4D62');
+    expect(TP_THEME_PRESETS.omada.dark.yellow).toBe('#F19151');
+
+    function ContrastProbe() {
+      const { highContrast, fontScale, tokens, setHighContrast, setFontScale } = useTPTheme();
+      return (
+        <div>
+          <span data-testid="hc">{String(highContrast)}</span>
+          <span data-testid="fs">{String(fontScale)}</span>
+          <span data-testid="hc-focus">{tokens.focus}</span>
+          <span data-testid="hc-title1">{String(tokens.fontWeightTitle1)}</span>
+          <button onClick={() => setHighContrast(true)}>enable-hc</button>
+          <button onClick={() => setFontScale(1.4)}>set-large-font</button>
+        </div>
+      );
+    }
+
+    const { container } = render(
+      <TPThemeProvider scoped defaultBrand="omada" defaultMode="light">
+        <ContrastProbe />
+      </TPThemeProvider>,
+    );
+
+    const rootEl = container.querySelector('[data-tp-brand]') as HTMLElement;
+    expect(rootEl.getAttribute('data-tp-contrast')).toBe('normal');
+    expect(rootEl.getAttribute('data-tp-large-font')).toBe('false');
+    expect(screen.getByTestId('hc-title1').textContent).toBe('Light');
+
+    act(() => screen.getByText('enable-hc').click());
+    expect(rootEl.getAttribute('data-tp-contrast')).toBe('high');
+    expect(screen.getByTestId('hc-focus').textContent).toBe('#008055');
+    expect(screen.getByTestId('hc-title1').textContent).toBe('Bold');
+
+    act(() => screen.getByText('set-large-font').click());
+    expect(rootEl.getAttribute('data-tp-large-font')).toBe('true');
+    expect(rootEl.style.getPropertyValue('--tp-font-scale')).toBe('1.4');
+  });
 });

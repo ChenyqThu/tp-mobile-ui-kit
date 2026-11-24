@@ -1,7 +1,7 @@
 {
   "name": "@chenyqthu/tp-mobile-ui-kit",
-  "version": "0.2.1",
-  "description": "TP-Link multi-brand mobile React UI component library (TP-Design 12-mode Theme Engine + Omada APP 5.3 Blocks & Real PAG Motion Assets + Single-file HTML standalone bundle)",
+  "version": "0.3.0",
+  "description": "TP-Link multi-brand mobile React UI component library (TP-Design 12-mode + WCAG High Contrast Theme Engine, 669 Figma Icons + Dark Variants, Omada APP V5.3–6.3 Blocks & Real PAG Motion Assets, Single-file HTML standalone bundle)",
   "license": "MIT",
   "repository": {
     "type": "git",

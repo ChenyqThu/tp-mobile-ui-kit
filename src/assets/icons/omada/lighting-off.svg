@@ -1,0 +1,7 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="stroke0_76_7751" fill="currentColor">
+<path d="M5.10547 6.84473V7.97183L7.43013 11.3532V23.7513H16.7288V11.3532L19.0534 7.97183V6.84473H5.10547Z"/>
+</mask>
+<path d="M5.10547 6.84473V7.97183L7.43013 11.3532V23.7513H16.7288V11.3532L19.0534 7.97183V6.84473H5.10547Z" stroke-width="2.4" stroke="currentColor" mask="url(#stroke0_76_7751)"/>
+<path d="M5.0531 4.64891H19.0269" stroke-width="1.2" stroke="currentColor"/>
+</svg>

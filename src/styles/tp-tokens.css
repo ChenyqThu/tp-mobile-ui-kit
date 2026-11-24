@@ -166,12 +166,12 @@
   --tp-text-inverse-primary: #2B2B2B;
   --tp-text-inverse-secondary: #999999;
   --tp-text-highlighted: #33A0E9;
-  --tp-color-alert: #EE385C;
-  --tp-color-alert-10: rgba(238, 56, 92, 0.1);
+  --tp-color-alert: #FF4D62;
+  --tp-color-alert-10: rgba(255, 77, 98, 0.16);
   --tp-color-green: #00A870;
   --tp-color-green-10: rgba(0, 168, 112, 0.1);
-  --tp-color-yellow: #FF8C27;
-  --tp-color-yellow-10: rgba(255, 140, 39, 0.1);
+  --tp-color-yellow: #F19151;
+  --tp-color-yellow-10: rgba(241, 145, 81, 0.16);
   --tp-btn-primary-bg: #008055;
   --tp-btn-secondary-bg: rgba(255, 255, 255, 0);
   --tp-btn-secondary-stroke: 2px;
@@ -232,7 +232,7 @@
   --tp-var-font-weight-title-1: Light;
   --tp-var-red-10: rgba(238, 56, 92, 0.1);
   --tp-var-red-16: rgba(238, 56, 92, 0.16);
-  --tp-var-general-alert: #EE385C;
+  --tp-var-general-alert: #FF4D62;
   --tp-var-red-40: rgba(238, 56, 92, 0.4);
   --tp-var-red-60: rgba(238, 56, 92, 0.6);
   --tp-var-red-20: rgba(238, 56, 92, 0.2);
@@ -253,7 +253,7 @@
   --tp-var-yellow-60: rgba(255, 140, 39, 0.6);
   --tp-var-yellow-40: rgba(255, 140, 39, 0.4);
   --tp-var-yellow-80: rgba(255, 140, 39, 0.8);
-  --tp-var-general-yellow: #FF8C27;
+  --tp-var-general-yellow: #F19151;
   --tp-var-font-weight-button-text: Regular;
   --tp-var-font-weight-title-4: Regular;
   --tp-var-component-overlay: rgba(0, 0, 0, 0.6);
@@ -1743,4 +1743,182 @@
 [data-tp-brand] {
   font-family: var(--tp-font-family);
   color: var(--tp-text-primary);
+  --tp-font-scale: 1;
+}
+
+/* ==========================================================================
+   Omada Port Speed Colors, Extended Semantic Tokens, Tag Palettes, Skeleton,
+   Accessibility High Contrast & Dynamic Font Scale
+   ========================================================================== */
+
+:root,
+[data-tp-mode="light"] {
+  --tp-port-100m: #F9B200;
+  --tp-port-1g: #95CC00;
+  --tp-port-2-5g: #00D076;
+  --tp-port-5g: #00A870;
+  --tp-port-10g: #00C9D4;
+  --tp-port-25g: #009CFE;
+  --tp-port-40g: #4C73FF;
+  --tp-port-100g: #D562FF;
+  --tp-port-disabled: #777777;
+  --tp-port-disconnected: rgba(153, 153, 153, 0.32);
+
+  --tp-color-accent: #F476FF;
+  --tp-color-purple: #9C4CA3;
+  --tp-color-purple-soft: rgba(244, 118, 255, 0.16);
+  --tp-color-indigo: #2F2FFF;
+  --tp-color-indigo-soft: rgba(47, 47, 255, 0.1);
+
+  --tp-tag-green-bg: rgba(0, 168, 112, 0.1);
+  --tp-tag-green-text: #00A870;
+  --tp-tag-green-border: #00A870;
+  --tp-tag-green-solid: #00A870;
+
+  --tp-tag-blue-bg: rgba(0, 105, 203, 0.1);
+  --tp-tag-blue-text: #0069CB;
+  --tp-tag-blue-border: #0069CB;
+  --tp-tag-blue-solid: #0069CB;
+
+  --tp-tag-red-bg: rgba(238, 56, 92, 0.1);
+  --tp-tag-red-text: #EE385C;
+  --tp-tag-red-border: #EE385C;
+  --tp-tag-red-solid: #EE385C;
+
+  --tp-tag-orange-bg: rgba(255, 140, 39, 0.1);
+  --tp-tag-orange-text: #FF8C27;
+  --tp-tag-orange-border: #FF8C27;
+  --tp-tag-orange-solid: #FF8C27;
+
+  --tp-tag-purple-bg: rgba(244, 118, 255, 0.16);
+  --tp-tag-purple-text: #9C4CA3;
+  --tp-tag-purple-border: #9C4CA3;
+  --tp-tag-purple-solid: #9C4CA3;
+
+  --tp-tag-indigo-bg: rgba(47, 47, 255, 0.1);
+  --tp-tag-indigo-text: #2F2FFF;
+  --tp-tag-indigo-border: #2F2FFF;
+  --tp-tag-indigo-solid: #2F2FFF;
+
+  --tp-tag-neutral-bg: #F4F4F4;
+  --tp-tag-neutral-text: #636363;
+  --tp-tag-neutral-border: #CCCCCC;
+  --tp-tag-neutral-solid: #999999;
+
+  --tp-skeleton-base: #F7F7F7;
+  --tp-skeleton-highlight: #ECECEC;
+  --tp-tabbar-active: var(--tp-focus);
+  --tp-search-omada-bg: rgba(43, 43, 43, 0.06);
+}
+
+[data-tp-mode="dark"] {
+  --tp-port-disconnected: rgba(255, 255, 255, 0.24);
+  --tp-color-accent: #E077E9;
+  --tp-color-purple: #F584FF;
+  --tp-color-purple-soft: rgba(244, 118, 255, 0.2);
+  --tp-color-indigo: #ACACFF;
+  --tp-color-indigo-soft: rgba(130, 130, 255, 0.2);
+
+  --tp-tag-green-bg: rgba(0, 168, 112, 0.2);
+  --tp-tag-green-text: #05C178;
+  --tp-tag-green-border: #00A870;
+  --tp-tag-green-solid: #00A870;
+
+  --tp-tag-blue-bg: rgba(51, 160, 233, 0.2);
+  --tp-tag-blue-text: #5CB3ED;
+  --tp-tag-blue-border: #33A0E9;
+  --tp-tag-blue-solid: #0069CB;
+
+  --tp-tag-red-bg: rgba(238, 56, 92, 0.2);
+  --tp-tag-red-text: #FF7181;
+  --tp-tag-red-border: #FF4D62;
+  --tp-tag-red-solid: #FF4D62;
+
+  --tp-tag-orange-bg: rgba(255, 140, 39, 0.2);
+  --tp-tag-orange-text: #F29C62;
+  --tp-tag-orange-border: #F19151;
+  --tp-tag-orange-solid: #F19151;
+
+  --tp-tag-purple-bg: rgba(244, 118, 255, 0.2);
+  --tp-tag-purple-text: #F584FF;
+  --tp-tag-purple-border: #F476FF;
+  --tp-tag-purple-solid: #9C4CA3;
+
+  --tp-tag-indigo-bg: rgba(130, 130, 255, 0.2);
+  --tp-tag-indigo-text: #ACACFF;
+  --tp-tag-indigo-border: #ACACFF;
+  --tp-tag-indigo-solid: #4E4EDD;
+
+  --tp-tag-neutral-bg: rgba(255, 255, 255, 0.16);
+  --tp-tag-neutral-text: rgba(255, 255, 255, 0.8);
+  --tp-tag-neutral-border: #999999;
+  --tp-tag-neutral-solid: #636363;
+
+  --tp-skeleton-base: #363636;
+  --tp-skeleton-highlight: #4D4D4D;
+  --tp-search-omada-bg: rgba(255, 255, 255, 0.1);
+}
+
+[data-tp-brand="omada"][data-tp-mode="dark"] {
+  --tp-tabbar-active: #00A163;
+}
+
+/* Omada Light High Contrast Accessibility Mode (WCAG 4.5:1) */
+[data-tp-brand="omada"][data-tp-mode="light"][data-tp-contrast="high"] {
+  --tp-focus: #008055;
+  --tp-focus-10: rgba(0, 128, 85, 0.1);
+  --tp-focus-16: rgba(0, 128, 85, 0.16);
+  --tp-focus-20: rgba(0, 128, 85, 0.2);
+  --tp-btn-primary-bg: #008055;
+  --tp-btn-text-color: #008055;
+  --tp-btn-secondary-border: 2px solid #008055;
+  --tp-color-green: #00865A;
+  --tp-color-green-10: rgba(0, 134, 90, 0.1);
+  --tp-color-alert: #D63253;
+  --tp-color-alert-10: rgba(214, 50, 83, 0.1);
+  --tp-color-yellow: #B2621B;
+  --tp-color-yellow-10: rgba(178, 98, 27, 0.1);
+  --tp-color-accent: #9C4CA3;
+  --tp-text-secondary: #636363;
+  --tp-font-weight-title1: 700;
+  --tp-tabbar-active: #008055;
+
+  --tp-tag-green-text: #006644;
+  --tp-tag-green-border: #008055;
+  --tp-tag-green-solid: #008055;
+
+  --tp-tag-blue-text: #0054A2;
+  --tp-tag-blue-border: #0069CB;
+  --tp-tag-blue-solid: #0069CB;
+
+  --tp-tag-red-text: #AB2842;
+  --tp-tag-red-border: #D63253;
+  --tp-tag-red-solid: #D63253;
+
+  --tp-tag-orange-text: #8E4E16;
+  --tp-tag-orange-border: #B2621B;
+  --tp-tag-orange-solid: #B2621B;
+
+  --tp-tag-purple-text: #7D3D82;
+  --tp-tag-purple-border: #9C4CA3;
+  --tp-tag-purple-solid: #9C4CA3;
+
+  --tp-tag-indigo-text: #2626CC;
+  --tp-tag-indigo-border: #2F2FFF;
+  --tp-tag-indigo-solid: #2A2AE5;
+
+  --tp-tag-neutral-bg: #ECECEC;
+  --tp-tag-neutral-text: #4F4F4F;
+  --tp-tag-neutral-border: #999999;
+  --tp-tag-neutral-solid: #636363;
+}
+
+[data-tp-contrast="high"] .tp-text--tone-highlighted,
+[data-tp-contrast="high"] .tp-btn--text {
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+[data-tp-large-font="true"] {
+  --tp-font-size-scaled-body: calc(var(--tp-font-size-main, 16px) * var(--tp-font-scale, 1));
 }

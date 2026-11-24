@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
+  OMADA_HIGH_CONTRAST_LIGHT_TOKENS,
   TP_BRANDS,
   TP_THEME_PRESETS,
   type TPBrand,
@@ -16,11 +17,16 @@ export interface TPThemeContextValue {
   resolvedMode: TPResolvedMode;
   os: TPPlatformOS;
   screenSize: TPScreenSize;
+  highContrast: boolean;
+  fontScale: number;
   tokens: TPThemeTokens;
   setBrand: (brand: TPBrand) => void;
   setMode: (mode: TPColorMode) => void;
   setOS: (os: TPPlatformOS) => void;
   setScreenSize: (size: TPScreenSize) => void;
+  setHighContrast: (highContrast: boolean) => void;
+  toggleHighContrast: () => void;
+  setFontScale: (scale: number) => void;
   toggleMode: () => void;
 }
 
@@ -30,11 +36,16 @@ const DEFAULT_CONTEXT: TPThemeContextValue = {
   resolvedMode: 'light',
   os: 'ios',
   screenSize: 'new',
+  highContrast: false,
+  fontScale: 1,
   tokens: TP_THEME_PRESETS.omada.light,
   setBrand: () => {},
   setMode: () => {},
   setOS: () => {},
   setScreenSize: () => {},
+  setHighContrast: () => {},
+  toggleHighContrast: () => {},
+  setFontScale: () => {},
   toggleMode: () => {},
 };
 
@@ -48,6 +59,10 @@ export interface TPThemeProviderProps {
   os?: TPPlatformOS;
   defaultOS?: TPPlatformOS;
   screenSize?: TPScreenSize;
+  highContrast?: boolean;
+  defaultHighContrast?: boolean;
+  fontScale?: number;
+  defaultFontScale?: number;
   /** When true, applies theme attributes only on the wrapper element instead of `document.documentElement`. */
   scoped?: boolean;
   className?: string;
@@ -74,6 +89,10 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
   os: controlledOS,
   defaultOS = 'ios',
   screenSize: controlledScreenSize,
+  highContrast: controlledHighContrast,
+  defaultHighContrast = false,
+  fontScale: controlledFontScale,
+  defaultFontScale = 1,
   scoped = false,
   className = '',
   style,
@@ -83,6 +102,8 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
   const [uncontrolledMode, setUncontrolledMode] = useState<TPColorMode>(defaultMode);
   const [uncontrolledOS, setUncontrolledOS] = useState<TPPlatformOS>(defaultOS);
   const [uncontrolledScreenSize, setUncontrolledScreenSize] = useState<TPScreenSize>('new');
+  const [uncontrolledHighContrast, setUncontrolledHighContrast] = useState<boolean>(defaultHighContrast);
+  const [uncontrolledFontScale, setUncontrolledFontScale] = useState<number>(defaultFontScale);
   const [systemDark, setSystemDark] = useState<boolean>(detectSystemPrefersDark);
 
   // Keep internal state aligned if parent transitions controlled props
@@ -101,6 +122,14 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
   useEffect(() => {
     if (controlledScreenSize !== undefined) setUncontrolledScreenSize(controlledScreenSize);
   }, [controlledScreenSize]);
+
+  useEffect(() => {
+    if (controlledHighContrast !== undefined) setUncontrolledHighContrast(controlledHighContrast);
+  }, [controlledHighContrast]);
+
+  useEffect(() => {
+    if (controlledFontScale !== undefined) setUncontrolledFontScale(controlledFontScale);
+  }, [controlledFontScale]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
@@ -123,14 +152,22 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
   const mode = controlledMode ?? uncontrolledMode;
   const os = controlledOS ?? uncontrolledOS;
   const screenSize = controlledScreenSize ?? uncontrolledScreenSize;
+  const highContrast = controlledHighContrast ?? uncontrolledHighContrast;
+  const rawScale = controlledFontScale ?? uncontrolledFontScale;
+  const fontScale = Number.isFinite(rawScale) ? Math.min(2, Math.max(0.85, rawScale)) : 1;
+  const isLargeFont = fontScale >= 1.4;
 
   const resolvedMode: TPResolvedMode =
     mode === 'system' ? (systemDark ? 'dark' : 'light') : mode;
 
   const tokens = useMemo<TPThemeTokens>(() => {
     const presetGroup = TP_THEME_PRESETS[brand] ?? TP_THEME_PRESETS.omada;
-    return presetGroup[resolvedMode] ?? presetGroup.light;
-  }, [brand, resolvedMode]);
+    const baseTokens = presetGroup[resolvedMode] ?? presetGroup.light;
+    if (highContrast && brand === 'omada' && resolvedMode === 'light') {
+      return { ...baseTokens, ...OMADA_HIGH_CONTRAST_LIGHT_TOKENS };
+    }
+    return baseTokens;
+  }, [brand, resolvedMode, highContrast]);
 
   useEffect(() => {
     if (scoped || typeof document === 'undefined') return;
@@ -139,7 +176,10 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
     root.setAttribute('data-tp-mode', resolvedMode);
     root.setAttribute('data-tp-os', os);
     root.setAttribute('data-tp-screen', screenSize);
-  }, [scoped, brand, resolvedMode, os, screenSize]);
+    root.setAttribute('data-tp-contrast', highContrast ? 'high' : 'normal');
+    root.setAttribute('data-tp-large-font', isLargeFont ? 'true' : 'false');
+    root.style.setProperty('--tp-font-scale', String(fontScale));
+  }, [scoped, brand, resolvedMode, os, screenSize, highContrast, isLargeFont, fontScale]);
 
   const setBrand = useCallback((next: TPBrand) => {
     setUncontrolledBrand(next);
@@ -157,6 +197,18 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
     setUncontrolledScreenSize(next);
   }, []);
 
+  const setHighContrast = useCallback((next: boolean) => {
+    setUncontrolledHighContrast(next);
+  }, []);
+
+  const toggleHighContrast = useCallback(() => {
+    setUncontrolledHighContrast((prev) => !prev);
+  }, []);
+
+  const setFontScale = useCallback((next: number) => {
+    setUncontrolledFontScale(Math.min(2, Math.max(0.85, next)));
+  }, []);
+
   const toggleMode = useCallback(() => {
     setUncontrolledMode((prev) => {
       const current = prev === 'system' ? (systemDark ? 'dark' : 'light') : prev;
@@ -171,14 +223,36 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
       resolvedMode,
       os,
       screenSize,
+      highContrast,
+      fontScale,
       tokens,
       setBrand,
       setMode,
       setOS,
       setScreenSize,
+      setHighContrast,
+      toggleHighContrast,
+      setFontScale,
       toggleMode,
     }),
-    [brand, mode, resolvedMode, os, screenSize, tokens, setBrand, setMode, setOS, setScreenSize, toggleMode],
+    [
+      brand,
+      mode,
+      resolvedMode,
+      os,
+      screenSize,
+      highContrast,
+      fontScale,
+      tokens,
+      setBrand,
+      setMode,
+      setOS,
+      setScreenSize,
+      setHighContrast,
+      toggleHighContrast,
+      setFontScale,
+      toggleMode,
+    ],
   );
 
   return (
@@ -188,14 +262,17 @@ export const TPThemeProvider: React.FC<TPThemeProviderProps> = ({
         data-tp-mode={resolvedMode}
         data-tp-os={os}
         data-tp-screen={screenSize}
+        data-tp-contrast={highContrast ? 'high' : 'normal'}
+        data-tp-large-font={isLargeFont ? 'true' : 'false'}
         className={`tp-theme-root ${className}`.trim()}
         style={{
           fontFamily: tokens.fontFamily.includes('SF Pro')
             ? '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif'
             : tokens.fontFamily,
           color: tokens.textPrimary,
+          '--tp-font-scale': String(fontScale),
           ...style,
-        }}
+        } as React.CSSProperties}
       >
         {children}
       </div>

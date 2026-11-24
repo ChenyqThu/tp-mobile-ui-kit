@@ -6,12 +6,17 @@ import '../../styles/tp-core-nav-controls.css';
 export const TPFixedButtonBar: React.FC<TPFixedButtonBarProps> = ({
   layout = 'single',
   primaryText,
+  primaryVariant = 'primary',
   onPrimaryClick,
   primaryLoading = false,
   primaryDisabled = false,
   secondaryText,
   onSecondaryClick,
   secondaryVariant = 'secondary',
+  tertiaryText,
+  onTertiaryClick,
+  tertiaryVariant = 'text',
+  tertiaryDisabled = false,
   note,
   className = '',
   style,
@@ -26,7 +31,7 @@ export const TPFixedButtonBar: React.FC<TPFixedButtonBarProps> = ({
 
   const primaryButton = (
     <TPButton
-      variant="primary"
+      variant={primaryVariant}
       size="lg"
       block
       loading={primaryLoading}
@@ -48,6 +53,18 @@ export const TPFixedButtonBar: React.FC<TPFixedButtonBarProps> = ({
     </TPButton>
   ) : null;
 
+  const tertiaryButton = tertiaryText ? (
+    <TPButton
+      variant={tertiaryVariant}
+      size="lg"
+      block
+      disabled={tertiaryDisabled}
+      onClick={onTertiaryClick}
+    >
+      {tertiaryText}
+    </TPButton>
+  ) : null;
+
   return (
     <div className={rootClass} data-layout={layout} style={style}>
       {note !== undefined && note !== null && (
@@ -58,6 +75,12 @@ export const TPFixedButtonBar: React.FC<TPFixedButtonBarProps> = ({
           <>
             {secondaryButton}
             {primaryButton}
+          </>
+        ) : layout === 'triple' ? (
+          <>
+            {primaryButton}
+            {secondaryButton}
+            {tertiaryButton}
           </>
         ) : (
           <>

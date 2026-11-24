@@ -76,15 +76,18 @@ export const TPListItem: React.FC<TPListItemProps> = ({
   switchProps,
   danger = false,
   disabled = false,
+  layout = 'default',
+  error,
   onClick,
   className = '',
   style,
 }) => {
+  const isFormField = layout === 'form-field';
   const isClickable = Boolean(onClick) && !disabled;
   const hasTrailingGroup =
-    value !== undefined && value !== null ||
-    badge !== undefined && badge !== null ||
-    trailing !== undefined && trailing !== null ||
+    (!isFormField && value !== undefined && value !== null) ||
+    (badge !== undefined && badge !== null) ||
+    (trailing !== undefined && trailing !== null) ||
     Boolean(checked) ||
     Boolean(switchProps) ||
     arrow;
@@ -105,6 +108,8 @@ export const TPListItem: React.FC<TPListItemProps> = ({
 
   const classes = [
     'tp-list-item',
+    isFormField ? 'tp-list-item--form-field' : '',
+    error ? 'tp-list-item--error' : '',
     isClickable ? 'tp-list-item--clickable' : '',
     danger ? 'tp-list-item--danger' : '',
     disabled ? 'tp-list-item--disabled' : '',
@@ -120,6 +125,7 @@ export const TPListItem: React.FC<TPListItemProps> = ({
       role={onClick ? 'button' : undefined}
       tabIndex={isClickable ? 0 : undefined}
       aria-disabled={disabled || undefined}
+      data-layout={layout}
       data-checked={checked !== undefined ? String(Boolean(checked)) : undefined}
       onClick={onClick ? handleClick : undefined}
       onKeyDown={onClick ? handleKeyDown : undefined}
@@ -129,18 +135,45 @@ export const TPListItem: React.FC<TPListItemProps> = ({
       )}
 
       <div className="tp-list-item-content">
-        <div className="tp-list-item-title">{title}</div>
-        {subtitle !== undefined && subtitle !== null && (
-          <div className="tp-list-item-subtitle">{subtitle}</div>
-        )}
-        {description !== undefined && description !== null && (
-          <div className="tp-list-item-description">{description}</div>
+        {isFormField ? (
+          <>
+            <div className="tp-list-item-form-label">{title}</div>
+            {value !== undefined && value !== null && (
+              <div className="tp-list-item-form-value">{value}</div>
+            )}
+            {subtitle !== undefined && subtitle !== null && (
+              <div className="tp-list-item-subtitle">{subtitle}</div>
+            )}
+            {description !== undefined && description !== null && (
+              <div className="tp-list-item-description">{description}</div>
+            )}
+            {error !== undefined && error !== null && error !== '' && (
+              <div className="tp-list-item-error" role="alert">
+                {error}
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="tp-list-item-title">{title}</div>
+            {subtitle !== undefined && subtitle !== null && (
+              <div className="tp-list-item-subtitle">{subtitle}</div>
+            )}
+            {description !== undefined && description !== null && (
+              <div className="tp-list-item-description">{description}</div>
+            )}
+            {error !== undefined && error !== null && error !== '' && (
+              <div className="tp-list-item-error" role="alert">
+                {error}
+              </div>
+            )}
+          </>
         )}
       </div>
 
       {hasTrailingGroup && (
         <div className="tp-list-item-trailing-group">
-          {value !== undefined && value !== null && (
+          {!isFormField && value !== undefined && value !== null && (
             <div className="tp-list-item-value">{value}</div>
           )}
           {badge !== undefined && badge !== null && (

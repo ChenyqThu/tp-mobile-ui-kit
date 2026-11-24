@@ -16,6 +16,7 @@ export const TPInput: React.FC<TPInputProps> = ({
   password = false,
   multiline = false,
   rows = 3,
+  showCount = false,
   error,
   helperText,
   prefix,
@@ -204,13 +205,25 @@ export const TPInput: React.FC<TPInputProps> = ({
         )}
       </div>
 
-      {error ? (
-        <div id={messageId} className="tp-input-error" role="alert">
-          {error}
-        </div>
-      ) : helperText ? (
-        <div id={messageId} className="tp-input-helper">
-          {helperText}
+      {(error || helperText || showCount) ? (
+        <div className="tp-input-footer">
+          {error ? (
+            <div id={messageId} className="tp-input-error" role="alert">
+              {error}
+            </div>
+          ) : helperText ? (
+            <div id={messageId} className="tp-input-helper">
+              {helperText}
+            </div>
+          ) : (
+            <span />
+          )}
+          {showCount && (
+            <span className="tp-input-count" aria-live="polite">
+              {currentValue.length}
+              {rest.maxLength !== undefined ? `/${rest.maxLength}` : ''}
+            </span>
+          )}
         </div>
       ) : null}
     </div>

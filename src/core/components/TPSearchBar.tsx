@@ -14,6 +14,7 @@ export const TPSearchBar: React.FC<TPSearchBarProps> = ({
   onCancel,
   showCancel = false,
   autoFocus = false,
+  shape = 'auto',
   className = '',
   style,
 }) => {
@@ -43,7 +44,11 @@ export const TPSearchBar: React.FC<TPSearchBarProps> = ({
   };
 
   return (
-    <div className={`tp-search-bar ${className}`.trim()} style={style}>
+    <div
+      className={`tp-search-bar tp-search-bar--shape-${shape} ${className}`.trim()}
+      data-shape={shape}
+      style={style}
+    >
       <div className="tp-search-field">
         <span className="tp-search-icon" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">

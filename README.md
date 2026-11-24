@@ -1,6 +1,6 @@
 # TP-Mobile UI Kit (`@chenyqthu/tp-mobile-ui-kit`)
 
-High-fidelity **TP-Link multi-brand mobile React UI component library** powered by the **TP-Design 12-Mode Theme Engine** (6 brands × Light/Dark + OS-adaptive iOS/Android geometry), **626 Figma icons**, **42 Light/Dark illustrations**, **16 brand logos**, **11 real Tencent PAG (`.pag`) vector animations**, **7 restored Omada APP v5.3–6.3 screens + V5.3 blocks**, and a zero-build single-file HTML standalone bundle.
+High-fidelity **TP-Link multi-brand mobile React UI component library** powered by the **TP-Design 12-Mode Theme Engine + WCAG 4.5:1 High Contrast & Large-Font Scaling** (6 brands × Light/Dark + OS-adaptive iOS Liquid Glass vs Android traditional chrome), **669 Figma icons** (with **25 dark-mode icon variants**), **42 Light/Dark illustrations**, **16 brand logos**, **17 real Tencent PAG (`.pag`) animations + 4 procedural SVG motions**, **Omada APP v5.3–6.3 screens, P0/P1/P2 blocks & sub-pages**, and a zero-build single-file HTML standalone bundle.
 
 ---
 
@@ -40,9 +40,9 @@ export function App() {
 | Subpath | Contents |
 | :--- | :--- |
 | `@chenyqthu/tp-mobile-ui-kit` | Root barrel re-exporting theme, core, assets, and Omada modules |
-| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider`, `useTPTheme`, `TP_BRANDS`, `TP_THEME_PRESETS`, and all `TP*` core mobile primitives (`TPPhoneFrame` with Liquid Glass `overlayTop`/`overlayBottom`, `TPLiquidGlass`, `TPStatusBar`, `TPHeader`, `TPTabBar`, `TPIconButton`, `TPSegment`, `TPButton`, `TPSwitch`, dual-thumb `TPSlider`, `TPCheckbox`, `TPRadio`, `TPListCard`, `TPListItem`, `TPSwipeRow`, `TPAlert`, `TPActionSheet`, `TPBottomSheet`, `TPFixedToast`, `TPTooltip`, `TPToast`, `useTPToast`, `TPProgress`, `TPSkeleton`, `TPStepper`, `TPDivider`, `TPAvatar`, `TPPinInput`, pickers, inputs) |
-| `@chenyqthu/tp-mobile-ui-kit/assets` | `TPIcon`, `TPIllustration`, `TPBrandLogo`, `TPMotion`, and asset manifests (`TP_ICONS`, `TP_ILLUSTRATIONS`, `TP_BRAND_LOGOS`, `TP_MOTIONS`) |
-| `@chenyqthu/tp-mobile-ui-kit/omada` | 7 restored Omada APP pages, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo`, 7 V5.3 blocks (`OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`), and `OmadaStandardInput` |
+| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider` (`highContrast`, `fontScale`), `useTPTheme`, `TP_BRANDS`, `TP_THEME_PRESETS`, and all `TP*` core mobile primitives (`TPPhoneFrame` with Liquid Glass `overlayTop`/`overlayBottom`, `TPLiquidGlass`, OS-adaptive `TPHeader` & `TPTabBar`, `TPIconButton`, `TPSegment`, `TPButton`, `TPFixedButtonBar`, `TPSwitch`, dual-thumb `TPSlider`, `TPCheckbox`, `TPRadio`, `TPListCard`, `TPListItem`, `TPSwipeRow`, `TPAlert`, `TPActionSheet`, `TPBottomSheet`, `TPInfoSheet`, `TPLegendSheet`, `TPFixedToast`, `TPTooltip`, `TPToast`, `useTPToast`, `TPProgress`, `TPSkeleton`, `TPStepper`, `TPDivider`, `TPAvatar`, `TPPinInput`, `TPLoadMore`, pickers, inputs) |
+| `@chenyqthu/tp-mobile-ui-kit/assets` | `TPIcon` (Light/Dark variant switching), `TPIllustration`, `TPBrandLogo`, `TPMotion` (PAG + procedural SVG), and asset manifests (`TP_ICONS`, `TP_ILLUSTRATIONS`, `TP_BRAND_LOGOS`, `TP_MOTIONS`) |
+| `@chenyqthu/tp-mobile-ui-kit/omada` | Restored Omada APP pages, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaConfigFormPage`, `OmadaLanSettingsPage`, `OmadaPortDetailPage`, `OmadaAccessibilitySettingsPage`, `OmadaPrivacyPolicyPage`, `OmadaAppDemo`, Omada blocks (`OmadaChartCard`, `OmadaDeviceListBlock`, `OmadaSiteListBlock`, `OmadaClientListBlock`, `OmadaSidebarDrawer`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaPortSelectorBlock`, `OmadaFormRepeaterBlock`, `OmadaCustomOptionList`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaVoucherPreviewCard`), and `OmadaStandardInput` |
 | `@chenyqthu/tp-mobile-ui-kit/style.css` | All `--tp-*` CSS token definitions and `.tp-*` component/Omada stylesheets |
 | `@chenyqthu/tp-mobile-ui-kit/standalone` | Browser IIFE bundle attaching everything to `window.TPMobileUI` |
 | `@chenyqthu/tp-mobile-ui-kit/catalog.json` | Machine-readable component, prop, token, asset, and template catalog |
@@ -121,22 +121,24 @@ Note: `<TPButton>` uses `variant="primary" | "secondary" | "text" | "alert" | "t
 - **CDN & `file://` fallback**: when running over `file://` or when local `./libpag.wasm` is unreachable, `TPMotion` automatically falls back to `https://cdn.jsdelivr.net/npm/libpag@4.5.85/lib/libpag.wasm` (or override via `wasmUrl`).
 - **Headless / non-WebGL fallback**: gracefully renders an animated `--tp-focus` SVG fallback (`data-tp-motion-fallback="true"`).
 
-Available motion slugs: `internet-connection`, `link-detection`, `update-network`, `deploy-config`, `discover-device`, `indeterminate-progress`, `connecting`, `tab-dropdown-select`, `tab-dropdown-mask`, `tab-dropdown-unmasked`, `port-card-expand`.
+Available motion slugs:
+- **Real Tencent PAG (`.pag`)**: `internet-connection`, `link-detection`, `update-network`, `deploy-config`, `discover-device`, `indeterminate-progress`, `connecting`, `tab-dropdown-select`, `tab-dropdown-mask`, `tab-dropdown-unmasked`, `port-card-expand`
+- **Procedural Theme SVG Motions**: `device-pairing`, `ap-scan`, `search-rotate`, `accessibility-zoom`
 
 ---
 
-## 5. Restored Omada APP Pages & V5.3 Blocks
+## 5. Restored Omada APP Pages, P0–P2 Blocks & Accessibility
 
 - **7 Restored Omada APP Screens**:
-  - `OmadaLaunchLoadingPage` — floating glass header, dismissible `V2.5.2` upgrade prompt, animated skeleton cards, Toolkit FAB
+  - `OmadaLaunchLoadingPage` — floating glass header, dismissible `V2.5.2` upgrade prompt, synchronized shimmer skeleton cards, Toolkit FAB
   - `OmadaControllerListPage` — `All Systems` filter menu, live search, `Cloud Management (5)` controller cards
   - `OmadaSiteDashboardPage` — site switcher (`92 ⌄ / 62`), 4 KPI tiles, Topology sheet, Site Health `100` scrubber, ISP Activity, Internet Activity chart, Toolkit diagnostics
   - `OmadaSiteInsightsPage` — `Wired | Wireless | Client | Apps` segments, `ISP Load` histogram + latency waveform, WAN/Gateway/Switch health trends
   - `OmadaSiteDevicesPage` — `+ | ⋮` glass capsule, `Device List | Device Group` segment, expandable filter chips, firmware upgrade badges
   - `OmadaSiteClientsPage` — `Online | Offline | Blocked | All` tabs, `All | Wired | Wireless` chips, dBm RSSI status, client detail & block actions
   - `OmadaSiteSettingsPage` — 4 grouped `TPListCard` sections with Omada `settings-*` icons and drill-downs
-- **Drill-Downs & Orchestrator**: `OmadaHealthDetailPage`, `OmadaDeviceDetailPage` (Ports `port-card-expand` + Firmware Upgrade `update-network` PAG motions), `OmadaAppDemo` (Apple Liquid Glass floating overlay navigation)
-- **V5.3 Blocks & Inputs**: `OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock` (`deploy-config` PAG motion), `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaStandardInput` (segmented IPv4, MAC, Port, Text)
+- **Drill-Downs, Config Forms & P1/P2 Pages**: `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaConfigFormPage` (`Discard Changes?` guard), `OmadaLanSettingsPage`, `OmadaPortDetailPage`, `OmadaAccessibilitySettingsPage` (WCAG 4.5:1 High Contrast + 140%+ Large Font preview), `OmadaPrivacyPolicyPage`, and `OmadaAppDemo` (iOS Liquid Glass vs Android traditional chrome + `OmadaSidebarDrawer`)
+- **Omada Blocks & Structured Inputs**: `OmadaChartCard` (6 chart types + `computeOmadaAxisScale`), `OmadaDeviceListBlock` (6 statuses, 7 secondary metrics, Display Options), `OmadaSiteListBlock`, `OmadaClientListBlock`, `OmadaSidebarDrawer`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock` (10 speeds, 17 badges, `dual-row`, `OmadaPortLegendSheet`), `OmadaPortSelectorBlock` (`select` / `icon-select` / `lag`), `OmadaFormRepeaterBlock`, `OmadaCustomOptionList`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaVoucherPreviewCard`, `OmadaStandardInput` (`ip`, `mac`, `port`, `text`, `cidr`, `ip-range`, `ip-port`, `time-range`)
 
 ---
 

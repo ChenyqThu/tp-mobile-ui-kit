@@ -2,11 +2,12 @@
 name: tp-mobile-ui-kit
 description: >-
   Build TP-Link multi-brand mobile React UI prototypes and Omada APP v5.3–6.3 screens
-  using @chenyqthu/tp-mobile-ui-kit (TP-Design 6-brand 12-mode theme engine, mobile TP*
-  primitives, 626 Figma icons, 42 Light/Dark illustrations, 16 brand logos, real Tencent
-  PAG .pag animations, and single-file zero-build HTML standalone bundle). Activate when
-  asked to build a TP-Link mobile UI demo, Omada/Tapo/Tether/Mercusys/Deco mobile mockup,
-  or single-file mobile prototype.
+  using @chenyqthu/tp-mobile-ui-kit (TP-Design 6-brand 12-mode + WCAG High Contrast theme
+  engine, OS-adaptive iOS Liquid Glass / Android chrome, mobile TP* primitives, 669 Figma
+  icons with 25 dark variants, 42 Light/Dark illustrations, 16 brand logos, 17 Tencent PAG
+  .pag + 4 SVG motions, Omada P0/P1/P2 blocks/pages, and single-file zero-build HTML standalone
+  bundle). Activate when asked to build a TP-Link mobile UI demo, Omada/Tapo/Tether/Mercusys/Deco
+  mobile mockup, or single-file mobile prototype.
 ---
 
 # TP-Mobile UI Kit — Mobile Prototype & Omada APP Skill
@@ -125,9 +126,9 @@ Prefer dedicated subpath imports to keep Vite/Rollup bundles lean via tree-shaki
 
 | Subpath | Contents |
 | :--- | :--- |
-| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider`, `useTPTheme`, `TP_BRANDS`, `TP_THEME_PRESETS`, and all `TP*` mobile core primitives (including `TPLiquidGlass`, `TPIconButton`, `TPIconButtonGroup`, `TPCheckbox`, `TPRadio`, `TPSwipeRow`, `TPTooltip`, `TPFixedToast`, `TPMonthPicker`, `TPLast7DaysPicker`, `TPStepText`, `TPProgress`, `TPSkeleton`, `TPStepper`, `TPDivider`, `TPAvatar`, `TPPinInput`, dual-thumb `TPSlider`) + `useTPToast` |
-| `@chenyqthu/tp-mobile-ui-kit/assets` | `TPIcon`, `TPIllustration`, `TPBrandLogo`, `TPMotion`, and asset manifests (`TP_ICONS`, `TP_ILLUSTRATIONS`, `TP_BRAND_LOGOS`, `TP_MOTIONS`) |
-| `@chenyqthu/tp-mobile-ui-kit/omada` | `OmadaStandardInput`, `OmadaDeviceThumb`, 7 V5.3 blocks (`OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`), 7 restored Omada APP pages, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo` |
+| `@chenyqthu/tp-mobile-ui-kit/core` | `TPThemeProvider`, `useTPTheme` (`highContrast`, `fontScale`, `os`), `TP_BRANDS`, `TP_THEME_PRESETS`, and all `TP*` mobile core primitives (including `TPLiquidGlass`, `TPIconButton`, `TPIconButtonGroup`, `TPCheckbox`, `TPRadio`, `TPSwipeRow`, `TPTooltip`, `TPFixedToast`, `TPInfoSheet`, `TPLegendSheet`, `TPLoadMore`, `TPMonthPicker`, `TPLast7DaysPicker`, `TPStepText`, `TPProgress`, `TPSkeleton`, `TPStepper`, `TPDivider`, `TPAvatar`, `TPPinInput`, dual-thumb `TPSlider`) + `useTPToast` |
+| `@chenyqthu/tp-mobile-ui-kit/assets` | `TPIcon` (669 icons + 25 dark variants), `TPIllustration`, `TPBrandLogo`, `TPMotion` (17 `.pag` + 4 SVG), and manifests (`TP_ICONS`, `TP_ILLUSTRATIONS`, `TP_BRAND_LOGOS`, `TP_MOTIONS`) |
+| `@chenyqthu/tp-mobile-ui-kit/omada` | `OmadaStandardInput`, `OmadaDeviceThumb`, P0/P1/P2 blocks (`OmadaChartCard`, `OmadaDeviceListBlock`, `OmadaSiteListBlock`, `OmadaClientListBlock`, `OmadaSidebarDrawer`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaPortSelectorBlock`, `OmadaFormRepeaterBlock`, `OmadaCustomOptionList`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaVoucherPreviewCard`), APP pages & `OmadaAppDemo` |
 | `@chenyqthu/tp-mobile-ui-kit/style.css` | Complete CSS token variables and `.tp-*` component/Omada styles |
 | `@chenyqthu/tp-mobile-ui-kit/standalone` | IIFE browser bundle attaching `window.TPMobileUI` |
 | `@chenyqthu/tp-mobile-ui-kit/catalog.json` | Machine-readable component, token, and asset catalog |
@@ -168,16 +169,18 @@ Switch dynamically via `useTPTheme()`:
 
 1. **Vite / React apps**: Place `libpag.wasm` in `public/libpag.wasm` (copied from `node_modules/libpag/lib/libpag.wasm`, or already in this repo's `public/libpag.wasm`).
 2. **Automatic fallback**: In `file://` standalone HTML or when local `./libpag.wasm` is absent, `TPMotion` falls back to `https://cdn.jsdelivr.net/npm/libpag@4.5.85/lib/libpag.wasm`. In headless/non-WebGL environments (like `jsdom`), it degrades gracefully to a themed SVG indicator (`data-tp-motion-fallback="true"`).
-3. Verified motion slugs (query via `search-assets motions`): `internet-connection`, `link-detection`, `update-network`, `deploy-config`, `discover-device`, `indeterminate-progress`, `connecting`, `tab-dropdown-select`, `tab-dropdown-mask`, `tab-dropdown-unmasked`, `port-card-expand`.
+3. Verified motion slugs (query via `search-assets motions`):
+   - **PAG (`.pag`)**: `internet-connection`, `link-detection`, `update-network`, `deploy-config`, `discover-device`, `indeterminate-progress`, `connecting`, `tab-dropdown-select`, `tab-dropdown-mask`, `tab-dropdown-unmasked`, `port-card-expand`.
+   - **Procedural SVG**: `device-pairing`, `ap-scan`, `search-rotate`, `accessibility-zoom`.
 
 ---
 
-## 6. Restored Omada APP Pages, Liquid Glass Chrome & V5.3 Blocks
+## 6. Restored Omada APP Pages, Liquid Glass / Android Chrome & Blocks
 
-- **Apple Liquid Glass Floating Chrome**: Set `overlayTop` and `overlayBottom` on `TPPhoneFrame` (with `<TPStatusBar transparent />` and `<TPTabBar variant="floating-pill" />`) so page content scrolls behind and softly blurs beneath both the floating glass header controls and the bottom pill tab bar (`TPLiquidGlass` exposes the standalone specular surface).
-- **7 Restored APP Screens**: `OmadaLaunchLoadingPage`, `OmadaControllerListPage`, `OmadaSiteDashboardPage`, `OmadaSiteInsightsPage`, `OmadaSiteDevicesPage`, `OmadaSiteClientsPage`, `OmadaSiteSettingsPage`
-- **Drill-Downs & Orchestrator**: `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaAppDemo` (all-in-one interactive prototype inside `TPPhoneFrame`)
-- **7 V5.3 Blocks & Inputs**: `OmadaDeviceListBlock`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaStandardInput` (segmented IPv4, MAC, Port, Text)
+- **OS-Adaptive Navigation Chrome**: On `os="ios"`, set `overlayTop` and `overlayBottom` on `TPPhoneFrame` (with `<TPStatusBar transparent />` and `<TPTabBar variant="floating-pill" />`) for Apple Liquid Glass floating headers and pill tabs (`TPLiquidGlass`). On `os="android"`, `TPHeader` and `TPTabBar` automatically render traditional Material-era docked bars and circular solid FABs with zero Liquid Glass.
+- **High Contrast & Font Scale**: `TPThemeProvider` supports `highContrast` (WCAG 4.5:1 Omada Light colors, Bold `700` `Title 1`, underlined bold links, and accessible Tags) and `fontScale` (`>= 1.4` enables stacked large-font list form rows).
+- **Omada Pages**: `OmadaLaunchLoadingPage`, `OmadaControllerListPage`, `OmadaSiteDashboardPage`, `OmadaSiteInsightsPage`, `OmadaSiteDevicesPage`, `OmadaSiteClientsPage`, `OmadaSiteSettingsPage`, `OmadaHealthDetailPage`, `OmadaDeviceDetailPage`, `OmadaConfigFormPage`, `OmadaLanSettingsPage`, `OmadaPortDetailPage`, `OmadaAccessibilitySettingsPage`, `OmadaPrivacyPolicyPage`, `OmadaAppDemo`.
+- **Omada Blocks & Inputs**: `OmadaChartCard`, `OmadaDeviceListBlock`, `OmadaSiteListBlock`, `OmadaClientListBlock`, `OmadaSidebarDrawer`, `OmadaWirelessNetworkBlock`, `OmadaIncidentsBlock`, `OmadaScheduleBlock`, `OmadaPortPanelBlock` (10 speeds + `dual-row` + `OmadaPortLegendSheet`), `OmadaPortSelectorBlock` (`select` / `icon-select` / `lag`), `OmadaFormRepeaterBlock`, `OmadaCustomOptionList`, `OmadaTopologyBlock`, `OmadaFirmwareUpdateBlock`, `OmadaVoucherPreviewCard`, `OmadaStandardInput` (`ip`, `mac`, `port`, `text`, `cidr`, `ip-range`, `ip-port`, `time-range`).
 
 ---
 

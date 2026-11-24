@@ -11,27 +11,61 @@ function clampYear(year: number, minYear: number, maxYear: number): number {
   return Math.min(maxYear, Math.max(minYear, year));
 }
 
+function formatDateIso(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function parseDateIso(raw: string | undefined, fallback: Date): Date {
+  if (!raw) return fallback;
+  const match = raw.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (!match) return fallback;
+  const parsed = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  return Number.isNaN(parsed.getTime()) ? fallback : parsed;
+}
+
 /**
- * Mobile date wheel picker with Year / Month / Day columns, leap-year clamping, and header actions.
+ * Mobile date wheel picker with Year / Month / Day columns, leap-year clamping, single & range modes, and header actions.
  */
 export const TPDatePicker: React.FC<TPDatePickerProps> = ({
+  mode = 'single',
   value,
   defaultValue,
+  rangeValue,
+  defaultRangeValue,
   minYear = 1990,
   maxYear = 2040,
   onChange,
   onConfirm,
+  onRangeChange,
+  onRangeConfirm,
   onCancel,
   title,
   className = '',
   style,
 }) => {
+  const isRange = mode === 'range';
   const [internalDate, setInternalDate] = useState<Date>(
     () => defaultValue ?? new Date(2026, 0, 1),
   );
+  const [internalRange, setInternalRange] = useState<[string, string]>(() => [
+    defaultRangeValue?.[0] ?? '2026-01-01',
+    defaultRangeValue?.[1] ?? '2026-01-07',
+  ]);
+  const [activeEdge, setActiveEdge] = useState<'start' | 'end'>('start');
 
-  const isControlled = value !== undefined;
-  const activeDate = isControlled ? value : internalDate;
+  const activeRange: [string, string] = rangeValue
+    ? [rangeValue[0], rangeValue[1]]
+    : internalRange;
+
+  const isControlled = isRange ? rangeValue !== undefined : value !== undefined;
+  const activeDate = isRange
+    ? parseDateIso(activeEdge === 'start' ? activeRange[0] : activeRange[1], new Date(2026, 0, 1))
+    : isControlled && value
+      ? value
+      : internalDate;
 
   const currentYear = clampYear(activeDate.getFullYear(), minYear, maxYear);
   const currentMonth = activeDate.getMonth() + 1;
@@ -76,16 +110,29 @@ export const TPDatePicker: React.FC<TPDatePickerProps> = ({
     const clampedDay = Math.min(nextDay, getDaysInMonth(nextYear, nextMonth));
     const nextDate = new Date(nextYear, nextMonth - 1, clampedDay);
 
+    if (isRange) {
+      const nextIso = formatDateIso(nextDate);
+      const nextPair: [string, string] =
+        activeEdge === 'start'
+          ? [nextIso, activeRange[1] < nextIso ? nextIso : activeRange[1]]
+          : [activeRange[0] > nextIso ? nextIso : activeRange[0], nextIso];
+      if (!rangeValue) {
+        setInternalRange(nextPair);
+      }
+      onRangeChange?.(nextPair);
+      return;
+    }
+
     if (!isControlled) {
       setInternalDate(nextDate);
     }
     onChange?.(nextDate);
   };
 
-  const hasHeader = title !== undefined || onCancel !== undefined || onConfirm !== undefined;
+  const hasHeader = title !== undefined || onCancel !== undefined || onConfirm !== undefined || onRangeConfirm !== undefined;
 
   return (
-    <div className={`tp-date-picker ${className}`.trim()} style={style}>
+    <div className={`tp-date-picker ${className}`.trim()} data-mode={mode} style={style}>
       {hasHeader && (
         <div className="tp-date-picker-header">
           {onCancel ? (
@@ -96,17 +143,49 @@ export const TPDatePicker: React.FC<TPDatePickerProps> = ({
             <span />
           )}
           {title !== undefined && <div className="tp-date-picker-title">{title}</div>}
-          {onConfirm ? (
+          {onConfirm || onRangeConfirm ? (
             <button
               type="button"
               className="tp-date-picker-btn tp-date-picker-btn--confirm"
-              onClick={() => onConfirm(new Date(currentYear, currentMonth - 1, currentDay))}
+              onClick={() => {
+                if (isRange) {
+                  onRangeConfirm?.(activeRange);
+                } else {
+                  onConfirm?.(new Date(currentYear, currentMonth - 1, currentDay));
+                }
+              }}
             >
               Confirm
             </button>
           ) : (
             <span />
           )}
+        </div>
+      )}
+
+      {isRange && (
+        <div className="tp-date-picker-range-tabs" role="tablist" aria-label="Date range bounds">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeEdge === 'start'}
+            className={`tp-date-picker-range-tab ${activeEdge === 'start' ? 'tp-date-picker-range-tab--active' : ''}`.trim()}
+            onClick={() => setActiveEdge('start')}
+          >
+            <span className="tp-date-picker-range-label">Start</span>
+            <span className="tp-date-picker-range-val">{activeRange[0]}</span>
+          </button>
+          <span className="tp-date-picker-range-sep" aria-hidden="true">→</span>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeEdge === 'end'}
+            className={`tp-date-picker-range-tab ${activeEdge === 'end' ? 'tp-date-picker-range-tab--active' : ''}`.trim()}
+            onClick={() => setActiveEdge('end')}
+          >
+            <span className="tp-date-picker-range-label">End</span>
+            <span className="tp-date-picker-range-val">{activeRange[1]}</span>
+          </button>
         </div>
       )}
 

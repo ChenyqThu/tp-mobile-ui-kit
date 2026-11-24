@@ -15,22 +15,24 @@ export const TPEmptyState: React.FC<TPEmptyStateProps> = ({
   actionText,
   onAction,
   compact = false,
+  size,
   className = '',
   style,
 }) => {
+  const isCompact = size ? size === 'compact' : compact;
   const classes = [
     'tp-empty-state',
-    compact ? 'tp-empty-state--compact' : '',
+    isCompact ? 'tp-empty-state--compact' : '',
     className,
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
-    <div className={classes} style={style}>
+    <div className={classes} data-size={isCompact ? 'compact' : 'full'} style={style}>
       {illustration ? (
         <div className="tp-empty-state-media">
-          <TPIllustration name={illustration} theme={theme} width={compact ? 180 : 240} />
+          <TPIllustration name={illustration} theme={theme} width={isCompact ? 180 : 240} />
         </div>
       ) : icon ? (
         <div className="tp-empty-state-icon">{icon}</div>

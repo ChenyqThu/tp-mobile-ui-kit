@@ -1,0 +1,10 @@
+<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="tp_grad_loading_grey" x1="2.5" y1="2.5" x2="21.5" y2="21.5" gradientUnits="userSpaceOnUse">
+<stop offset="0%" stop-color="#999999" stop-opacity="0.9"/>
+<stop offset="65%" stop-color="#999999" stop-opacity="0.35"/>
+<stop offset="100%" stop-color="#999999" stop-opacity="0.06"/>
+</linearGradient>
+</defs>
+<path d="M21.5 12C21.5 6.75329 17.2467 2.5 12 2.5C6.75329 2.5 2.5 6.75329 2.5 12C2.5 17.2467 6.75329 21.5 12 21.5C16.2496 21.5 19.8474 18.7098 21.0615 14.8614" stroke="url(#tp_grad_loading_grey)" stroke-width="2" stroke-linecap="square"/>
+</svg>

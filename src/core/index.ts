@@ -63,3 +63,5 @@ export { TPDivider } from './components/TPDivider';
 export { TPAvatar } from './components/TPAvatar';
 export { TPPinInput } from './components/TPPinInput';
 export { TPPrompt } from './components/TPPrompt';
+export { TPLoadMore } from './components/TPLoadMore';
+export { TPInfoSheet, TPLegendSheet } from './components/TPInfoSheet';

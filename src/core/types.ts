@@ -51,10 +51,19 @@ export interface TPStatusBarProps {
   style?: React.CSSProperties;
 }
 
+export interface TPHeaderTabItem {
+  key: string;
+  label: React.ReactNode;
+  badge?: number | string;
+}
+
 export interface TPHeaderProps {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
-  variant?: 'standard' | 'floating';
+  variant?: 'standard' | 'floating' | 'large' | 'tabs';
+  os?: 'ios' | 'android';
+  /** Automatically adapt floating Liquid Glass to traditional chrome on Android (default true) */
+  adaptiveOS?: boolean;
   left?: React.ReactNode;
   right?: React.ReactNode;
   showBack?: boolean;
@@ -63,6 +72,10 @@ export interface TPHeaderProps {
   onTitleClick?: () => void;
   rightBadge?: number | string;
   translucent?: boolean;
+  loading?: boolean;
+  tabs?: readonly TPHeaderTabItem[];
+  activeTab?: string;
+  onTabChange?: (key: string) => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -80,7 +93,12 @@ export interface TPTabBarProps {
   activeKey: string;
   onChange: (key: string) => void;
   variant?: 'floating-pill' | 'docked';
+  os?: 'ios' | 'android';
+  /** Automatically adapt floating pill to docked bar on Android (default true) */
+  adaptiveOS?: boolean;
+  iconSize?: number;
   extraAction?: React.ReactNode;
+  fab?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -96,7 +114,7 @@ export interface TPSegmentProps {
   options: readonly TPSegmentOption[];
   value: string;
   onChange: (key: string) => void;
-  variant?: 'underline' | 'pill';
+  variant?: 'underline' | 'pill' | 'segmented';
   fullWidth?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -105,29 +123,47 @@ export interface TPSegmentProps {
 export interface TPPageControlProps {
   total: number;
   current: number;
+  variant?: 'dots' | 'process';
   onChange?: (index: number) => void;
   className?: string;
   style?: React.CSSProperties;
 }
 
+export type TPButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'text'
+  | 'alert'
+  | 'alert-strong'
+  | 'tonal'
+  | 'in-card'
+  | 'in-card-alert';
+
 export interface TPButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
-  variant?: 'primary' | 'secondary' | 'text' | 'alert' | 'tonal' | 'in-card';
+  variant?: TPButtonVariant;
   size?: 'lg' | 'md' | 'sm';
   block?: boolean;
   loading?: boolean;
+  /** Optional deterministic progress fill percentage (0-100) rendered behind the label */
+  progress?: number;
   htmlType?: 'button' | 'submit' | 'reset';
   icon?: React.ReactNode;
 }
 
 export interface TPFixedButtonBarProps {
-  layout?: 'single' | 'dual-horizontal' | 'dual-vertical';
+  layout?: 'single' | 'dual-horizontal' | 'dual-vertical' | 'triple';
   primaryText: string;
+  primaryVariant?: TPButtonVariant;
   onPrimaryClick?: () => void;
   primaryLoading?: boolean;
   primaryDisabled?: boolean;
   secondaryText?: string;
   onSecondaryClick?: () => void;
-  secondaryVariant?: 'secondary' | 'text' | 'alert';
+  secondaryVariant?: TPButtonVariant;
+  tertiaryText?: string;
+  onTertiaryClick?: () => void;
+  tertiaryVariant?: TPButtonVariant;
+  tertiaryDisabled?: boolean;
   note?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -190,6 +226,8 @@ export interface TPListItemProps {
   switchProps?: TPSwitchProps;
   danger?: boolean;
   disabled?: boolean;
+  layout?: 'default' | 'form-field';
+  error?: React.ReactNode;
   onClick?: () => void;
   className?: string;
   style?: React.CSSProperties;
@@ -230,11 +268,23 @@ export interface TPTextProps {
   children: React.ReactNode;
 }
 
+export type TPTagTone =
+  | 'focus'
+  | 'neutral'
+  | 'success'
+  | 'warning'
+  | 'alert'
+  | 'info'
+  | 'purple'
+  | 'indigo';
+
 export interface TPTagProps {
   children: React.ReactNode;
-  tone?: 'focus' | 'neutral' | 'success' | 'warning' | 'alert' | 'info';
+  tone?: TPTagTone;
   selected?: boolean;
-  size?: 'sm' | 'md';
+  size?: 'xs' | 'sm' | 'md';
+  shape?: 'pill' | 'rect';
+  appearance?: 'soft' | 'solid' | 'outline';
   closable?: boolean;
   onClose?: () => void;
   onClick?: () => void;
@@ -262,12 +312,13 @@ export interface TPEmptyStateProps {
   actionText?: string;
   onAction?: () => void;
   compact?: boolean;
+  size?: 'full' | 'compact';
   className?: string;
   style?: React.CSSProperties;
 }
 
 export interface TPInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'prefix'> {
-  variant?: 'standard' | 'list' | 'borderless' | 'icon';
+  variant?: 'standard' | 'list' | 'borderless' | 'icon' | 'underline';
   label?: React.ReactNode;
   value?: string;
   defaultValue?: string;
@@ -276,6 +327,7 @@ export interface TPInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
   password?: boolean;
   multiline?: boolean;
   rows?: number;
+  showCount?: boolean;
   error?: string;
   helperText?: string;
   prefix?: React.ReactNode;
@@ -292,6 +344,7 @@ export interface TPSearchBarProps {
   onCancel?: () => void;
   showCancel?: boolean;
   autoFocus?: boolean;
+  shape?: 'auto' | 'pill' | 'rounded';
   className?: string;
   style?: React.CSSProperties;
 }
@@ -312,12 +365,17 @@ export interface TPWheelPickerProps {
 }
 
 export interface TPDatePickerProps {
+  mode?: 'single' | 'range';
   value?: Date;
   defaultValue?: Date;
+  rangeValue?: readonly [string, string];
+  defaultRangeValue?: readonly [string, string];
   minYear?: number;
   maxYear?: number;
   onChange?: (date: Date) => void;
   onConfirm?: (date: Date) => void;
+  onRangeChange?: (range: [string, string]) => void;
+  onRangeConfirm?: (range: [string, string]) => void;
   onCancel?: () => void;
   title?: string;
   className?: string;
@@ -327,6 +385,7 @@ export interface TPDatePickerProps {
 export interface TPTimePickerProps {
   value?: { hour: number; minute: number; period?: 'AM' | 'PM' };
   use12Hour?: boolean;
+  format?: '24h' | '12h';
   minuteStep?: number;
   onChange?: (val: { hour: number; minute: number; period?: 'AM' | 'PM' }) => void;
   className?: string;
@@ -581,6 +640,8 @@ export interface TPTooltipProps {
 
 export interface TPFixedToastProps {
   status?: 'default' | 'info' | 'success' | 'warning' | 'danger';
+  /** Convenience alias matching status tones */
+  tone?: 'default' | 'info' | 'success' | 'warning' | 'danger';
   action?: 'none' | 'close' | 'go-to' | 'button';
   actionLabel?: string;
   onAction?: () => void;
@@ -697,6 +758,53 @@ export interface TPPinInputProps {
   onChange?: (value: string) => void;
   onComplete?: (value: string) => void;
   ariaLabel?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPLoadMoreProps {
+  status?: 'idle' | 'loading' | 'no-more' | 'error';
+  idleText?: React.ReactNode;
+  loadingText?: React.ReactNode;
+  noMoreText?: React.ReactNode;
+  errorText?: React.ReactNode;
+  onLoadMore?: () => void;
+  onRetry?: () => void;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPInfoSheetProps {
+  open: boolean;
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  description?: React.ReactNode;
+  bullets?: readonly React.ReactNode[];
+  confirmText?: string;
+  onConfirm?: () => void;
+  onClose: () => void;
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export interface TPLegendItem {
+  key: string;
+  label: React.ReactNode;
+  description?: React.ReactNode;
+  color?: string;
+  icon?: React.ReactNode;
+  badge?: React.ReactNode;
+}
+
+export interface TPLegendSheetProps {
+  open: boolean;
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  items: readonly TPLegendItem[];
+  columns?: 1 | 2;
+  onClose: () => void;
+  footer?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }

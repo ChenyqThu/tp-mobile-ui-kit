@@ -319,31 +319,150 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  display: grid;
-  grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr);
-  align-items: center;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   box-sizing: border-box;
   color: var(--tp-text-primary);
   font-family: var(--tp-font-family);
 }
 
-.tp-header--standard {
-  min-height: 48px;
-  padding: 6px 12px;
+.tp-header-bar {
+  display: grid;
+  grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr);
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.tp-header--standard,
+.tp-header--large,
+.tp-header--tabs {
+  padding: 4px 12px;
   background: var(--tp-bg-card);
   border-bottom: 1px solid var(--tp-divider);
 }
 
-.tp-header--standard.tp-header--translucent {
+.tp-header--standard {
+  min-height: 48px;
+  padding: 6px 12px;
+}
+
+.tp-header--large {
+  padding: 6px 14px 10px;
+}
+
+.tp-header--tabs {
+  padding: 6px 12px 0;
+}
+
+.tp-header--standard.tp-header--translucent,
+.tp-header--large.tp-header--translucent,
+.tp-header--tabs.tp-header--translucent {
   background: rgba(255, 255, 255, 0.64);
   backdrop-filter: blur(22px) saturate(190%);
   -webkit-backdrop-filter: blur(22px) saturate(190%);
 }
 
-[data-tp-mode="dark"] .tp-header--standard.tp-header--translucent {
+[data-tp-mode="dark"] .tp-header--standard.tp-header--translucent,
+[data-tp-mode="dark"] .tp-header--large.tp-header--translucent,
+[data-tp-mode="dark"] .tp-header--tabs.tp-header--translucent {
   background: rgba(32, 34, 38, 0.62);
+}
+
+.tp-header-loading {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 2px solid var(--tp-focus);
+  border-top-color: transparent;
+  animation: tp-spin 0.75s linear infinite;
+  flex-shrink: 0;
+}
+
+.tp-header-large-row {
+  padding: 6px 2px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tp-header-large-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tp-header-large-title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: var(--tp-font-weight-title1, 300);
+  color: var(--tp-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.tp-header-large-subtitle {
+  font-size: 13px;
+  color: var(--tp-text-secondary-alt);
+}
+
+.tp-header-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin-top: 4px;
+  padding: 0 4px;
+  overflow-x: auto;
+}
+
+.tp-header-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 2px 10px;
+  border: none;
+  background: transparent;
+  color: var(--tp-text-secondary-alt);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tp-header-tab--active {
+  color: var(--tp-focus);
+  font-weight: 600;
+}
+
+.tp-header-tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 9999px;
+  background: var(--tp-focus);
+}
+
+.tp-header-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 9999px;
+  background: var(--tp-focus-16);
+  color: var(--tp-focus);
+  font-size: 10px;
+  font-weight: 600;
 }
 
 .tp-header--floating {
@@ -703,6 +822,7 @@
 }
 
 .tp-tabbar--docked {
+  position: relative;
   background: var(--tp-bg-card);
   border-top: 1px solid var(--tp-divider);
 }
@@ -712,8 +832,37 @@
   align-items: stretch;
   justify-content: space-around;
   min-height: 54px;
-  padding: 4px 8px;
+  padding: 4px 2px;
   box-sizing: border-box;
+}
+
+.tp-tabbar--docked .tp-tabbar-icon-wrap {
+  width: 26px;
+  height: 26px;
+}
+
+.tp-tabbar--docked .tp-tabbar-item {
+  padding: 6px 2px;
+}
+
+.tp-tabbar--docked .tp-tabbar-item--active {
+  color: var(--tp-tabbar-active, var(--tp-focus));
+}
+
+.tp-tabbar-android-fab {
+  position: absolute;
+  right: 16px;
+  bottom: calc(100% + 14px);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  background: var(--tp-btn-primary-bg, #00A870);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
 }
 
 .tp-tabbar-item {
@@ -929,6 +1078,46 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
+.tp-segment--segmented {
+  gap: 2px;
+  height: 34px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--tp-bg-search);
+  box-sizing: border-box;
+}
+
+.tp-segment--segmented .tp-segment-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--tp-segment-tab-text, var(--tp-text-secondary-alt));
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.tp-segment--segmented.tp-segment--full .tp-segment-item {
+  flex: 1;
+  min-width: 0;
+}
+
+.tp-segment--segmented .tp-segment-item--active {
+  background: var(--tp-bg-card);
+  color: var(--tp-text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
 .tp-segment-item--disabled {
   opacity: 0.4;
   cursor: not-allowed !important;
@@ -979,11 +1168,37 @@ button.tp-page-control-dot {
   background: var(--tp-focus);
 }
 
+.tp-page-control--process {
+  gap: 6px;
+  width: 100%;
+}
+
+.tp-page-control-bar {
+  flex: 1;
+  min-width: 16px;
+  height: 4px;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: var(--tp-divider, #ECECEC);
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+button.tp-page-control-bar {
+  cursor: pointer;
+}
+
+.tp-page-control-bar--active {
+  background: var(--tp-focus);
+}
+
 /* ==========================================================================
    TPButton
    ========================================================================== */
 
 .tp-btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1051,6 +1266,11 @@ button.tp-page-control-dot {
   color: var(--tp-color-alert);
 }
 
+.tp-btn--alert-strong {
+  background: var(--tp-color-alert, #EE385C);
+  color: #FFFFFF;
+}
+
 .tp-btn--tonal {
   background: var(--tp-focus-10);
   color: var(--tp-focus);
@@ -1062,11 +1282,52 @@ button.tp-page-control-dot {
   color: var(--tp-focus);
 }
 
+.tp-btn--in-card-alert {
+  border-radius: var(--tp-radius-in-card-btn, 8px);
+  background: var(--tp-color-alert-10, rgba(238, 56, 92, 0.1));
+  color: var(--tp-color-alert, #EE385C);
+}
+
+.tp-btn-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  transition: width 0.22s ease;
+}
+
+.tp-btn--secondary .tp-btn-progress,
+.tp-btn--tonal .tp-btn-progress,
+.tp-btn--in-card .tp-btn-progress {
+  background: var(--tp-focus-16, rgba(0, 168, 112, 0.16));
+}
+
+.tp-btn--alert .tp-btn-progress,
+.tp-btn--in-card-alert .tp-btn-progress {
+  background: var(--tp-color-alert-10, rgba(238, 56, 92, 0.16));
+}
+
+.tp-btn-spinner,
+.tp-btn-icon,
+.tp-btn-label {
+  position: relative;
+  z-index: 1;
+}
+
 .tp-btn:disabled:not(.tp-btn--loading) {
   background: var(--tp-btn-disabled-bg);
   color: var(--tp-btn-disabled-text);
   border-color: transparent;
   cursor: not-allowed;
+}
+
+[data-tp-brand="omada"] .tp-btn--secondary:disabled:not(.tp-btn--loading),
+[data-tp-brand="omada"] .tp-btn--alert:disabled:not(.tp-btn--loading) {
+  background: transparent;
+  border: 2px solid var(--tp-btn-disabled-bg);
+  color: var(--tp-btn-disabled-text);
 }
 
 .tp-btn--text:disabled:not(.tp-btn--loading) {
@@ -1124,7 +1385,8 @@ button.tp-page-control-dot {
 }
 
 .tp-fixed-btn-bar--single .tp-fixed-btn-bar-actions,
-.tp-fixed-btn-bar--dual-vertical .tp-fixed-btn-bar-actions {
+.tp-fixed-btn-bar--dual-vertical .tp-fixed-btn-bar-actions,
+.tp-fixed-btn-bar--triple .tp-fixed-btn-bar-actions {
   flex-direction: column;
 }
 
@@ -1162,8 +1424,10 @@ button.tp-page-control-dot {
   background: rgba(120, 120, 128, 0.36);
 }
 
-.tp-switch--checked {
+.tp-list-item .tp-switch.tp-switch--checked,
+.tp-switch.tp-switch--checked {
   background: var(--tp-focus);
+  background-color: var(--tp-focus);
 }
 
 .tp-switch--disabled {

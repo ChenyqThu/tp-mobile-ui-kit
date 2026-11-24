@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { TPTabBarItem } from '../../core/types';
+import { TPBottomSheet } from '../../core/components/TPBottomSheet';
+import { TPButton } from '../../core/components/TPButton';
 import { TPListCard } from '../../core/components/TPListCard';
 import { TPListItem } from '../../core/components/TPListItem';
 import { TPEmptyState } from '../../core/components/TPEmptyState';
 import { TPSectionHeader } from '../../core/components/TPSectionHeader';
+import { TPTag } from '../../core/components/TPTag';
 import { TPIcon } from '../../assets-lib';
 import '../../styles/tp-omada.css';
 
@@ -43,7 +46,28 @@ export const OMADA_SITE_TABS: readonly TPTabBarItem[] = [
 ];
 
 export type OmadaDeviceType = 'gateway' | 'switch' | 'ap';
-export type OmadaDeviceStatus = 'connected' | 'disconnected' | 'pending';
+export type OmadaDeviceStatus =
+  | 'connected'
+  | 'disconnected'
+  | 'pending'
+  | 'adopting'
+  | 'isolated'
+  | 'heartbeat-missed'
+  | 'online'
+  | 'offline'
+  | 'updating'
+  | 'warning';
+
+export type OmadaDeviceSecondaryMetric =
+  | 'ip'
+  | 'mac'
+  | 'uptime'
+  | 'clients'
+  | 'cpu-mem'
+  | 'traffic'
+  | 'firmware';
+
+export type OmadaDeviceThumbSize = 'sm' | 'md' | 'lg';
 
 export interface OmadaDeviceRecord {
   id: string;
@@ -61,6 +85,8 @@ export interface OmadaDeviceRecord {
   uptime?: string;
   cpuPct?: number;
   memoryPct?: number;
+  clientsCount?: number;
+  trafficRate?: string;
 }
 
 export const DEFAULT_OMADA_DEVICES: readonly OmadaDeviceRecord[] = [
@@ -79,6 +105,8 @@ export const DEFAULT_OMADA_DEVICES: readonly OmadaDeviceRecord[] = [
     uptime: '18d 04h 22m',
     cpuPct: 3,
     memoryPct: 31,
+    clientsCount: 4,
+    trafficRate: '142 Mbps',
   },
   {
     id: 'dev-ap-1',
@@ -96,6 +124,8 @@ export const DEFAULT_OMADA_DEVICES: readonly OmadaDeviceRecord[] = [
     uptime: '14d 11h 09m',
     cpuPct: 6,
     memoryPct: 42,
+    clientsCount: 28,
+    trafficRate: '84 Mbps',
   },
   {
     id: 'dev-ap-2',
@@ -113,6 +143,8 @@ export const DEFAULT_OMADA_DEVICES: readonly OmadaDeviceRecord[] = [
     uptime: '14d 11h 04m',
     cpuPct: 5,
     memoryPct: 39,
+    clientsCount: 19,
+    trafficRate: '56 Mbps',
   },
 ];
 
@@ -136,12 +168,20 @@ export const OmadaDeviceThumb: React.FC<{ type: OmadaDeviceType; size?: number }
       </span>
     );
   }
-  return <TPIcon name="client-switch" size={size} />;
+  return <TPIcon name={type === 'gateway' ? 'client-gateway' : 'client-switch'} size={size} />;
 };
 
 export interface OmadaDeviceListBlockProps {
   devices?: readonly OmadaDeviceRecord[];
   grouped?: boolean;
+  secondaryMetric?: OmadaDeviceSecondaryMetric;
+  onSecondaryMetricChange?: (metric: OmadaDeviceSecondaryMetric) => void;
+  thumbSize?: OmadaDeviceThumbSize;
+  onThumbSizeChange?: (size: OmadaDeviceThumbSize) => void;
+  showDisplayOptions?: boolean;
+  selectable?: 'none' | 'single' | 'multi';
+  selectedIds?: readonly string[];
+  onSelectionChange?: (selectedIds: string[]) => void;
   onSelectDevice?: (device: OmadaDeviceRecord) => void;
   emptyTitle?: string;
   emptyDescription?: string;
@@ -153,6 +193,13 @@ const STATUS_LABEL_MAP: Record<OmadaDeviceStatus, string> = {
   connected: 'Connected',
   disconnected: 'Disconnected',
   pending: 'Pending',
+  adopting: 'Adopting',
+  isolated: 'Isolated',
+  'heartbeat-missed': 'Heartbeat Missed',
+  online: 'Connected',
+  offline: 'Disconnected',
+  updating: 'Updating',
+  warning: 'Warning',
 };
 
 const GROUP_TITLE_MAP: Record<OmadaDeviceType, string> = {
@@ -161,18 +208,102 @@ const GROUP_TITLE_MAP: Record<OmadaDeviceType, string> = {
   ap: 'Access Points',
 };
 
+const THUMB_PIXEL_SIZE: Record<OmadaDeviceThumbSize, number> = {
+  sm: 30,
+  md: 38,
+  lg: 46,
+};
+
+const SECONDARY_METRIC_OPTIONS: readonly { key: OmadaDeviceSecondaryMetric; label: string }[] = [
+  { key: 'ip', label: 'IP Address' },
+  { key: 'mac', label: 'MAC Address' },
+  { key: 'uptime', label: 'Uptime' },
+  { key: 'clients', label: 'Connected Clients' },
+  { key: 'cpu-mem', label: 'CPU / Memory' },
+  { key: 'traffic', label: 'Traffic Rate' },
+  { key: 'firmware', label: 'Firmware Version' },
+];
+
+function formatDeviceSecondaryMetric(
+  device: OmadaDeviceRecord,
+  metric: OmadaDeviceSecondaryMetric,
+): string {
+  switch (metric) {
+    case 'mac':
+      return device.mac;
+    case 'uptime':
+      return device.uptime ?? '0m';
+    case 'clients':
+      return `${device.clientsCount ?? 0} clients`;
+    case 'cpu-mem':
+      return `CPU ${device.cpuPct ?? 0}% · MEM ${device.memoryPct ?? 0}%`;
+    case 'traffic':
+      return device.trafficRate ?? '0 Mbps';
+    case 'firmware':
+      return device.firmwareVersion ?? 'v1.0.0';
+    case 'ip':
+    default:
+      return device.ip;
+  }
+}
+
 /**
- * Reusable Omada v5.3+ Device List block matching real-device `SiteDevices.png` row geometry.
+ * Reusable Omada v5.3+ Device List block matching real-device `SiteDevices.png` row geometry,
+ * extended with 6+ device statuses, 7 selectable secondary metrics, Display Options sheet, and row selection.
  */
 export const OmadaDeviceListBlock: React.FC<OmadaDeviceListBlockProps> = ({
   devices = DEFAULT_OMADA_DEVICES,
   grouped = false,
+  secondaryMetric: controlledMetric,
+  onSecondaryMetricChange,
+  thumbSize: controlledThumbSize,
+  onThumbSizeChange,
+  showDisplayOptions = false,
+  selectable = 'none',
+  selectedIds: controlledSelectedIds,
+  onSelectionChange,
   onSelectDevice,
   emptyTitle = 'No Devices Found',
   emptyDescription = 'Try adjusting your search query or status filter.',
   className = '',
   style,
 }) => {
+  const [internalMetric, setInternalMetric] = useState<OmadaDeviceSecondaryMetric>('ip');
+  const [internalThumbSize, setInternalThumbSize] = useState<OmadaDeviceThumbSize>('md');
+  const [internalSelected, setInternalSelected] = useState<string[]>([]);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+
+  const activeMetric = controlledMetric ?? internalMetric;
+  const activeThumbSize = controlledThumbSize ?? internalThumbSize;
+  const activeSelectedIds = controlledSelectedIds ?? internalSelected;
+
+  const updateMetric = (metric: OmadaDeviceSecondaryMetric) => {
+    if (!controlledMetric) setInternalMetric(metric);
+    onSecondaryMetricChange?.(metric);
+  };
+
+  const updateThumbSize = (size: OmadaDeviceThumbSize) => {
+    if (!controlledThumbSize) setInternalThumbSize(size);
+    onThumbSizeChange?.(size);
+  };
+
+  const handleRowAction = (device: OmadaDeviceRecord) => {
+    if (selectable !== 'none') {
+      const exists = activeSelectedIds.includes(device.id);
+      let next: string[];
+      if (selectable === 'single') {
+        next = exists ? [] : [device.id];
+      } else {
+        next = exists
+          ? activeSelectedIds.filter((id) => id !== device.id)
+          : [...activeSelectedIds, device.id];
+      }
+      if (!controlledSelectedIds) setInternalSelected(next);
+      onSelectionChange?.(next);
+    }
+    onSelectDevice?.(device);
+  };
+
   if (devices.length === 0) {
     return (
       <TPEmptyState
@@ -188,9 +319,13 @@ export const OmadaDeviceListBlock: React.FC<OmadaDeviceListBlockProps> = ({
 
   const renderDeviceRow = (device: OmadaDeviceRecord) => {
     const statusClass =
-      device.status === 'connected'
+      device.status === 'connected' || device.status === 'online'
         ? 'tp-omada-status-line--good'
-        : device.status === 'pending'
+        : device.status === 'pending' ||
+            device.status === 'adopting' ||
+            device.status === 'updating' ||
+            device.status === 'heartbeat-missed' ||
+            device.status === 'warning'
           ? 'tp-omada-status-line--warn'
           : 'tp-omada-status-line--alert';
 
@@ -201,10 +336,12 @@ export const OmadaDeviceListBlock: React.FC<OmadaDeviceListBlockProps> = ({
           ? 'tp-omada-dot--warn'
           : '';
 
+    const isSelected = selectable !== 'none' && activeSelectedIds.includes(device.id);
+
     return (
       <TPListItem
         key={device.id}
-        leading={<OmadaDeviceThumb type={device.type} size={38} />}
+        leading={<OmadaDeviceThumb type={device.type} size={THUMB_PIXEL_SIZE[activeThumbSize]} />}
         title={
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             <span>{device.mac}</span>
@@ -233,29 +370,95 @@ export const OmadaDeviceListBlock: React.FC<OmadaDeviceListBlockProps> = ({
             <span className={`tp-omada-status-line ${statusClass}`}>
               {STATUS_LABEL_MAP[device.status]}
             </span>
-            <span>{device.ip}</span>
+            <span>{formatDeviceSecondaryMetric(device, activeMetric)}</span>
             <span className="tp-omada-health-dot-row">
               <span className={`tp-omada-dot ${dotClass}`.trim()} aria-hidden="true" />
               <span>{device.healthLabel}</span>
             </span>
           </div>
         }
-        onClick={onSelectDevice ? () => onSelectDevice(device) : undefined}
+        checked={selectable !== 'none' ? isSelected : undefined}
+        onClick={
+          onSelectDevice || selectable !== 'none' ? () => handleRowAction(device) : undefined
+        }
       />
     );
   };
 
+  const optionsBar = showDisplayOptions ? (
+    <div className="tp-omada-device-toolbar">
+      <TPTag size="xs" tone="neutral">
+        Metric: {SECONDARY_METRIC_OPTIONS.find((m) => m.key === activeMetric)?.label ?? activeMetric}
+      </TPTag>
+      <TPButton
+        variant="text"
+        size="sm"
+        onClick={() => setOptionsOpen(true)}
+      >
+        Display Options
+      </TPButton>
+    </div>
+  ) : null;
+
+  const displaySheet = (
+    <TPBottomSheet
+      open={optionsOpen}
+      title="Display Options"
+      subtitle="Choose secondary metric and device thumbnail size"
+      onClose={() => setOptionsOpen(false)}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div>
+          <div className="tp-omada-std-input-label" style={{ marginBottom: 6 }}>
+            Thumbnail Size
+          </div>
+          <div className="tp-omada-chip-group">
+            {(['sm', 'md', 'lg'] as const).map((sz) => (
+              <TPTag
+                key={sz}
+                size="sm"
+                selected={activeThumbSize === sz}
+                onClick={() => updateThumbSize(sz)}
+              >
+                {sz.toUpperCase()} ({THUMB_PIXEL_SIZE[sz]}px)
+              </TPTag>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="tp-omada-std-input-label" style={{ marginBottom: 6 }}>
+            Secondary Metric
+          </div>
+          <TPListCard divided>
+            {SECONDARY_METRIC_OPTIONS.map((opt) => (
+              <TPListItem
+                key={opt.key}
+                title={opt.label}
+                checked={activeMetric === opt.key}
+                onClick={() => updateMetric(opt.key)}
+              />
+            ))}
+          </TPListCard>
+        </div>
+      </div>
+    </TPBottomSheet>
+  );
+
   if (!grouped) {
     return (
-      <TPListCard divided className={className} style={style}>
-        {devices.map(renderDeviceRow)}
-      </TPListCard>
+      <div className={className} style={style}>
+        {optionsBar}
+        <TPListCard divided>{devices.map(renderDeviceRow)}</TPListCard>
+        {displaySheet}
+      </div>
     );
   }
 
   const order: OmadaDeviceType[] = ['gateway', 'switch', 'ap'];
   return (
     <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 12, ...style }}>
+      {optionsBar}
       {order.map((type) => {
         const subset = devices.filter((d) => d.type === type);
         if (subset.length === 0) return null;
@@ -266,6 +469,7 @@ export const OmadaDeviceListBlock: React.FC<OmadaDeviceListBlockProps> = ({
           </div>
         );
       })}
+      {displaySheet}
     </div>
   );
 };
