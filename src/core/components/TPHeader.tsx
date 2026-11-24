@@ -1,6 +1,25 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import type { TPHeaderProps } from '../types';
+import { TPLiquidGlassBackdrop } from './TPLiquidGlassBackdrop';
 import '../../styles/tp-core-nav-controls.css';
+
+const FloatingGlassWell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const wellRef = useRef<HTMLDivElement>(null);
+  return (
+    <div ref={wellRef} className="tp-header-well">
+      <TPLiquidGlassBackdrop
+        hostRef={wellRef}
+        shape="pill"
+        tint="clear"
+        bezelWidth={12}
+        refraction={1.05}
+        dispersion={0.9}
+        blur={2}
+      />
+      {children}
+    </div>
+  );
+};
 
 export const TPHeader: React.FC<TPHeaderProps> = ({
   title,
@@ -87,7 +106,7 @@ export const TPHeader: React.FC<TPHeaderProps> = ({
       <div className="tp-header-left">
         {hasLeftContent ? (
           isFloating ? (
-            <div className="tp-header-well">{leftNodes}</div>
+            <FloatingGlassWell>{leftNodes}</FloatingGlassWell>
           ) : (
             leftNodes
           )
@@ -117,7 +136,7 @@ export const TPHeader: React.FC<TPHeaderProps> = ({
         {hasRightContent ? (
           <div className="tp-header-right-slot">
             {isFloating ? (
-              <div className="tp-header-well">{right}</div>
+              <FloatingGlassWell>{right}</FloatingGlassWell>
             ) : (
               right
             )}

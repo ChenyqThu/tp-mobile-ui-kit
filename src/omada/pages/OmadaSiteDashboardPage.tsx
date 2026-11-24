@@ -5,6 +5,7 @@ import { TPTabBar } from '../../core/components/TPTabBar';
 import { TPMenu } from '../../core/components/TPMenu';
 import { TPBottomSheet } from '../../core/components/TPBottomSheet';
 import { TPButton } from '../../core/components/TPButton';
+import { TPLiquidGlass } from '../../core/components/TPLiquidGlass';
 import { TPIcon, type TPIconName } from '../../assets-lib';
 import {
   OMADA_SITE_TABS,
@@ -400,14 +401,18 @@ export const OmadaSiteDashboardPage: React.FC<OmadaSiteDashboardPageProps> = ({
       </div>
 
       {showFloatingAction && (
-        <button
-          type="button"
+        <TPLiquidGlass
+          as="button"
+          shape="circle"
+          tint="brand"
+          interactive
+          blur={1.8}
           className="tp-omada-fab tp-omada-standalone-fab"
-          aria-label="Network Toolkit"
+          ariaLabel="Network Toolkit"
           onClick={handleToolkitTrigger}
         >
           <TPIcon name="settings-network-tools" size={22} color="#FFFFFF" />
-        </button>
+        </TPLiquidGlass>
       )}
 
       {showTabBar && (

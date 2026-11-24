@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { hasTPIcon, TPIcon } from '../../assets-lib';
 import type { TPTabBarItem, TPTabBarProps } from '../types';
+import { TPLiquidGlassBackdrop } from './TPLiquidGlassBackdrop';
 import '../../styles/tp-core-nav-controls.css';
 
 function renderTabIcon(item: TPTabBarItem, isActive: boolean): React.ReactNode {
@@ -43,7 +44,9 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
   className = '',
   style,
 }) => {
+  const trackRef = useRef<HTMLDivElement>(null);
   const hasExtra = extraAction !== undefined && extraAction !== null && variant === 'floating-pill';
+  const activeIndex = items.findIndex((item) => item.key === activeKey);
   const rootClass = [
     'tp-tabbar',
     `tp-tabbar--${variant}`,
@@ -53,6 +56,14 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
     .filter(Boolean)
     .join(' ');
 
+  const lensStyle: React.CSSProperties | undefined =
+    variant === 'floating-pill' && activeIndex >= 0 && items.length > 0
+      ? {
+          width: `calc((100% - 8px - ${(items.length - 1) * 4}px) / ${items.length})`,
+          transform: `translateX(calc(${activeIndex} * (100% + 4px)))`,
+        }
+      : undefined;
+
   return (
     <nav
       className={rootClass}
@@ -60,7 +71,26 @@ export const TPTabBar: React.FC<TPTabBarProps> = ({
       aria-label="Bottom Navigation"
       style={style}
     >
-      <div className="tp-tabbar-track" role="tablist">
+      <div ref={trackRef} className="tp-tabbar-track" role="tablist">
+        {variant === 'floating-pill' && (
+          <TPLiquidGlassBackdrop
+            hostRef={trackRef}
+            shape="pill"
+            tint="clear"
+            bezelWidth={16}
+            refraction={1.35}
+            dispersion={1.15}
+            blur={2.2}
+          />
+        )}
+        {lensStyle && (
+          <span
+            className="tp-tabbar-active-lens"
+            aria-hidden="true"
+            data-active-index={activeIndex}
+            style={lensStyle}
+          />
+        )}
         {items.map((item) => {
           const isActive = item.key === activeKey;
           return (

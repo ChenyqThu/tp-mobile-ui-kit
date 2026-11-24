@@ -4,6 +4,7 @@ import { TPPhoneFrame } from '../../core/components/TPPhoneFrame';
 import { TPStatusBar } from '../../core/components/TPStatusBar';
 import { TPTabBar } from '../../core/components/TPTabBar';
 import { TPBottomSheet } from '../../core/components/TPBottomSheet';
+import { TPLiquidGlass } from '../../core/components/TPLiquidGlass';
 import { TPIcon, type TPIconName } from '../../assets-lib';
 import {
   DEFAULT_OMADA_DEVICES,
@@ -248,14 +249,18 @@ export const OmadaAppDemo: React.FC<OmadaAppDemoProps> = ({
         }
         floatingAction={
           showToolkitFab ? (
-            <button
-              type="button"
+            <TPLiquidGlass
+              as="button"
+              shape="circle"
+              tint="brand"
+              interactive
+              blur={1.8}
               className="tp-omada-fab"
-              aria-label="Network Toolkit"
+              ariaLabel="Network Toolkit"
               onClick={() => setToolkitOpen(true)}
             >
               <TPIcon name="settings-network-tools" size={22} color="#FFFFFF" />
-            </button>
+            </TPLiquidGlass>
           ) : undefined
         }
         bottomBar={

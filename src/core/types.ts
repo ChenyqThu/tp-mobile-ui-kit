@@ -24,6 +24,10 @@ export interface TPLiquidGlassProps {
   shape?: 'pill' | 'circle' | 'rounded';
   tint?: 'clear' | 'brand' | 'dark';
   interactive?: boolean;
+  refraction?: number;
+  dispersion?: number;
+  blur?: number;
+  optical?: boolean;
   as?: 'div' | 'button' | 'nav' | 'section';
   ariaLabel?: string;
   disabled?: boolean;

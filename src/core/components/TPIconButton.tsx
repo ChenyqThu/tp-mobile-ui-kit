@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext, useRef } from 'react';
 import { hasTPIcon, TPIcon } from '../../assets-lib';
 import type { TPIconButtonGroupProps, TPIconButtonProps } from '../types';
+import { TPLiquidGlassBackdrop } from './TPLiquidGlassBackdrop';
 import '../../styles/tp-core-extended.css';
+
+const IconButtonGroupContext = React.createContext(false);
 
 function renderBadge(badge: TPIconButtonProps['badge']): React.ReactNode {
   if (badge === undefined || badge === null || badge === false || badge === '' || badge === 0) {
@@ -28,6 +31,8 @@ export const TPIconButton: React.FC<TPIconButtonProps> = ({
   className = '',
   style,
 }) => {
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const inGroup = useContext(IconButtonGroupContext);
   const iconPx = size === 'sm' ? 16 : size === 'lg' ? 22 : 19;
   const resolvedIcon =
     typeof icon === 'string' && hasTPIcon(icon) ? (
@@ -48,6 +53,7 @@ export const TPIconButton: React.FC<TPIconButtonProps> = ({
 
   return (
     <button
+      ref={btnRef}
       type="button"
       className={classes}
       data-variant={variant}
@@ -57,6 +63,17 @@ export const TPIconButton: React.FC<TPIconButtonProps> = ({
       onClick={onClick}
       style={style}
     >
+      {variant === 'glass' && !inGroup && (
+        <TPLiquidGlassBackdrop
+          hostRef={btnRef}
+          shape="circle"
+          tint="clear"
+          bezelWidth={12}
+          refraction={1.05}
+          dispersion={0.9}
+          blur={2}
+        />
+      )}
       <span className="tp-icon-btn-glyph">{resolvedIcon}</span>
       {renderBadge(badge)}
     </button>
@@ -72,14 +89,29 @@ export const TPIconButtonGroup: React.FC<TPIconButtonGroupProps> = ({
   className = '',
   style,
 }) => {
+  const groupRef = useRef<HTMLDivElement>(null);
   return (
-    <div
-      className={`tp-icon-btn-group tp-icon-btn-group--${variant} ${className}`.trim()}
-      data-variant={variant}
-      role="group"
-      style={style}
-    >
-      {children}
-    </div>
+    <IconButtonGroupContext.Provider value={true}>
+      <div
+        ref={groupRef}
+        className={`tp-icon-btn-group tp-icon-btn-group--${variant} ${className}`.trim()}
+        data-variant={variant}
+        role="group"
+        style={style}
+      >
+        {variant === 'glass' && (
+          <TPLiquidGlassBackdrop
+            hostRef={groupRef}
+            shape="pill"
+            tint="clear"
+            bezelWidth={12}
+            refraction={1.05}
+            dispersion={0.9}
+            blur={2}
+          />
+        )}
+        {children}
+      </div>
+    </IconButtonGroupContext.Provider>
   );
 };

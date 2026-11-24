@@ -41,6 +41,12 @@ export {
   type TPToastContextValue,
 } from './components/TPToast';
 export { TPLiquidGlass } from './components/TPLiquidGlass';
+export {
+  computeLiquidGlassDisplacementField,
+  supportsSvgBackdropFilter,
+  type LiquidGlassFieldOptions,
+  type LiquidGlassFieldResult,
+} from './utils/liquidGlassEngine';
 export { TPIconButton, TPIconButtonGroup } from './components/TPIconButton';
 export { TPCheckbox, TPCheckboxGroup } from './components/TPCheckbox';
 export { TPRadio, TPRadioGroup } from './components/TPRadio';

@@ -515,6 +515,7 @@ const CoreKitTab: React.FC<{
   const [tabVariant, setTabVariant] = useState<'floating-pill' | 'docked'>('floating-pill');
   const [showTabExtra, setShowTabExtra] = useState(true);
   const [activeTabKey, setActiveTabKey] = useState('home');
+  const [opticalRefraction, setOpticalRefraction] = useState(true);
 
   // Display & Lists state
   const [listSwitch, setListSwitch] = useState(true);
@@ -829,14 +830,26 @@ const CoreKitTab: React.FC<{
                     <h4 className="studio-core-section-title">
                       TPLiquidGlass, TPIconButton &amp; Group
                     </h4>
-                    <span className="studio-core-section-badge">iOS 27 Glass</span>
+                    <TPButton
+                      size="sm"
+                      variant={opticalRefraction ? 'tonal' : 'secondary'}
+                      onClick={() => setOpticalRefraction((prev) => !prev)}
+                    >
+                      Optical: {opticalRefraction ? 'On' : 'Off'}
+                    </TPButton>
                   </div>
                   <div
                     style={{
-                      padding: 12,
+                      position: 'relative',
+                      padding: '18px 12px',
                       borderRadius: 12,
-                      background:
-                        'linear-gradient(135deg, rgba(0,168,112,0.22) 0%, rgba(0,105,203,0.24) 55%, rgba(217,70,239,0.22) 100%)',
+                      overflow: 'hidden',
+                      backgroundColor: resolvedMode === 'dark' ? '#14171D' : '#EEF2F8',
+                      backgroundImage: [
+                        'repeating-linear-gradient(135deg, rgba(0,168,112,0.52) 0 8px, transparent 8px 20px)',
+                        'repeating-linear-gradient(-45deg, rgba(51,160,233,0.45) 0 4px, transparent 4px 16px)',
+                        'linear-gradient(90deg, rgba(229,125,250,0.42) 0%, rgba(255,159,64,0.34) 100%)',
+                      ].join(', '),
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
@@ -847,13 +860,23 @@ const CoreKitTab: React.FC<{
                     <TPLiquidGlass
                       shape="pill"
                       interactive
+                      optical={opticalRefraction}
+                      refraction={1.25}
+                      dispersion={1.2}
                       as="button"
                       onClick={() => toast.show({ type: 'info', message: 'Liquid Glass Pill clicked' })}
-                      style={{ padding: '8px 14px', fontSize: 13, fontWeight: 600 }}
+                      style={{ padding: '9px 15px', fontSize: 13, fontWeight: 600 }}
                     >
                       Liquid Glass Pill
                     </TPLiquidGlass>
-                    <TPLiquidGlass shape="circle" tint="brand" interactive style={{ width: 38, height: 38 }}>
+                    <TPLiquidGlass
+                      shape="circle"
+                      tint="brand"
+                      interactive
+                      optical={opticalRefraction}
+                      refraction={1.15}
+                      style={{ width: 42, height: 42 }}
+                    >
                       <TPIcon name="settings-network-tools" size={18} color="#FFFFFF" />
                     </TPLiquidGlass>
                     <TPIconButtonGroup variant="glass">

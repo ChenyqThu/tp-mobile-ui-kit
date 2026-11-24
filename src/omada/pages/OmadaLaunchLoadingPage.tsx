@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TPHeader } from '../../core/components/TPHeader';
 import { TPPrompt } from '../../core/components/TPPrompt';
 import { TPTabBar } from '../../core/components/TPTabBar';
+import { TPLiquidGlass } from '../../core/components/TPLiquidGlass';
 import { TPIcon } from '../../assets-lib';
 import { OMADA_SITE_TABS, type OmadaSiteTabKey } from '../blocks/OmadaDeviceListBlock';
 import '../../styles/tp-omada.css';
@@ -131,14 +132,18 @@ export const OmadaLaunchLoadingPage: React.FC<OmadaLaunchLoadingPageProps> = ({
       </div>
 
       {showFloatingAction && (
-        <button
-          type="button"
+        <TPLiquidGlass
+          as="button"
+          shape="circle"
+          tint="brand"
+          interactive
+          blur={1.8}
           className="tp-omada-fab tp-omada-standalone-fab"
-          aria-label="Network Toolkit"
+          ariaLabel="Network Toolkit"
           onClick={onToolkitClick}
         >
           <TPIcon name="settings-network-tools" size={22} color="#FFFFFF" />
-        </button>
+        </TPLiquidGlass>
       )}
 
       {showTabBar && (

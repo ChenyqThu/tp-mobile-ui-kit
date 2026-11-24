@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-23T22:47:40.614Z",
+  "generatedAt": "2026-11-24T00:52:09.764Z",
   "package": {
     "name": "@chenyqthu/tp-mobile-ui-kit",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "TP-Link multi-brand mobile React UI component library (TP-Design 12-mode Theme Engine + Omada APP 5.3 Blocks & Real PAG Motion Assets + Single-file HTML standalone bundle)",
     "entries": {
       ".": "@chenyqthu/tp-mobile-ui-kit",
@@ -18,15 +18,15 @@
       "jsdelivrCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/style.css",
       "jsdelivrStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/standalone.js",
       "jsdelivrWasm": "https://cdn.jsdelivr.net/npm/libpag@4.5.85/lib/libpag.wasm",
-      "pinnedCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/style.css",
-      "pinnedStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/standalone.js"
+      "pinnedCss": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/style.css",
+      "pinnedStandalone": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/standalone.js"
     }
   },
   "counts": {
     "components": 77,
     "blocks": 7,
     "pages": 10,
-    "hooksAndHelpers": 9,
+    "hooksAndHelpers": 11,
     "brands": 6,
     "themePresets": 12,
     "templates": 3,
@@ -1910,6 +1910,24 @@
       ]
     },
     {
+      "name": "computeLiquidGlassDisplacementField",
+      "category": "core-nav-controls",
+      "kind": "helper",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/utils/liquidGlassEngine.ts",
+      "description": "Computes a rounded-rectangle SDF displacement field using a convex squircle profile and Snell's law refraction (`n1 = 1.0 -> n2 = 1.5`), keeping interior center pixels neutral (`R = 128, G = 128`) and refracting along the curved bezel rim.",
+      "signature": "(options: LiquidGlassFieldOptions): LiquidGlassFieldResult"
+    },
+    {
+      "name": "supportsSvgBackdropFilter",
+      "category": "core-nav-controls",
+      "kind": "helper",
+      "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
+      "sourcePath": "src/core/utils/liquidGlassEngine.ts",
+      "description": "Returns true only in Chromium desktop/Android browsers where SVG `backdrop-filter: url(#...)` samples live DOM pixels behind the element. Safari/WebKit and Firefox drop the entire `backdrop-filter` rule when `url(...)` appears, so they receive CSS fallback styling instead.",
+      "signature": "(): boolean"
+    },
+    {
       "name": "TPButton",
       "category": "core-nav-controls",
       "kind": "component",
@@ -2186,7 +2204,7 @@
       "kind": "component",
       "subpath": "@chenyqthu/tp-mobile-ui-kit/core",
       "sourcePath": "src/core/components/TPLiquidGlass.tsx",
-      "description": "Apple iOS 26/27 Liquid Glass surface primitive combining translucent refractive backdrop blur, a directional 135-degree specular rim highlight, and inner meniscus depth lighting.",
+      "description": "Apple iOS 26/27 Liquid Glass surface primitive combining SDF Snell-law optical backdrop refraction (with subtle RGB dispersion in Chromium), directional 135-degree specular rim highlights, and inner meniscus depth lighting.",
       "propsType": "TPLiquidGlassProps",
       "props": [
         {
@@ -2201,6 +2219,26 @@
         },
         {
           "name": "interactive",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "refraction",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "dispersion",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "blur",
+          "type": "number",
+          "optional": true
+        },
+        {
+          "name": "optical",
           "type": "boolean",
           "optional": true
         },
@@ -12310,8 +12348,8 @@
         "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@latest/dist/standalone.js"
       },
       "pinnedUrls": {
-        "css": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/style.css",
-        "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.0/dist/standalone.js"
+        "css": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/style.css",
+        "js": "https://cdn.jsdelivr.net/npm/@chenyqthu/tp-mobile-ui-kit@0.2.1/dist/standalone.js"
       }
     },
     {

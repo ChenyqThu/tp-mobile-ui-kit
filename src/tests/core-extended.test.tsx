@@ -6,6 +6,7 @@ import { TPThemeProvider } from '../theme';
 import { TPPhoneFrame } from '../core/components/TPPhoneFrame';
 import { TPTabBar } from '../core/components/TPTabBar';
 import { TPLiquidGlass } from '../core/components/TPLiquidGlass';
+import { computeLiquidGlassDisplacementField } from '../core/utils/liquidGlassEngine';
 import { TPIconButton, TPIconButtonGroup } from '../core/components/TPIconButton';
 import { TPCheckbox, TPCheckboxGroup } from '../core/components/TPCheckbox';
 import { TPRadioGroup } from '../core/components/TPRadio';
@@ -273,5 +274,77 @@ describe('Liquid Glass, Overlay Frame & Extended Core Components', () => {
 
     expect(document.querySelector('[data-variant="list"]')).toBeInTheDocument();
     expect(document.querySelector('[data-variant="borderless"]')).toBeInTheDocument();
+  });
+
+  it('computes neutral center and symmetric Snell refraction vectors on pill rims', () => {
+    const width = 120;
+    const height = 48;
+    const field = computeLiquidGlassDisplacementField({
+      width,
+      height,
+      radius: 24,
+      bezelWidth: 14,
+    });
+
+    expect(field.width).toBe(width);
+    expect(field.height).toBe(height);
+    expect(field.maxScale).toBeGreaterThan(0);
+
+    const readPixel = (x: number, y: number) => {
+      const idx = (y * width + x) * 4;
+      return {
+        r: field.data[idx],
+        g: field.data[idx + 1],
+        b: field.data[idx + 2],
+        a: field.data[idx + 3],
+      };
+    };
+
+    const center = readPixel(width / 2, height / 2);
+    expect(center).toEqual({ r: 128, g: 128, b: 128, a: 255 });
+
+    const topRim = readPixel(width / 2, 2);
+    const bottomRim = readPixel(width / 2, height - 3);
+    expect(topRim.g).toBeGreaterThan(128);
+    expect(bottomRim.g).toBeLessThan(128);
+
+    const leftRim = readPixel(2, height / 2);
+    const rightRim = readPixel(width - 3, height / 2);
+    expect(leftRim.r).toBeGreaterThan(128);
+    expect(rightRim.r).toBeLessThan(128);
+  });
+
+  it('renders TPLiquidGlass optical backdrop props and TPTabBar sliding active lens index', () => {
+    const items = [
+      { key: 'dash', label: 'Dashboard', icon: 'tabbar-dashboard-off' },
+      { key: 'dev', label: 'Devices', icon: 'tabbar-device-off' },
+      { key: 'set', label: 'Settings', icon: 'tabbar-setting-off' },
+    ];
+
+    const { container, rerender } = render(
+      <TPThemeProvider brand="omada" mode="dark">
+        <TPLiquidGlass shape="pill" refraction={1.4} dispersion={1.2} blur={2} optical={false}>
+          Crystal Pill
+        </TPLiquidGlass>
+        <TPTabBar variant="floating-pill" items={items} activeKey="dash" onChange={() => {}} />
+      </TPThemeProvider>,
+    );
+
+    const glassBackdrop = container.querySelector('.tp-liquid-glass > .tp-lg-backdrop');
+    expect(glassBackdrop).toHaveAttribute('data-optical', 'css-fallback');
+
+    const lens = container.querySelector('.tp-tabbar-active-lens');
+    expect(lens).toHaveAttribute('data-active-index', '0');
+
+    rerender(
+      <TPThemeProvider brand="omada" mode="dark">
+        <TPLiquidGlass shape="pill" refraction={1.4} dispersion={1.2} blur={2} optical={false}>
+          Crystal Pill
+        </TPLiquidGlass>
+        <TPTabBar variant="floating-pill" items={items} activeKey="set" onChange={() => {}} />
+      </TPThemeProvider>,
+    );
+
+    expect(container.querySelector('.tp-tabbar-active-lens')).toHaveAttribute('data-active-index', '2');
   });
 });
